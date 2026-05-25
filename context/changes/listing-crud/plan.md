@@ -316,13 +316,13 @@ The `handle_updated_at()` function defined in this migration is reusable. Later 
 
 #### Automated
 
-- [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports
-- [x] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports — 4e56763
+- [x] 3.2 `npm run lint` passes — 4e56763
 
 #### Manual
 
-- [x] 3.3 Dashboard shows "Nowe ogłoszenie" button and Polish empty state
-- [x] 3.4 Creating a listing saves it and shows a card with correct data in Polish
-- [x] 3.5 Editing pre-fills the form and saves changes correctly
-- [x] 3.6 Delete shows Polish confirmation; confirming removes the listing from the dashboard
-- [x] 3.7 All UI text is in Polish; `lang="pl"` in page HTML source
+- [x] 3.3 Dashboard shows "Nowe ogłoszenie" button and Polish empty state — 4e56763
+- [x] 3.4 Creating a listing saves it and shows a card with correct data in Polish — 4e56763
+- [x] 3.5 Editing pre-fills the form and saves changes correctly — 4e56763
+- [x] 3.6 Delete shows Polish confirmation; confirming removes the listing from the dashboard — 4e56763
+- [x] 3.7 All UI text is in Polish; `lang="pl"` in page HTML source — 4e56763
