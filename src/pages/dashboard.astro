@@ -1,25 +1,75 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Banner from "@/components/Banner.astro";
+import ListingCard from "@/components/listings/ListingCard.astro";
+import { createClient } from "@/lib/supabase";
+import type { Listing } from "@/types/listings";
 
-const { user } = Astro.locals;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let listings: Listing[] = [];
+let fetchError: string | null = null;
+
+if (!supabase) {
+  fetchError = "Błąd konfiguracji bazy danych";
+} else {
+  const { data, error } = await supabase.from("listings").select("*").order("created_at", { ascending: false });
+
+  if (error) {
+    fetchError = error.message;
+  } else {
+    listings = (data as Listing[]).sort((a, b) => {
+      if (a.status === b.status) return 0;
+      return a.status === "active" ? -1 : 1;
+    });
+  }
+}
+
+const urlError = Astro.url.searchParams.get("error");
 ---
 
-<Layout title="Dashboard">
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
-    <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-      <h1 class="mb-4 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-        Dashboard
-      </h1>
-      <p class="text-blue-100/80">
-        Welcome, <span class="font-semibold text-white">{user?.email}</span>
-      </p>
-      <p class="mt-2 text-sm text-blue-100/50">This page is only for authenticated users.</p>
-      <form method="POST" action="/api/auth/signout" class="mt-6">
+<Layout title="Dashboard — EstateDesk">
+  <div class="bg-cosmic min-h-screen p-6">
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-white">Ogłoszenia</h1>
+        <a
+          href="/dashboard/listings/new"
+          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+        >
+          + Nowe ogłoszenie
+        </a>
+      </div>
+
+      {urlError && <Banner variant="error">{urlError}</Banner>}
+      {fetchError && <Banner variant="error">{fetchError}</Banner>}
+
+      {
+        listings.length === 0 && !fetchError ? (
+          <div class="rounded-xl border border-white/10 bg-white/10 p-12 text-center backdrop-blur-xl">
+            <p class="text-blue-100/70">Brak ogłoszeń.</p>
+            <a
+              href="/dashboard/listings/new"
+              class="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
+              Dodaj pierwsze ogłoszenie
+            </a>
+          </div>
+        ) : (
+          <div class="grid gap-4 sm:grid-cols-2">
+            {listings.map((listing) => (
+              <ListingCard listing={listing} />
+            ))}
+          </div>
+        )
+      }
+
+      <form method="POST" action="/api/auth/signout" class="mt-8">
         <button
           type="submit"
-          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20"
+          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
         >
-          Sign out
+          Wyloguj
         </button>
       </form>
     </div>

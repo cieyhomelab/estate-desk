@@ -303,26 +303,26 @@ The `handle_updated_at()` function defined in this migration is reusable. Later 
 
 #### Automated
 
-- [x] 2.1 `npm run build` completes without TypeScript errors
-- [x] 2.2 `npm run lint` passes with no new violations
+- [x] 2.1 `npm run build` completes without TypeScript errors — b3b58fe
+- [x] 2.2 `npm run lint` passes with no new violations — b3b58fe
 
 #### Manual
 
-- [x] 2.3 POST to `/api/listings/create` inserts a row and redirects to `/dashboard`
-- [x] 2.4 POST to `/api/listings/[id]/update` updates the correct row
-- [x] 2.5 POST to `/api/listings/[id]/delete` removes the row; cross-user delete has no effect
+- [x] 2.3 POST to `/api/listings/create` inserts a row and redirects to `/dashboard` — b3b58fe
+- [x] 2.4 POST to `/api/listings/[id]/update` updates the correct row — b3b58fe
+- [x] 2.5 POST to `/api/listings/[id]/delete` removes the row; cross-user delete has no effect — b3b58fe
 
 ### Phase 3: Dashboard and listing pages
 
 #### Automated
 
-- [ ] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports
-- [ ] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports
+- [x] 3.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.3 Dashboard shows "Nowe ogłoszenie" button and Polish empty state
-- [ ] 3.4 Creating a listing saves it and shows a card with correct data in Polish
-- [ ] 3.5 Editing pre-fills the form and saves changes correctly
-- [ ] 3.6 Delete shows Polish confirmation; confirming removes the listing from the dashboard
-- [ ] 3.7 All UI text is in Polish; `lang="pl"` in page HTML source
+- [x] 3.3 Dashboard shows "Nowe ogłoszenie" button and Polish empty state
+- [x] 3.4 Creating a listing saves it and shows a card with correct data in Polish
+- [x] 3.5 Editing pre-fills the form and saves changes correctly
+- [x] 3.6 Delete shows Polish confirmation; confirming removes the listing from the dashboard
+- [x] 3.7 All UI text is in Polish; `lang="pl"` in page HTML source

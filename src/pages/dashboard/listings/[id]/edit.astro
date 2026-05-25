@@ -1,0 +1,121 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Banner from "@/components/Banner.astro";
+import { createClient } from "@/lib/supabase";
+import type { Listing } from "@/types/listings";
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let listing: Listing | null = null;
+
+if (id && supabase) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const result = (await supabase.from("listings").select("*").eq("id", id).eq("user_id", user.id).single()) as {
+      data: Listing | null;
+    };
+    listing = result.data;
+  }
+}
+
+if (!listing) {
+  return Astro.redirect("/dashboard");
+}
+
+const error = Astro.url.searchParams.get("error");
+---
+
+<Layout title="Edytuj ogłoszenie — EstateDesk">
+  <div class="bg-cosmic min-h-screen p-6">
+    <div class="mx-auto max-w-lg">
+      <a href="/dashboard" class="mb-6 inline-block text-sm text-blue-200/70 transition-colors hover:text-blue-200">
+        ← Powrót
+      </a>
+
+      <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h1 class="mb-6 text-2xl font-bold text-white">Edytuj ogłoszenie</h1>
+
+        {error && <Banner variant="error">{error}</Banner>}
+
+        <form method="POST" action={`/api/listings/${listing.id}/update`} class="space-y-5">
+          <div>
+            <label for="type" class="mb-1 block text-sm font-medium text-blue-100/80"
+              >Typ ogłoszenia <span class="text-red-400">*</span></label
+            >
+            <select
+              id="type"
+              name="type"
+              required
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+              <option value="sale" selected={listing.type === "sale"} class="bg-gray-900">Sprzedaż</option>
+              <option value="occasional-rental" selected={listing.type === "occasional-rental"} class="bg-gray-900"
+                >Najem okazjonalny</option
+              >
+            </select>
+          </div>
+
+          <div>
+            <label for="address" class="mb-1 block text-sm font-medium text-blue-100/80"
+              >Adres nieruchomości <span class="text-red-400">*</span></label
+            >
+            <input
+              id="address"
+              type="text"
+              name="address"
+              required
+              value={listing.address}
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="owner_name" class="mb-1 block text-sm font-medium text-blue-100/80"
+              >Imię i nazwisko właściciela</label
+            >
+            <input
+              id="owner_name"
+              type="text"
+              name="owner_name"
+              value={listing.owner_name ?? ""}
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="owner_phone" class="mb-1 block text-sm font-medium text-blue-100/80">Telefon właściciela</label>
+            <input
+              id="owner_phone"
+              type="tel"
+              name="owner_phone"
+              value={listing.owner_phone ?? ""}
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="owner_email" class="mb-1 block text-sm font-medium text-blue-100/80">E-mail właściciela</label>
+            <input
+              id="owner_email"
+              type="email"
+              name="owner_email"
+              value={listing.owner_email ?? ""}
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Zapisz zmiany
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</Layout>
