@@ -1,0 +1,15 @@
+export type ListingType = "sale" | "occasional-rental";
+export type ListingStatus = "active" | "done";
+
+export interface Listing {
+  id: string;
+  user_id: string;
+  type: ListingType;
+  status: ListingStatus;
+  address: string;
+  owner_name: string | null;
+  owner_phone: string | null;
+  owner_email: string | null;
+  created_at: string;
+  updated_at: string;
+}

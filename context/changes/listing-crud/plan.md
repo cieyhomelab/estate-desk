@@ -290,27 +290,27 @@ The `handle_updated_at()` function defined in this migration is reusable. Later 
 
 #### Automated
 
-- [x] 1.1 Migration applies without errors: `npx supabase db push`
-- [x] 1.2 Migration file tracked in git: `git status supabase/migrations/`
+- [x] 1.1 Migration applies without errors: `npx supabase db push` — d3dd114
+- [x] 1.2 Migration file tracked in git: `git status supabase/migrations/` — d3dd114
 
 #### Manual
 
-- [x] 1.3 listings table visible in Supabase Studio with all 10 columns
-- [x] 1.4 RLS enabled and policy visible in Authentication → Policies → listings
-- [x] 1.5 type CHECK constraint rejects invalid values
+- [x] 1.3 listings table visible in Supabase Studio with all 10 columns — d3dd114
+- [x] 1.4 RLS enabled and policy visible in Authentication → Policies → listings — d3dd114
+- [x] 1.5 type CHECK constraint rejects invalid values — d3dd114
 
 ### Phase 2: Server data layer
 
 #### Automated
 
-- [ ] 2.1 `npm run build` completes without TypeScript errors
-- [ ] 2.2 `npm run lint` passes with no new violations
+- [x] 2.1 `npm run build` completes without TypeScript errors
+- [x] 2.2 `npm run lint` passes with no new violations
 
 #### Manual
 
-- [ ] 2.3 POST to `/api/listings/create` inserts a row and redirects to `/dashboard`
-- [ ] 2.4 POST to `/api/listings/[id]/update` updates the correct row
-- [ ] 2.5 POST to `/api/listings/[id]/delete` removes the row; cross-user delete has no effect
+- [x] 2.3 POST to `/api/listings/create` inserts a row and redirects to `/dashboard`
+- [x] 2.4 POST to `/api/listings/[id]/update` updates the correct row
+- [x] 2.5 POST to `/api/listings/[id]/delete` removes the row; cross-user delete has no effect
 
 ### Phase 3: Dashboard and listing pages
 
