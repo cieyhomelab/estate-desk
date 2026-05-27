@@ -1,5 +1,7 @@
 -- listings table: core entity for S-02 (listing-crud)
 -- Downstream slices (S-03..S-06) add foreign keys to this table.
+create extension if not exists "pgcrypto" with schema extensions;
+
 create table listings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -26,9 +28,10 @@ create policy "owners_own_listings" on listings
 create or replace function handle_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
-  new.updated_at = now();
+  new.updated_at = pg_catalog.now();
   return new;
 end;
 $$;

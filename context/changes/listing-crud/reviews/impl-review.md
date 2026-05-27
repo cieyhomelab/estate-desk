@@ -5,150 +5,128 @@
 - **Scope**: All 3 phases
 - **Date**: 2026-05-27
 - **Verdict**: NEEDS ATTENTION
-- **Findings**: 0 critical  4 warnings  3 observations
+- **Findings**: 0 critical  5 warnings  3 observations
 
 ## Verdicts
 
 | Dimension | Verdict |
 |-----------|---------|
-| Plan Adherence | PASS |
+| Plan Adherence | WARNING |
 | Scope Discipline | WARNING |
 | Safety & Quality | WARNING |
 | Architecture | PASS |
-| Pattern Consistency | PASS |
+| Pattern Consistency | WARNING |
 | Success Criteria | PASS |
 
 ## Build & Lint
 
-- `npm run build` — succeeded (Cloudflare adapter; pre-existing unrelated CSS minify warning)
-- `npm run lint` — succeeded (parser warnings about `projectService` are pre-existing, not from this slice)
+- `npm run build` — succeeded (pre-existing unrelated CSS minify warning)
+- `npm run lint` — succeeded (`projectService` parser warnings are pre-existing, not from this slice)
 
 ## Findings
 
-### F1 — handle_updated_at() missing SET search_path
+### F1 — handle_updated_at() missing SET search_path [FIXED + ACCEPTED-AS-RULE: Postgres functions must pin search_path]
 
 - **Severity**: ⚠️ WARNING
-- **Impact**: 🔎 MEDIUM — function is intentionally reused by later slices; fixing it later means a follow-up migration on every table that already has the trigger
+- **Impact**: 🔎 MEDIUM — function is reused on later-slice tables; fixing later means a follow-up migration per table
 - **Dimension**: Safety & Quality
 - **Location**: supabase/migrations/20260525152607_create_listings.sql:26-34
-- **Detail**: The function is declared `language plpgsql` with no fixed search_path. Supabase's DB linter raises a "Function Search Path Mutable" warning for every such function — a malicious schema earlier in resolution order could shadow built-ins (e.g., `now()`). Plan migration-notes explicitly say later slices will reuse this function as-is, so the warning will compound across S-03+ tables.
-- **Fix**: Add `set search_path = ''` and fully-qualify `now()`:
-  ```sql
-  create or replace function handle_updated_at()
-  returns trigger
-  language plpgsql
-  set search_path = ''
-  as $$
-  begin
-    new.updated_at = pg_catalog.now();
-    return new;
-  end;
-  $$;
-  ```
-  - Strength: Removes the linter warning now, before S-03 reuses the function on a new table.
-  - Tradeoff: Requires `pg_catalog.now()` qualification — trivial.
+- **Detail**: Function declared `language plpgsql` with no fixed search_path. Supabase's DB linter flags this as `function_search_path_mutable` — a malicious schema earlier in resolution order could shadow built-ins like `now()`. Plan migration-notes commit this function to be reused verbatim in S-03+, so the warning will compound.
+- **Fix**: Add `set search_path = ''` after `language plpgsql` and qualify `now()` as `pg_catalog.now()`.
+  - Strength: Removes Supabase linter warning before downstream slices propagate the trigger to new tables.
+  - Tradeoff: Two-line edit, trivial.
   - Confidence: HIGH — standard Supabase guidance.
   - Blind spot: None significant.
-- **Decision**: PENDING
+- **Decision**: FIXED + ACCEPTED-AS-RULE (lesson: "Postgres functions must pin search_path")
 
-### F2 — gen_random_uuid() used without explicit pgcrypto extension
+### F2 — gen_random_uuid() used without declaring pgcrypto [FIXED + ACCEPTED-AS-RULE: Migrations must declare extensions they depend on]
 
 - **Severity**: ⚠️ WARNING
-- **Impact**: 🏃 LOW — one-line addition at the top of the migration
+- **Impact**: 🏃 LOW — one-line addition at top of migration
 - **Dimension**: Safety & Quality
 - **Location**: supabase/migrations/20260525152607_create_listings.sql:4
-- **Detail**: Migration relies on `gen_random_uuid()` but never declares the pgcrypto dependency. Supabase's default project has pgcrypto pre-enabled, so this works today — but a fresh local Supabase project, a stripped Postgres, or a future project where the extension is disabled will fail to apply this migration. The next four slices add FKs into this table; making the dependency explicit documents intent.
-- **Fix**: Add `create extension if not exists "pgcrypto" with schema extensions;` at the top of the migration.
-- **Decision**: PENDING
+- **Detail**: Migration calls `gen_random_uuid()` without `create extension if not exists pgcrypto`. Hosted Supabase ships pgcrypto pre-enabled, but fresh local stacks or projects where the extension is disabled will fail to apply this migration. Making the dependency explicit documents intent before downstream slices add FKs.
+- **Fix**: Prepend `create extension if not exists "pgcrypto" with schema extensions;`.
+- **Decision**: FIXED + ACCEPTED-AS-RULE (lesson: "Migrations must declare extensions they depend on")
 
-### F3 — edit.astro silently redirects on DB error (data/error not distinguished)
+### F3 — edit.astro casts .single() result and swallows DB errors [FIXED + ACCEPTED-AS-RULE: Never cast away the `error` field of a supabase-js response]
 
 - **Severity**: ⚠️ WARNING
 - **Impact**: 🏃 LOW — narrow edit, one file
 - **Dimension**: Safety & Quality (Reliability)
 - **Location**: src/pages/dashboard/listings/[id]/edit.astro:18-26
-- **Detail**: The fetch uses an `as { data: Listing | null }` cast that discards the `error` field of the supabase-js response. If `.single()` errors (network, RLS misconfig, malformed UUID), `result.data` is null and the page silently redirects to `/dashboard` with no error message — masking infrastructure problems. Sister mutation routes (update.ts) handle `error` and `data` separately; this page should too.
-- **Fix**: Drop the cast; destructure `{ data, error }`; redirect to `/dashboard?error=...` on real error; redirect to `/dashboard` only on "not found":
-  ```ts
-  const { data, error } = await supabase
-    .from("listings").select("*")
-    .eq("id", id).eq("user_id", user.id).single();
-  if (error && error.code !== "PGRST116") {
-    return Astro.redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
-  }
-  listing = data;
-  ```
-  - Strength: Matches the error-handling pattern of update.ts / delete.ts; surfaces real failures.
-  - Tradeoff: A few extra lines; need to know PGRST116 is the "no rows" code for `.single()`.
-  - Confidence: HIGH — pattern used in sibling routes.
+- **Detail**: The fetch uses `as { data: Listing | null }` which discards the `error` field. Any real failure (network, RLS misconfig, malformed UUID id) produces `data === null` and the page silently redirects to `/dashboard` indistinguishably from a legitimate "not found". Sibling routes (update.ts, delete.ts) handle `error` and `data` separately.
+- **Fix**: Drop the cast, destructure `{ data, error }`, redirect with `?error=` on real error, redirect to /dashboard only on the PGRST116 ("no rows from .single()") case.
+  - Strength: Matches error-handling pattern of sibling routes; surfaces real failures.
+  - Tradeoff: Need to special-case PGRST116; few extra lines.
+  - Confidence: HIGH — pattern used in same module.
   - Blind spot: None significant.
-- **Decision**: PENDING
+- **Decision**: FIXED + ACCEPTED-AS-RULE (lesson: "Never cast away the `error` field of a supabase-js response")
 
-### F4 — DELETE and UPDATE disagree on "not found" handling
+### F4 — ESLint rule disabled for ALL .astro files (unplanned + overly broad) [FIXED via Fix A + ACCEPTED-AS-RULE: Scope ESLint rule disables to the smallest possible surface]
 
 - **Severity**: ⚠️ WARNING
-- **Impact**: 🔎 MEDIUM — real tradeoff (idempotent UX vs. consistency between sibling routes)
+- **Impact**: 🔎 MEDIUM — silences a load-bearing rule across the entire Astro surface
+- **Dimension**: Safety & Quality + Scope Discipline
+- **Location**: eslint.config.js:68-69
+- **Detail**: A two-line `astroConfig.rules` change disables `@typescript-eslint/no-misused-promises` for every `.astro` file with a comment about a parser crash. The only file that actually triggers the crash is `edit.astro:26`. The disable is unplanned AND its scope is the entire UI surface — every future `.astro` page silently loses a misused-promise safety net.
+- **Fix A ⭐ Recommended**: Narrow the disable to a per-file `files: [...]` override pinned to the offending pattern.
+  - Strength: Restores the rule for the rest of the Astro codebase; documents the parser bug at the trigger site.
+  - Tradeoff: Slightly more eslint config noise.
+  - Confidence: HIGH — the parser bug is reproducible only with early-return Astro.redirect, used only by edit.astro.
+  - Blind spot: Haven't verified other promise-returning frontmatter patterns won't crash the parser.
+- **Fix B**: Document on the plan as an addendum and leave the broad disable in place.
+  - Strength: Zero code change; preserves discovered workaround for future Astro files.
+  - Tradeoff: Keeps the safety rule disabled across all .astro files indefinitely.
+  - Confidence: MED — accepting a broad disable is a real tradeoff.
+  - Blind spot: We haven't quantified how often misused-promises bugs appear in Astro frontmatter here.
+- **Decision**: FIXED via Fix A + ACCEPTED-AS-RULE (lesson: "Scope ESLint rule disables to the smallest possible surface"). Implementation note: minimatch treats `[id]` as a character class — escaped as `[[]id[]]`.
+
+### F5 — UPDATE vs DELETE disagree on "not found" handling [FIXED via Fix A + ACCEPTED-AS-RULE: Document intentional asymmetry between sibling routes/handlers]
+
+- **Severity**: ⚠️ WARNING
+- **Impact**: 🔎 MEDIUM — idempotent UX vs sibling-route consistency
 - **Dimension**: Pattern Consistency
 - **Location**: src/pages/api/listings/[id]/delete.ts:22, src/pages/api/listings/[id]/update.ts:38-51
-- **Detail**: update.ts chains `.select()` and reports "Ogłoszenie nie zostało znalezione" when 0 rows match (lines 49-51). delete.ts has no `.select()` and treats 0-row deletes as success (line 22-28) — explicitly per plan ("idempotent — double-delete is not an error"). Both behaviors are defensible; the issue is they're inconsistent without a comment to signal intent, inviting a future "cleanup" PR to align them in the wrong direction.
-- **Fix A ⭐ Recommended**: Keep both behaviors; add an inline comment to delete.ts explaining the asymmetry
-  - Strength: Honors plan's "idempotent delete is intentional" decision while guarding against future regression. Trivial edit.
-  - Tradeoff: Asymmetry remains — purely a documentation fix.
+- **Detail**: update.ts uses `.select()` and reports "Ogłoszenie nie zostało znalezione" on 0 rows. delete.ts has no `.select()` and treats 0-row deletes as success — explicitly per plan ("idempotent — double-delete is not an error"). Both behaviors are defensible; the issue is they're inconsistent without a comment to signal intent, inviting a future "cleanup" PR to align them in the wrong direction.
+- **Fix A ⭐ Recommended**: Keep both behaviors; add an inline comment to delete.ts explaining the asymmetry.
+  - Strength: Honors plan's explicit "idempotent delete" decision; guards against future regression.
+  - Tradeoff: Asymmetry remains — documentation-only.
   - Confidence: HIGH — plan explicitly endorses idempotent delete.
   - Blind spot: None significant.
-- **Fix B**: Add `.select()` to delete.ts and surface "Ogłoszenie nie zostało znalezione" on 0 rows
-  - Strength: Sibling routes behave identically; less cognitive load when reading the API.
-  - Tradeoff: Changes user-observable behavior (re-deleting a stale tab now shows an error); contradicts the plan's explicit decision.
-  - Confidence: MEDIUM — depends whether stale double-delete is a real UX path worth surfacing.
-  - Blind spot: Haven't traced UI flows that might POST delete twice from a slow network.
-- **Decision**: PENDING
+- **Fix B**: Add `.select()` to delete.ts and surface "not found" on 0 rows.
+  - Strength: Sibling routes behave identically.
+  - Tradeoff: Contradicts plan's explicit "idempotent" decision; changes user-observable behavior.
+  - Confidence: MED — depends whether stale double-delete is a real UX path.
+  - Blind spot: Haven't traced whether the UI ever POSTs delete twice.
+- **Decision**: FIXED via Fix A + ACCEPTED-AS-RULE (lesson: "Document intentional asymmetry between sibling routes/handlers")
 
-### F5 — Unplanned eslint.config.js change (rule disable for *.astro)
-
-- **Severity**: 🔍 OBSERVATION
-- **Impact**: 🏃 LOW — already shipped; question is whether to document on the plan
-- **Dimension**: Scope Discipline
-- **Location**: eslint.config.js:68-69 (commit 6a5dea5)
-- **Detail**: Two lines added to `astroConfig.rules`:
-  ```js
-  // astro-eslint-parser crashes on return Astro.redirect() in frontmatter
-  "@typescript-eslint/no-misused-promises": "off",
-  ```
-  Narrowly scoped to Astro files (preserves the rule for TS/TSX), comment documents the rationale, justified by the lint gate in Phase 2 success criteria. Not in any phase's "Changes Required" — appears to have been a discovery while implementing Phase 3 (`return Astro.redirect()` in edit.astro frontmatter).
-- **Fix**: Document on the plan as an addendum under Phase 3's "Changes Required" so it stops being a silent surprise on the next plan↔diff comparison.
-- **Decision**: PENDING
-
-### F6 — Dashboard empty-state copy split across two elements
+### F6 — Empty-state copy split across two elements [FIXED + ACCEPTED-AS-RULE: UX-positive deviations from a verbatim plan string are OK — but record them]
 
 - **Severity**: 🔍 OBSERVATION
 - **Impact**: 🏃 LOW
 - **Dimension**: Plan Adherence
 - **Location**: src/pages/dashboard.astro:50-56
-- **Detail**: Plan specified one string: `"Brak ogłoszeń. Dodaj pierwsze ogłoszenie."` Code splits it into a `<p>Brak ogłoszeń.</p>` followed by a CTA `<a>Dodaj pierwsze ogłoszenie</a>`. Same text content; arguably better UX (the second half becomes a button instead of body copy). Worth noting only because it is a low-stakes deviation from a verbatim contract.
+- **Detail**: Plan specified one string: `"Brak ogłoszeń. Dodaj pierwsze ogłoszenie."` Code splits it: `<p>Brak ogłoszeń.</p>` + a CTA `<a>` labeled "Dodaj pierwsze ogłoszenie". Same content; arguably better UX (second half becomes actionable). Worth noting only as a low-stakes deviation from a verbatim contract.
 - **Fix**: None required — accept as a UX-positive deviation.
-- **Decision**: PENDING
+- **Decision**: FIXED + ACCEPTED-AS-RULE (lesson: "UX-positive deviations from a verbatim plan string are OK — but record them"). User opted to revert to verbatim copy; whole card wraps a single link to `/dashboard/listings/new` carrying the plan's exact string.
 
-### F7 — In-memory active-first sort is redundant with DB ordering
+### F7 — Dashboard fetch unbounded + redundant in-memory sort [FIXED + ACCEPTED-AS-RULE: Push ordering and bounds to the database, not the application]
 
 - **Severity**: 🔍 OBSERVATION
 - **Impact**: 🏃 LOW
 - **Dimension**: Performance
-- **Location**: src/pages/dashboard.astro:16, 21-25
-- **Detail**: Query orders by `created_at desc`, then JS re-sorts active-first. `Array.prototype.sort` is stable in modern engines, so the combined ordering is correct. A single DB-side ordering would be clearer.
-- **Fix**: Optional cleanup — replace the `.sort()` with a second `.order()` call on the supabase query:
-  ```ts
-  .order("status", { ascending: true })   // 'active' < 'done'
-  .order("created_at", { ascending: false });
-  ```
-- **Decision**: PENDING
+- **Location**: src/pages/dashboard.astro:16,21-25
+- **Detail**: `select("*").order("created_at", ...)` has no `.limit()` — fine at MVP scale, will need pagination eventually. The JS `.sort()` re-sorts active-first; folding that into the SQL order would be clearer and removes a stability dependency.
+- **Fix**: Add `.order("status", { ascending: true })` then `.order("created_at", { ascending: false })`, drop the JS sort, and add `.limit(100)` as a guardrail.
+- **Decision**: FIXED + ACCEPTED-AS-RULE (lesson: "Push ordering and bounds to the database, not the application"). Used `.overrideTypes<Listing[], { merge: false }>()` rather than the deprecated `.returns()`.
 
-## Notes on what was checked but not flagged
+### F8 — Auth check happens after field validation (inverts plan order) [FIXED + ACCEPTED-AS-RULE: Authenticate first, then validate — short-circuit unauthenticated requests at the door]
 
-- RLS + per-route `.eq("user_id", user.id)` — defense in depth is correctly applied across update/delete/edit
-- Astro auto-escaping covers all interpolated listing data (`{listing.address}`, etc.); no `set:html` directive used
-- `confirm()` in ListingCard.astro uses a static Polish string with no interpolation surface
-- `encodeURIComponent` used consistently on every `?error=` redirect across all three API routes
-- Auth gating (`supabase.auth.getUser()` + redirect on null) present in every API route
-- `formData.get(...) as string | null` cast is more defensive than the auth-route pattern — an improvement
-- Phase 1 migration is a verbatim match to the plan contract (10 columns, RLS policy, trigger)
-- Layout.astro `lang="pl"` fix landed correctly (line 14)
+- **Severity**: 🔍 OBSERVATION
+- **Impact**: 🏃 LOW
+- **Dimension**: Plan Adherence
+- **Location**: src/pages/api/listings/create.ts:12-29, src/pages/api/listings/[id]/update.ts (same pattern)
+- **Detail**: Plan contract orders steps as: getUser → validate. Implementation does validate → getUser, so an unauthenticated POST with bad input is redirected to the protected form page rather than directly to /auth/signin (middleware then re-redirects). No real security or UX harm, but it leaks "what fields the route validates" to unauthenticated callers.
+- **Fix**: Move `createClient` + `getUser` above the field-validation block.
+- **Decision**: FIXED + ACCEPTED-AS-RULE (lesson: "Authenticate first, then validate — short-circuit unauthenticated requests at the door"). Applied to both create.ts and update.ts.

@@ -65,7 +65,17 @@ const astroConfig = tseslint.config({
     "astro/no-set-html-directive": "error",
     "astro/no-unused-css-selector": "warn",
     "astro/prefer-class-list-directive": "warn",
-    // astro-eslint-parser crashes on return Astro.redirect() in frontmatter
+  },
+});
+
+// Narrow override: astro-eslint-parser crashes on `return Astro.redirect()` in
+// frontmatter. Disable only for files that use that pattern, so the rest of
+// the .astro surface keeps the misused-promise safety net.
+// Glob note: minimatch treats `[id]` as a character class — escape with `[[]id[]]`
+// to match the literal `[id]` segment in the dynamic-route path.
+const astroRedirectFrontmatterConfig = tseslint.config({
+  files: ["src/pages/dashboard/listings/[[]id[]]/edit.astro"],
+  rules: {
     "@typescript-eslint/no-misused-promises": "off",
   },
 });
@@ -77,5 +87,6 @@ export default tseslint.config(
   eslintPluginAstro.configs["flat/recommended"],
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
   astroConfig,
+  astroRedirectFrontmatterConfig,
   eslintPluginPrettier,
 );

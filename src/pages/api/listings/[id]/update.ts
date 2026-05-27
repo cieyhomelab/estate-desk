@@ -7,6 +7,18 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard?error=${encodeURIComponent("Brak identyfikatora ogłoszenia")}`);
   }
 
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) {
+    return context.redirect(`/dashboard?error=${encodeURIComponent("Błąd konfiguracji bazy danych")}`);
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return context.redirect("/auth/signin");
+  }
+
   const form = await context.request.formData();
   const type = (form.get("type") as string | null) ?? "";
   const address = ((form.get("address") as string | null) ?? "").trim();
@@ -21,18 +33,6 @@ export const POST: APIRoute = async (context) => {
   }
   if (!address) {
     return context.redirect(`/dashboard/listings/${id}/edit?error=${encodeURIComponent("Adres jest wymagany")}`);
-  }
-
-  const supabase = createClient(context.request.headers, context.cookies);
-  if (!supabase) {
-    return context.redirect(`/dashboard?error=${encodeURIComponent("Błąd konfiguracji bazy danych")}`);
-  }
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    return context.redirect("/auth/signin");
   }
 
   const { data, error } = await supabase

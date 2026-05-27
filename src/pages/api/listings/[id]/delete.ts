@@ -19,6 +19,9 @@ export const POST: APIRoute = async (context) => {
     return context.redirect("/auth/signin");
   }
 
+  // Intentionally no .select() — idempotent delete per plan listing-crud Phase 2
+  // ("idempotent — double-delete is not an error"). Diverges from update.ts on
+  // purpose; see context/foundation/lessons.md "Document intentional asymmetry".
   const { error } = await supabase.from("listings").delete().eq("id", id).eq("user_id", user.id);
 
   if (error) {

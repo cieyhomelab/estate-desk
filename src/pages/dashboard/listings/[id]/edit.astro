@@ -15,10 +15,17 @@ if (id && supabase) {
   } = await supabase.auth.getUser();
 
   if (user) {
-    const result = (await supabase.from("listings").select("*").eq("id", id).eq("user_id", user.id).single()) as {
-      data: Listing | null;
-    };
-    listing = result.data;
+    const { data, error: fetchError } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .single<Listing>();
+
+    if (fetchError && fetchError.code !== "PGRST116") {
+      return Astro.redirect(`/dashboard?error=${encodeURIComponent(fetchError.message)}`);
+    }
+    listing = data;
   }
 }
 
