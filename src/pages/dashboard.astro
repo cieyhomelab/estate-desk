@@ -13,15 +13,18 @@ let fetchError: string | null = null;
 if (!supabase) {
   fetchError = "Błąd konfiguracji bazy danych";
 } else {
-  const { data, error } = await supabase.from("listings").select("*").order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*")
+    .order("status", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(100)
+    .overrideTypes<Listing[], { merge: false }>();
 
   if (error) {
     fetchError = error.message;
   } else {
-    listings = (data as Listing[]).sort((a, b) => {
-      if (a.status === b.status) return 0;
-      return a.status === "active" ? -1 : 1;
-    });
+    listings = data;
   }
 }
 
@@ -46,15 +49,12 @@ const urlError = Astro.url.searchParams.get("error");
 
       {
         listings.length === 0 && !fetchError ? (
-          <div class="rounded-xl border border-white/10 bg-white/10 p-12 text-center backdrop-blur-xl">
-            <p class="text-blue-100/70">Brak ogłoszeń.</p>
-            <a
-              href="/dashboard/listings/new"
-              class="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-            >
-              Dodaj pierwsze ogłoszenie
-            </a>
-          </div>
+          <a
+            href="/dashboard/listings/new"
+            class="block rounded-xl border border-white/10 bg-white/10 p-12 text-center backdrop-blur-xl transition-colors hover:bg-white/15"
+          >
+            <p class="text-blue-100/70">Brak ogłoszeń. Dodaj pierwsze ogłoszenie.</p>
+          </a>
         ) : (
           <div class="grid gap-4 sm:grid-cols-2">
             {listings.map((listing) => (
