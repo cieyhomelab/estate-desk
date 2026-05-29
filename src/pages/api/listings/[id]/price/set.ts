@@ -2,11 +2,6 @@ import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 
 export const POST: APIRoute = async (context) => {
-  const id = context.params.id;
-  if (!id) {
-    return context.redirect(`/dashboard?error=${encodeURIComponent("Brak identyfikatora ogłoszenia")}`);
-  }
-
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
     return context.redirect(`/dashboard?error=${encodeURIComponent("Błąd konfiguracji bazy danych")}`);
@@ -17,6 +12,11 @@ export const POST: APIRoute = async (context) => {
   } = await supabase.auth.getUser();
   if (!user) {
     return context.redirect("/auth/signin");
+  }
+
+  const id = context.params.id;
+  if (!id) {
+    return context.redirect(`/dashboard?error=${encodeURIComponent("Brak identyfikatora ogłoszenia")}`);
   }
 
   const form = await context.request.formData();
@@ -34,7 +34,8 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/listings/${id}/pricing?error=blad-zapisu`);
   }
 
-  // Second write — denormalized cache of price_history. Sequential (not atomic) by design; retry is safe. See plan pricing-and-commission Phase 3.
+  // Second write — denormalized cache of price_history. Sequential (not atomic) by design; on failure here the
+  // price_history row is already committed. User must resubmit the form to reconcile. See plan pricing-and-commission Phase 3.
   const { error: updateError } = await supabase
     .from("listings")
     .update({ asking_price: parsedPrice })

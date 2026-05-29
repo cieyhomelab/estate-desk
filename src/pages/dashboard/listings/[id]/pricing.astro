@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
 import { createClient } from "@/lib/supabase";
+import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
 import type { PriceHistoryEntry, CommissionSettings } from "@/types/pricing";
 
@@ -75,6 +76,8 @@ if (hasValidCommission && commissionSettings) {
   const tax_cents = Math.round((gross_cents * commissionSettings.tax_rate) / 100);
   const agent_cents = gross_cents - tax_cents;
 
+  // Formula is algebraically exact by construction (agent_cents is the remainder, not independently rounded).
+  // Guard catches only malformed inputs that somehow escape the preceding validation.
   if (Math.abs(agency_cents + tax_cents + agent_cents - total_cents) <= 1) {
     breakdown = {
       total: total_cents / 100,
@@ -84,12 +87,6 @@ if (hasValidCommission && commissionSettings) {
       agentNet: agent_cents / 100,
     };
   }
-}
-
-function formatPLN(value: number): string {
-  const [whole, decimal] = value.toFixed(2).split(".");
-  const wholeFormatted = whole.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  return `${wholeFormatted},${decimal} zł`;
 }
 
 function formatDate(dateStr: string): string {

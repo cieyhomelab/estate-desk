@@ -23,7 +23,7 @@ create policy "owners_own_commission_settings" on commission_settings
 -- Reuse handle_updated_at() declared in the first migration (CREATE OR REPLACE).
 create trigger handle_commission_settings_updated_at
   before update on commission_settings
-  for each row execute function handle_updated_at();
+  for each row execute function public.handle_updated_at();
 
 -- price_history: append-only; no updated_at, no trigger needed
 create table price_history (

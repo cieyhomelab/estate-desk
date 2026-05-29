@@ -23,7 +23,9 @@ const { data: settings, error: fetchError } = await supabase
   .maybeSingle<CommissionSettings>();
 
 if (fetchError) {
-  return Astro.redirect("/dashboard?error=" + encodeURIComponent(fetchError.message));
+  return Astro.redirect(
+    "/dashboard?error=" + encodeURIComponent("Nie udało się pobrać ustawień prowizji. Spróbuj ponownie."),
+  );
 }
 
 const error = Astro.url.searchParams.get("error");
@@ -42,7 +44,11 @@ const error = Astro.url.searchParams.get("error");
         {
           error && (
             <Banner variant="error">
-              {error === "stawki-nieprawidlowe" ? "Stawki muszą być liczbami z zakresu 0–100." : error}
+              {error === "stawki-nieprawidlowe"
+                ? "Stawki muszą być liczbami z zakresu 0–100."
+                : error === "blad-zapisu"
+                  ? "Nie udało się zapisać ustawień. Spróbuj ponownie."
+                  : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."}
             </Banner>
           )
         }

@@ -39,7 +39,7 @@ export const POST: APIRoute = async (context) => {
     .upsert({ user_id: user.id, tax_rate, agency_percent }, { onConflict: "user_id" });
 
   if (error) {
-    return context.redirect("/dashboard/settings/commission?error=" + encodeURIComponent(error.message));
+    return context.redirect("/dashboard/settings/commission?error=blad-zapisu");
   }
 
   return context.redirect("/dashboard/settings/commission");

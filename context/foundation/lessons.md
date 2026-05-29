@@ -81,3 +81,23 @@
 **Rule:** Every mutation route does auth first: build the supabase/db client, call `getUser()` (or equivalent), redirect/401 if unauthenticated. Only after that branch is cleared, parse and validate body fields. The pattern reads as: `client → user → (parse body) → validate → mutate`.
 
 **Applies to:** All `src/pages/api/**` Astro API routes and any handler that performs a user-scoped mutation. Re-check at `/10x-impl-review`.
+
+## Map internal DB errors to safe Polish strings before surfacing to the user
+
+**Context:** `src/pages/api/**` Astro API routes and `.astro` pages that call supabase-js and surface errors to users via `?error=` query-param redirects.
+
+**Problem:** `error.message` from supabase-js calls (PostgREST constraint violations, RLS failures, network errors) is placed raw into the redirect URL and rendered verbatim in the UI banner. The strings are internal English messages like "new row for relation X violates check constraint Y" — not suitable for user-facing Polish UI.
+
+**Rule:** Map known DB/API errors to a safe, Polish-language error code before redirecting (e.g., `?error=blad-zapisu`). For unexpected errors, use a generic Polish fallback ("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.") rather than passing `error.message` through. The `.astro` page maps the code to a human-readable string in Polish.
+
+**Applies to:** All `src/pages/api/**` routes that redirect with `?error=encodeURIComponent(error.message)` and any `.astro` page that renders the `?error=` param in a banner. Re-check at `/10x-impl-review`.
+
+## Schema-qualify function references in CREATE TRIGGER
+
+**Context:** `supabase/migrations/*.sql` — any `CREATE TRIGGER ... EXECUTE FUNCTION` call that references a trigger function by name.
+
+**Problem:** `EXECUTE FUNCTION handle_updated_at()` resolves the function using the session's `search_path` at trigger-creation time. If a migration runs in a strict-search_path environment (e.g. `search_path = ''`), the unqualified name fails to resolve and the migration aborts. The lesson already requires `SET search_path = ''` on every `CREATE FUNCTION`; the same discipline should apply to the function reference in the trigger.
+
+**Rule:** Always schema-qualify the function name in `EXECUTE FUNCTION` — use `public.handle_updated_at()` (or whichever schema the function lives in), not just `handle_updated_at()`. Idempotent and portable.
+
+**Applies to:** All `supabase/migrations/*.sql` files that create a trigger. Re-check at `/10x-plan` (when designing a migration) and `/10x-impl-review` (when reviewing one).

@@ -1,5 +1,6 @@
 ---
 import type { Listing } from "@/types/listings";
+import { formatPLN } from "@/lib/utils";
 
 interface Props {
   listing: Listing;
@@ -9,12 +10,6 @@ const { listing } = Astro.props;
 
 const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem okazjonalny";
 const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
-
-function formatPLN(value: number): string {
-  const [whole, decimal] = value.toFixed(2).split(".");
-  const wholeFormatted = whole.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  return `${wholeFormatted},${decimal} zł`;
-}
 ---
 
 <div class="rounded-xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl">
