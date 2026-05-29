@@ -327,22 +327,22 @@ The `ALTER TABLE listings ADD COLUMN asking_price NUMERIC(12,2)` is safe on an e
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles: `npm run typecheck` passes
-- [x] 2.2 Linting passes: `npm run lint` passes
+- [x] 2.1 TypeScript compiles: `npm run typecheck` passes — 1e3befc
+- [x] 2.2 Linting passes: `npm run lint` passes — 1e3befc
 
 #### Manual
 
-- [ ] 2.3 First visit to `/dashboard/settings/commission` shows form with zero defaults
-- [ ] 2.4 Save → revisit shows saved values
-- [ ] 2.5 Invalid rate (e.g., 101) → Polish error banner shown
-- [ ] 2.6 Nav link on dashboard navigates to settings page
+- [x] 2.3 First visit to `/dashboard/settings/commission` shows form with zero defaults — 1e3befc
+- [x] 2.4 Save → revisit shows saved values — 1e3befc
+- [x] 2.5 Invalid rate (e.g., 101) → Polish error banner shown — 1e3befc
+- [x] 2.6 Nav link on dashboard navigates to settings page — 1e3befc
 
 ### Phase 3: Listing Pricing Page and Price-Set API
 
 #### Automated
 
-- [ ] 3.1 TypeScript compiles: `npm run typecheck` passes
-- [ ] 3.2 Linting passes: `npm run lint` passes
+- [x] 3.1 TypeScript compiles: `npm run typecheck` passes
+- [x] 3.2 Linting passes: `npm run lint` passes
 
 #### Manual
 

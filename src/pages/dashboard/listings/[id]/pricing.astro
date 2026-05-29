@@ -1,0 +1,247 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Banner from "@/components/Banner.astro";
+import { createClient } from "@/lib/supabase";
+import type { Listing } from "@/types/listings";
+import type { PriceHistoryEntry, CommissionSettings } from "@/types/pricing";
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let listing: Listing | null = null;
+let priceHistory: PriceHistoryEntry[] = [];
+let commissionSettings: CommissionSettings | null = null;
+
+if (id && supabase) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data, error: listingError } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .single<Listing>();
+
+    if (listingError && listingError.code !== "PGRST116") {
+      return Astro.redirect(`/dashboard?error=${encodeURIComponent("Błąd podczas pobierania ogłoszenia")}`);
+    }
+    listing = data;
+
+    if (listing) {
+      const { data: historyData } = await supabase
+        .from("price_history")
+        .select("*")
+        .eq("listing_id", id)
+        .order("set_at", { ascending: false })
+        .limit(100)
+        .overrideTypes<PriceHistoryEntry[], { merge: false }>();
+      priceHistory = historyData ?? [];
+
+      const { data: settingsData } = await supabase
+        .from("commission_settings")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle<CommissionSettings>();
+      commissionSettings = settingsData;
+    }
+  }
+}
+
+if (!listing) {
+  return Astro.redirect("/dashboard");
+}
+
+const commissionParam = Astro.url.searchParams.get("commission");
+const commissionTotal = commissionParam !== null ? parseFloat(commissionParam) : NaN;
+const hasValidCommission = isFinite(commissionTotal) && commissionTotal > 0;
+
+interface CommissionBreakdown {
+  total: number;
+  agency: number;
+  gross: number;
+  tax: number;
+  agentNet: number;
+}
+
+let breakdown: CommissionBreakdown | null = null;
+
+if (hasValidCommission && commissionSettings) {
+  const total_cents = Math.round(commissionTotal * 100);
+  const agency_cents = Math.round((total_cents * commissionSettings.agency_percent) / 100);
+  const gross_cents = total_cents - agency_cents;
+  const tax_cents = Math.round((gross_cents * commissionSettings.tax_rate) / 100);
+  const agent_cents = gross_cents - tax_cents;
+
+  if (Math.abs(agency_cents + tax_cents + agent_cents - total_cents) <= 1) {
+    breakdown = {
+      total: total_cents / 100,
+      agency: agency_cents / 100,
+      gross: gross_cents / 100,
+      tax: tax_cents / 100,
+      agentNet: agent_cents / 100,
+    };
+  }
+}
+
+function formatPLN(value: number): string {
+  const [whole, decimal] = value.toFixed(2).split(".");
+  const wholeFormatted = whole.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return `${wholeFormatted},${decimal} zł`;
+}
+
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  return `${d.getUTCDate().toString().padStart(2, "0")}.${(d.getUTCMonth() + 1).toString().padStart(2, "0")}.${d.getUTCFullYear()}`;
+}
+
+const error = Astro.url.searchParams.get("error");
+const success = Astro.url.searchParams.get("success");
+---
+
+<Layout title="Cena i prowizja — EstateDesk">
+  <div class="bg-cosmic min-h-screen p-6">
+    <div class="mx-auto max-w-lg">
+      <a
+        href={`/dashboard/listings/${listing.id}/edit`}
+        class="mb-6 inline-block text-sm text-blue-200/70 transition-colors hover:text-blue-200"
+      >
+        ← Powrót do edycji
+      </a>
+
+      {
+        error && (
+          <Banner variant="error">
+            {error === "cena-nieprawidlowa"
+              ? "Cena musi być liczbą większą od zera z co najwyżej dwoma miejscami po przecinku."
+              : error === "blad-zapisu"
+                ? "Nie udało się zapisać ceny. Spróbuj ponownie."
+                : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."}
+          </Banner>
+        )
+      }
+
+      {success === "cena-zapisana" && <Banner variant="info">Cena została pomyślnie zapisana.</Banner>}
+
+      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-4 text-xl font-bold text-white">Cena wywoławcza</h2>
+        <p class="mb-4 text-lg text-blue-100/70">
+          {listing.asking_price ? formatPLN(listing.asking_price) : "Nie ustalono"}
+        </p>
+        <form method="POST" action={`/api/listings/${id}/price/set`} class="space-y-4">
+          <div>
+            <label for="price" class="mb-1 block text-sm font-medium text-blue-100/80">Nowa cena (PLN)</label>
+            <input
+              id="price"
+              type="number"
+              name="price"
+              step="0.01"
+              min="0.01"
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Ustaw cenę
+          </button>
+        </form>
+      </div>
+
+      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-4 text-xl font-bold text-white">Historia cen</h2>
+        {
+          priceHistory.length === 0 ? (
+            <p class="text-blue-100/70">Brak historii cen.</p>
+          ) : (
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-white/10">
+                  <th class="pb-2 text-left font-medium text-blue-100/50">Data</th>
+                  <th class="pb-2 text-right font-medium text-blue-100/50">Cena</th>
+                </tr>
+              </thead>
+              <tbody>
+                {priceHistory.map((entry) => (
+                  <tr class="border-b border-white/5 last:border-0">
+                    <td class="py-2 text-blue-100/70">{formatDate(entry.set_at)}</td>
+                    <td class="py-2 text-right text-white">{formatPLN(entry.price)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )
+        }
+      </div>
+
+      <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-4 text-xl font-bold text-white">Kalkulator prowizji</h2>
+        {
+          !commissionSettings ? (
+            <p class="text-blue-100/70">
+              Aby obliczyć prowizję, skonfiguruj stawki w{" "}
+              <a href="/dashboard/settings/commission" class="text-blue-400 underline hover:text-blue-300">
+                ustawieniach konta
+              </a>
+              .
+            </p>
+          ) : (
+            <div>
+              <form method="GET" class="mb-6 space-y-4">
+                <div>
+                  <label for="commission" class="mb-1 block text-sm font-medium text-blue-100/80">
+                    Prowizja ogółem (PLN)
+                  </label>
+                  <input
+                    id="commission"
+                    type="number"
+                    name="commission"
+                    step="0.01"
+                    min="0.01"
+                    value={commissionParam ?? ""}
+                    class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                >
+                  Oblicz
+                </button>
+              </form>
+              {breakdown && (
+                <table class="w-full text-sm">
+                  <tbody>
+                    <tr class="border-b border-white/10">
+                      <td class="py-2 text-blue-100/70">Prowizja ogółem</td>
+                      <td class="py-2 text-right text-white">{formatPLN(breakdown.total)}</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-2 text-blue-100/70">Część agencji</td>
+                      <td class="py-2 text-right text-white">{formatPLN(breakdown.agency)}</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-2 text-blue-100/70">Dochód brutto</td>
+                      <td class="py-2 text-right text-white">{formatPLN(breakdown.gross)}</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-2 text-blue-100/70">Rezerwa podatkowa</td>
+                      <td class="py-2 text-right text-white">{formatPLN(breakdown.tax)}</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 font-medium text-white">Dochód netto agenta</td>
+                      <td class="py-2 text-right font-bold text-white">{formatPLN(breakdown.agentNet)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

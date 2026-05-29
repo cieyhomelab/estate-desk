@@ -9,6 +9,12 @@ const { listing } = Astro.props;
 
 const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem okazjonalny";
 const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
+
+function formatPLN(value: number): string {
+  const [whole, decimal] = value.toFixed(2).split(".");
+  const wholeFormatted = whole.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return `${wholeFormatted},${decimal} zł`;
+}
 ---
 
 <div class="rounded-xl border border-white/10 bg-white/10 p-5 backdrop-blur-xl">
@@ -29,14 +35,24 @@ const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
     </div>
   </div>
 
-  {listing.owner_name && <p class="mb-4 text-sm text-blue-100/70">{listing.owner_name}</p>}
+  {listing.owner_name && <p class="mb-1 text-sm text-blue-100/70">{listing.owner_name}</p>}
 
-  <div class="flex gap-2">
+  <p class="mb-4 text-sm font-medium text-white/80">
+    {listing.asking_price ? formatPLN(listing.asking_price) : "Brak ceny"}
+  </p>
+
+  <div class="flex flex-wrap gap-2">
     <a
       href={`/dashboard/listings/${listing.id}/edit`}
       class="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
     >
       Edytuj
+    </a>
+    <a
+      href={`/dashboard/listings/${listing.id}/pricing`}
+      class="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
+    >
+      Cena i prowizja
     </a>
     <form method="POST" action={`/api/listings/${listing.id}/delete`}>
       <button

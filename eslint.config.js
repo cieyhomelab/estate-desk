@@ -73,8 +73,14 @@ const astroConfig = tseslint.config({
 // the .astro surface keeps the misused-promise safety net.
 // Glob note: minimatch treats `[id]` as a character class — escape with `[[]id[]]`
 // to match the literal `[id]` segment in the dynamic-route path.
+// Maintenance: every new .astro page that uses `return Astro.redirect()` in
+// its frontmatter must be added to the `files` list below explicitly.
 const astroRedirectFrontmatterConfig = tseslint.config({
-  files: ["src/pages/dashboard/listings/[[]id[]]/edit.astro", "src/pages/dashboard/settings/commission.astro"],
+  files: [
+    "src/pages/dashboard/listings/[[]id[]]/edit.astro",
+    "src/pages/dashboard/listings/[[]id[]]/pricing.astro",
+    "src/pages/dashboard/settings/commission.astro",
+  ],
   rules: {
     "@typescript-eslint/no-misused-promises": "off",
   },
