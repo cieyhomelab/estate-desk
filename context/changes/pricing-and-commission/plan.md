@@ -341,14 +341,14 @@ The `ALTER TABLE listings ADD COLUMN asking_price NUMERIC(12,2)` is safe on an e
 
 #### Automated
 
-- [x] 3.1 TypeScript compiles: `npm run typecheck` passes
-- [x] 3.2 Linting passes: `npm run lint` passes
+- [x] 3.1 TypeScript compiles: `npm run typecheck` passes — 11ed58b
+- [x] 3.2 Linting passes: `npm run lint` passes — 11ed58b
 
 #### Manual
 
-- [ ] 3.3 Set price → history table updated, dashboard card updated
-- [ ] 3.4 Second price set → history shows two entries newest-first
-- [ ] 3.5 Another user's listing pricing page → redirect to dashboard
-- [ ] 3.6 No commission settings → inline notice with settings link
-- [ ] 3.7 Commission calculator with tax=20 agency=50 total=10000 → correct breakdown
-- [ ] 3.8 Invalid price (0 or negative) → Polish error banner
+- [x] 3.3 Set price → history table updated, dashboard card updated — 11ed58b
+- [x] 3.4 Second price set → history shows two entries newest-first — 11ed58b
+- [x] 3.5 Another user's listing pricing page → redirect to dashboard — 11ed58b
+- [x] 3.6 No commission settings → inline notice with settings link — 11ed58b
+- [x] 3.7 Commission calculator with tax=20 agency=50 total=10000 → correct breakdown — 11ed58b
+- [x] 3.8 Invalid price (0 or negative) → Polish error banner — 11ed58b
