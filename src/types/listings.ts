@@ -12,4 +12,5 @@ export interface Listing {
   owner_email: string | null;
   created_at: string;
   updated_at: string;
+  asking_price: number | null;
 }
