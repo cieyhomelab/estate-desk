@@ -313,22 +313,22 @@ The `ALTER TABLE listings ADD COLUMN asking_price NUMERIC(12,2)` is safe on an e
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset` completes without errors
-- [x] 1.2 TypeScript compiles: `npm run typecheck` passes
-- [x] 1.3 Linting passes: `npm run lint` passes
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` completes without errors — 49c8a2b
+- [x] 1.2 TypeScript compiles: `npm run typecheck` passes — 49c8a2b
+- [x] 1.3 Linting passes: `npm run lint` passes — 49c8a2b
 
 #### Manual
 
-- [x] 1.4 Supabase Studio shows `commission_settings` and `price_history` tables with RLS enabled
-- [x] 1.5 `listings` table shows nullable `asking_price` column
-- [x] 1.6 Constraint violation on `tax_rate` outside 0–100 confirmed
+- [x] 1.4 Supabase Studio shows `commission_settings` and `price_history` tables with RLS enabled — 49c8a2b
+- [x] 1.5 `listings` table shows nullable `asking_price` column — 49c8a2b
+- [x] 1.6 Constraint violation on `tax_rate` outside 0–100 confirmed — 49c8a2b
 
 ### Phase 2: Commission Settings Page and API
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles: `npm run typecheck` passes
-- [ ] 2.2 Linting passes: `npm run lint` passes
+- [x] 2.1 TypeScript compiles: `npm run typecheck` passes
+- [x] 2.2 Linting passes: `npm run lint` passes
 
 #### Manual
 

@@ -36,12 +36,20 @@ const urlError = Astro.url.searchParams.get("error");
     <div class="mx-auto max-w-4xl">
       <div class="mb-6 flex items-center justify-between">
         <h1 class="text-2xl font-bold text-white">Ogłoszenia</h1>
-        <a
-          href="/dashboard/listings/new"
-          class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-        >
-          + Nowe ogłoszenie
-        </a>
+        <div class="flex items-center gap-3">
+          <a
+            href="/dashboard/settings/commission"
+            class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+          >
+            Ustawienia
+          </a>
+          <a
+            href="/dashboard/listings/new"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            + Nowe ogłoszenie
+          </a>
+        </div>
       </div>
 
       {urlError && <Banner variant="error">{urlError}</Banner>}

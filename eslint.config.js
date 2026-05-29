@@ -74,7 +74,7 @@ const astroConfig = tseslint.config({
 // Glob note: minimatch treats `[id]` as a character class — escape with `[[]id[]]`
 // to match the literal `[id]` segment in the dynamic-route path.
 const astroRedirectFrontmatterConfig = tseslint.config({
-  files: ["src/pages/dashboard/listings/[[]id[]]/edit.astro"],
+  files: ["src/pages/dashboard/listings/[[]id[]]/edit.astro", "src/pages/dashboard/settings/commission.astro"],
   rules: {
     "@typescript-eslint/no-misused-promises": "off",
   },
