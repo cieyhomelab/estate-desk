@@ -1,0 +1,203 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Banner from "@/components/Banner.astro";
+import { createClient } from "@/lib/supabase";
+import type { Listing } from "@/types/listings";
+import type { ListingDocument } from "@/types/documents";
+
+type ListingForDocuments = Pick<Listing, "id" | "type" | "address" | "status"> & { checklist_override: boolean };
+interface DocOverrideOpts {
+  merge: false;
+}
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+if (!id || !supabase) {
+  return Astro.redirect("/auth/signin");
+}
+
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (!user) {
+  return Astro.redirect("/auth/signin");
+}
+
+const { data: listing, error: listingError } = await supabase
+  .from("listings")
+  .select("id, type, address, status, checklist_override")
+  .eq("id", id)
+  .eq("user_id", user.id)
+  .maybeSingle<ListingForDocuments>();
+
+if (listingError || !listing) {
+  return Astro.redirect("/dashboard?error=nie-znaleziono");
+}
+
+const { data: documents } = await supabase
+  .from("listing_documents")
+  .select("*")
+  .eq("listing_id", id)
+  .order("position")
+  .order("created_at")
+  .limit(50)
+  .overrideTypes<ListingDocument[], DocOverrideOpts>();
+
+const docs = documents ?? [];
+
+const error = Astro.url.searchParams.get("error");
+const success = Astro.url.searchParams.get("success");
+---
+
+<Layout title="Dokumenty i zdjęcia — EstateDesk">
+  <div class="bg-cosmic min-h-screen p-6">
+    <div class="mx-auto max-w-lg">
+      <div class="mb-6 flex items-center justify-between">
+        <a href="/dashboard" class="text-sm text-blue-200/70 transition-colors hover:text-blue-200">← Powrót</a>
+      </div>
+
+      <div class="mb-6 flex gap-4 border-b border-white/10 pb-4">
+        <a
+          href={`/dashboard/listings/${listing.id}/edit`}
+          class="text-sm text-blue-200/70 transition-colors hover:text-blue-200"
+        >
+          Edytuj
+        </a>
+        <a
+          href={`/dashboard/listings/${listing.id}/pricing`}
+          class="text-sm text-blue-200/70 transition-colors hover:text-blue-200"
+        >
+          Cena i prowizja
+        </a>
+        <span class="text-sm font-medium text-white">Dokumenty i zdjęcia</span>
+      </div>
+
+      {
+        error && (
+          <Banner variant="error">
+            {error === "nieprawidlowa-nazwa"
+              ? "Nazwa dokumentu nie może być pusta ani dłuższa niż 500 znaków."
+              : error === "blad-zapisu"
+                ? "Nie udało się zapisać. Spróbuj ponownie."
+                : error === "blad-usuniecia"
+                  ? "Nie udało się usunąć. Spróbuj ponownie."
+                  : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."}
+          </Banner>
+        )
+      }
+      {success === "dodano" && <Banner variant="info">Dokument został dodany.</Banner>}
+      {success === "usunieto" && <Banner variant="info">Dokument został usunięty.</Banner>}
+      {success === "zapisano" && <Banner variant="info">Ustawienia zostały zapisane.</Banner>}
+
+      <!-- Checklist section -->
+      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-4 text-xl font-bold text-white">Lista dokumentów</h2>
+
+        {
+          docs.length === 0 ? (
+            <p class="mb-4 text-blue-100/70">Brak dokumentów na liście.</p>
+          ) : (
+            <ul class="mb-6 space-y-2">
+              {docs.map((doc) => (
+                <li class="flex items-center justify-between gap-3">
+                  <form
+                    method="POST"
+                    action={`/api/listings/${id}/documents/${doc.id}/toggle`}
+                    class="flex items-center gap-3"
+                  >
+                    <input type="hidden" name="checked" value={String(!doc.is_checked)} />
+                    <button
+                      type="submit"
+                      class:list={[
+                        "h-5 w-5 shrink-0 rounded border transition-colors",
+                        doc.is_checked
+                          ? "border-blue-400 bg-blue-500/40"
+                          : "border-white/30 bg-white/10 hover:border-white/50",
+                      ]}
+                      aria-label={doc.is_checked ? "Odznacz" : "Zaznacz"}
+                    >
+                      {doc.is_checked && <span class="flex items-center justify-center text-xs text-white">✓</span>}
+                    </button>
+                    <span
+                      class:list={["text-sm", doc.is_checked ? "text-blue-100/50 line-through" : "text-blue-100/90"]}
+                    >
+                      {doc.label}
+                    </span>
+                  </form>
+                  <form method="POST" action={`/api/listings/${id}/documents/${doc.id}/delete`}>
+                    <button
+                      type="submit"
+                      class="text-xs text-red-400/70 transition-colors hover:text-red-300"
+                      aria-label="Usuń"
+                    >
+                      Usuń
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <form method="POST" action={`/api/listings/${id}/documents/add`} class="flex gap-2">
+          <input
+            type="text"
+            name="label"
+            placeholder="Dodaj dokument..."
+            maxlength="500"
+            class="flex-1 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          />
+          <button
+            type="submit"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Dodaj
+          </button>
+        </form>
+      </div>
+
+      <!-- Override section -->
+      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-2 text-xl font-bold text-white">Pominięcie weryfikacji</h2>
+        <p class="mb-4 text-sm text-yellow-300/80">
+          Uwaga: włączenie tej opcji pozwoli zamknąć transakcję bez kompletnej listy dokumentów.
+        </p>
+        <form method="POST" action={`/api/listings/${id}/documents/override`} class="flex items-center gap-3">
+          <input type="hidden" name="override" value={String(!listing.checklist_override)} />
+          <button
+            type="submit"
+            class:list={[
+              "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none",
+              listing.checklist_override ? "bg-blue-600" : "bg-white/20",
+            ]}
+            role="switch"
+            aria-checked={listing.checklist_override}
+          >
+            <span
+              class:list={[
+                "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                listing.checklist_override ? "translate-x-6" : "translate-x-1",
+              ]}></span>
+          </button>
+          <span class="text-sm text-blue-100/80">
+            {listing.checklist_override ? "Pominięcie aktywne" : "Pominięcie nieaktywne"}
+          </span>
+        </form>
+      </div>
+
+      <!-- Photos section — Phase 3 placeholder -->
+      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-4 text-xl font-bold text-white">Zdjęcia</h2>
+        <p class="text-sm text-blue-100/50">Sekcja zdjęć zostanie dodana w następnej fazie.</p>
+      </div>
+
+      <!-- Files section — Phase 3 placeholder -->
+      <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+        <h2 class="mb-4 text-xl font-bold text-white">Pliki dokumentów</h2>
+        <p class="text-sm text-blue-100/50">Sekcja plików zostanie dodana w następnej fazie.</p>
+      </div>
+    </div>
+  </div>
+</Layout>

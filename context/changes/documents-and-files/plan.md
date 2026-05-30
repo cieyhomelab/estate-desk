@@ -353,33 +353,33 @@ Add Supabase Storage upload and delete for listing photos (multi-file, public bu
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` completes without error
-- [x] 1.2 `npm run typecheck` passes after adding `src/types/documents.ts`
+- [x] 1.1 `npx supabase db reset` completes without error — 56d667b
+- [x] 1.2 `npm run typecheck` passes after adding `src/types/documents.ts` — 56d667b
 
 #### Manual
 
-- [x] 1.3 Sale listing creates 8 `listing_documents` rows (verified in Supabase Studio)
-- [x] 1.4 Najem okazjonalny listing creates 5 `listing_documents` rows
-- [x] 1.5 `listings.checklist_override` column visible, defaults to `false`
-- [x] 1.6 Two storage buckets visible in Supabase Studio
+- [x] 1.3 Sale listing creates 8 `listing_documents` rows (verified in Supabase Studio) — 56d667b
+- [x] 1.4 Najem okazjonalny listing creates 5 `listing_documents` rows — 56d667b
+- [x] 1.5 `listings.checklist_override` column visible, defaults to `false` — 56d667b
+- [x] 1.6 Two storage buckets visible in Supabase Studio — 56d667b
 
 ### Phase 2: Document Checklist
 
 #### Automated
 
-- [ ] 2.1 `npm run typecheck` passes
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npm run typecheck` passes
+- [x] 2.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.3 Sale listing Documents tab shows 8 pre-populated items
-- [ ] 2.4 Check / uncheck item — state persists on reload
-- [ ] 2.5 Add custom item — appears at bottom of checklist
-- [ ] 2.6 Delete item — removed from list
-- [ ] 2.7 Toggle override — `listings.checklist_override` flips in DB
-- [ ] 2.8 Edit → Pricing → Documents navigation chain works
-- [ ] 2.9 ListingCard "Dokumenty i zdjęcia" button navigates correctly
-- [ ] 2.10 Error banner shown for empty add-item input
+- [x] 2.3 Sale listing Documents tab shows 8 pre-populated items
+- [x] 2.4 Check / uncheck item — state persists on reload
+- [x] 2.5 Add custom item — appears at bottom of checklist
+- [x] 2.6 Delete item — removed from list
+- [x] 2.7 Toggle override — `listings.checklist_override` flips in DB
+- [x] 2.8 Edit → Pricing → Documents navigation chain works
+- [x] 2.9 ListingCard "Dokumenty i zdjęcia" button navigates correctly
+- [x] 2.10 Error banner shown for empty add-item input
 
 ### Phase 3: Photo & File Uploads
 
