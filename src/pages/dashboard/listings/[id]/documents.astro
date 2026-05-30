@@ -3,7 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
 import { createClient } from "@/lib/supabase";
 import type { Listing } from "@/types/listings";
-import type { ListingDocument } from "@/types/documents";
+import type { ListingDocument, ListingFile, ListingPhoto } from "@/types/documents";
 
 type ListingForDocuments = Pick<Listing, "id" | "type" | "address" | "status"> & { checklist_override: boolean };
 interface DocOverrideOpts {
@@ -46,6 +46,33 @@ const { data: documents } = await supabase
   .overrideTypes<ListingDocument[], DocOverrideOpts>();
 
 const docs = documents ?? [];
+
+const { data: photosData } = await supabase
+  .from("listing_photos")
+  .select("*")
+  .eq("listing_id", id)
+  .order("created_at")
+  .limit(100)
+  .overrideTypes<ListingPhoto[], DocOverrideOpts>();
+const photos = photosData ?? [];
+
+const photoPublicUrls = photos.map((p) => {
+  const { data } = supabase.storage.from("listing-photos").getPublicUrl(p.storage_path);
+  return data.publicUrl;
+});
+
+const { data: filesData } = await supabase
+  .from("listing_files")
+  .select("*")
+  .eq("listing_id", id)
+  .order("created_at")
+  .limit(100)
+  .overrideTypes<ListingFile[], DocOverrideOpts>();
+const files = filesData ?? [];
+
+const signedUrls = await Promise.all(
+  files.map((f) => supabase.storage.from("listing-documents").createSignedUrl(f.storage_path, 3600)),
+);
 
 const error = Astro.url.searchParams.get("error");
 const success = Astro.url.searchParams.get("success");
@@ -187,16 +214,114 @@ const success = Astro.url.searchParams.get("success");
         </form>
       </div>
 
-      <!-- Photos section — Phase 3 placeholder -->
+      <!-- Photos section -->
       <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
         <h2 class="mb-4 text-xl font-bold text-white">Zdjęcia</h2>
-        <p class="text-sm text-blue-100/50">Sekcja zdjęć zostanie dodana w następnej fazie.</p>
+
+        {success === "dodano-zdjecia" && <Banner variant="info">Zdjęcia zostały dodane.</Banner>}
+        {error === "brak-plikow" && <Banner variant="error">Nie wybrano żadnego pliku.</Banner>}
+        {error === "nieprawidlowy-typ" && <Banner variant="error">Wybierz plik graficzny (JPG, PNG itp.).</Banner>}
+        {error === "blad-uploadu" && <Banner variant="error">Nie udało się przesłać pliku. Spróbuj ponownie.</Banner>}
+
+        {
+          photos.length === 0 ? (
+            <p class="mb-4 text-sm text-blue-100/50">Brak zdjęć. Dodaj pierwsze zdjęcie.</p>
+          ) : (
+            <div class="mb-4 grid grid-cols-3 gap-3">
+              {photos.map((photo, i) => (
+                <div class="relative">
+                  <img src={photoPublicUrls[i]} alt={photo.file_name} class="h-24 w-full rounded-lg object-cover" />
+                  <form
+                    method="POST"
+                    action={`/api/listings/${id}/photos/${photo.id}/delete`}
+                    class="absolute top-1 right-1"
+                  >
+                    <button
+                      type="submit"
+                      class="rounded bg-black/60 px-1.5 py-0.5 text-xs text-red-300 hover:bg-black/80"
+                    >
+                      Usuń
+                    </button>
+                  </form>
+                </div>
+              ))}
+            </div>
+          )
+        }
+
+        <form
+          method="POST"
+          action={`/api/listings/${id}/photos/upload`}
+          enctype="multipart/form-data"
+          class="flex items-center gap-3"
+        >
+          <input
+            type="file"
+            name="photos"
+            multiple
+            accept="image/*"
+            class="flex-1 text-sm text-blue-100/80 file:mr-3 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-1.5 file:text-sm file:text-white file:hover:bg-blue-700"
+          />
+          <button
+            type="submit"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Prześlij
+          </button>
+        </form>
       </div>
 
-      <!-- Files section — Phase 3 placeholder -->
+      <!-- Files section -->
       <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
         <h2 class="mb-4 text-xl font-bold text-white">Pliki dokumentów</h2>
-        <p class="text-sm text-blue-100/50">Sekcja plików zostanie dodana w następnej fazie.</p>
+
+        {success === "dodano-plik" && <Banner variant="info">Plik został dodany.</Banner>}
+        {error === "brak-pliku" && <Banner variant="error">Nie wybrano żadnego pliku.</Banner>}
+
+        {
+          files.length === 0 ? (
+            <p class="mb-4 text-sm text-blue-100/50">Brak plików. Dodaj pierwszy plik.</p>
+          ) : (
+            <ul class="mb-4 space-y-2">
+              {files.map((file, i) => (
+                <li class="flex items-center justify-between gap-3">
+                  <a
+                    href={signedUrls[i]?.data?.signedUrl ?? "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-blue-300 underline hover:text-blue-200"
+                  >
+                    {file.file_name}
+                  </a>
+                  <form method="POST" action={`/api/listings/${id}/files/${file.id}/delete`}>
+                    <button type="submit" class="text-xs text-red-400/70 transition-colors hover:text-red-300">
+                      Usuń
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <form
+          method="POST"
+          action={`/api/listings/${id}/files/upload`}
+          enctype="multipart/form-data"
+          class="flex items-center gap-3"
+        >
+          <input
+            type="file"
+            name="file"
+            class="flex-1 text-sm text-blue-100/80 file:mr-3 file:rounded file:border-0 file:bg-blue-600 file:px-3 file:py-1.5 file:text-sm file:text-white file:hover:bg-blue-700"
+          />
+          <button
+            type="submit"
+            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Prześlij
+          </button>
+        </form>
       </div>
     </div>
   </div>
