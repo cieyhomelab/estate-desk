@@ -295,8 +295,6 @@ No unit tests — consistent with prior slices; manual verification is the accep
 - [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports — 3de04f8
 - [x] 3.2 `npm run lint` passes — 7f87435  <!-- See 2.2 note: contact-management files lint clean; pre-existing S-03 pricing/commission errors are out of scope. -->
 
-
-
 #### Manual
 
 - [ ] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links
