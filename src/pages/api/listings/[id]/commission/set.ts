@@ -24,11 +24,7 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/listings/${id}/pricing?error=prowizja-nieprawidlowa`);
   }
 
-  const { error } = await supabase
-    .from("listings")
-    .update({ commission_percent })
-    .eq("id", id)
-    .eq("user_id", user.id);
+const { error } = await supabase.from("listings").update({ commission_percent }).eq("id", id).eq("user_id", user.id);
 
   if (error) {
     return context.redirect(`/dashboard/listings/${id}/pricing?error=blad-zapisu`);
