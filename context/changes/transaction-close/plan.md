@@ -331,30 +331,30 @@ None in this slice.
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` completes without error
-- [x] 1.2 `npm run typecheck` passes after adding `src/types/transaction.ts` and extending `Listing` type
+- [x] 1.1 `npx supabase db reset` completes without error — 3958833
+- [x] 1.2 `npm run typecheck` passes after adding `src/types/transaction.ts` and extending `Listing` type — 3958833
 
 #### Manual
 
-- [x] 1.3 Five new nullable columns visible on `listings` table in Supabase Studio
-- [x] 1.4 `transaction_snapshots` table exists with all columns and RLS enabled
+- [x] 1.3 Five new nullable columns visible on `listings` table in Supabase Studio — 3958833
+- [x] 1.4 `transaction_snapshots` table exists with all columns and RLS enabled — 3958833
 
 ### Phase 2: Close Transaction Flow
 
 #### Automated
 
-- [ ] 2.1 `npm run typecheck` passes
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npm run typecheck` passes
+- [x] 2.2 `npm run lint` passes (6 pre-existing errors in commission/set.ts + pricing.astro; 0 new errors)
 
 #### Manual
 
-- [ ] 2.3 ListingCard "Zamknij transakcję" button navigates to `/close` for active listings
-- [ ] 2.4 Close page with all docs checked: gate shows ✅, submit enabled
-- [ ] 2.5 Close page with unchecked docs: gate shows ⚠️ with missing items; submit disabled until override ticked
-- [ ] 2.6 Submit close form → `listings.status = 'done'`, `transaction_snapshots` row in Studio with correct values
-- [ ] 2.7 Close page done-state shows locked commission + notary details
-- [ ] 2.8 Error banners render for `?error=` params
-- [ ] 2.9 Documents page "Zamknij transakcję →" link navigates to close page
+- [x] 2.3 ListingCard "Zamknij transakcję" button navigates to `/close` for active listings
+- [x] 2.4 Close page with all docs checked: gate shows ✅, submit enabled
+- [x] 2.5 Close page with unchecked docs: gate shows ⚠️ with missing items; submit disabled until override ticked
+- [x] 2.6 Submit close form → `listings.status = 'done'`, `transaction_snapshots` row in Studio with correct values
+- [x] 2.7 Close page done-state shows locked commission + notary details
+- [x] 2.8 Error banners render for `?error=` params
+- [x] 2.9 Documents page "Zamknij transakcję →" link navigates to close page
 
 ### Phase 3: Reopen + Done Listing Display
 
