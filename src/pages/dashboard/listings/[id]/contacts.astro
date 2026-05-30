@@ -1,0 +1,146 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Banner from "@/components/Banner.astro";
+import { createClient } from "@/lib/supabase";
+import type { Listing } from "@/types/listings";
+import type { Contact } from "@/types/contacts";
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let listing: Listing | null = null;
+let contacts: Contact[] = [];
+let loadError = false;
+
+if (id && supabase) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return Astro.redirect("/auth/signin");
+  }
+
+  const { data: listingData, error: fetchError } = await supabase
+    .from("listings")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single<Listing>();
+
+  if (fetchError && fetchError.code !== "PGRST116") {
+    loadError = true;
+  } else if (!listingData) {
+    return Astro.redirect("/dashboard");
+  } else {
+    listing = listingData;
+
+    const { data: contactsData, error: contactsError } = await supabase
+      .from("contacts")
+      .select("*")
+      .eq("listing_id", id)
+      .order("created_at", { ascending: true })
+      .limit(100)
+      .overrideTypes<Contact[], { merge: false }>();
+
+    if (contactsError) {
+      loadError = true;
+    } else {
+      contacts = contactsData;
+    }
+  }
+}
+
+const error = Astro.url.searchParams.get("error");
+
+const errorMessages: Record<string, string> = {
+  "nazwa-wymagana": "Imię i nazwisko jest wymagane.",
+  "rola-nieprawidlowa": "Wybrana rola jest nieprawidłowa.",
+  "blad-zapisu": "Wystąpił błąd podczas zapisu. Spróbuj ponownie.",
+  "blad-usuniecia": "Wystąpił błąd podczas usuwania. Spróbuj ponownie.",
+  "blad-konfiguracji": "Błąd konfiguracji. Skontaktuj się z administratorem.",
+};
+
+const errorMessage = error ? errorMessages[error] : null;
+
+const roleLabels: Record<string, string> = {
+  kupujący: "Kupujący",
+  najemca: "Najemca",
+};
+---
+
+<Layout title={`Kontakty — ${listing?.address ?? ""}`}>
+  <main>
+    {loadError && <Banner variant="error">Wystąpił błąd podczas ładowania danych.</Banner>}
+    {errorMessage && <Banner variant="error">{errorMessage}</Banner>}
+    {
+      listing && (
+        <section>
+          <a href="/dashboard">← Powrót</a>
+          <h1>Kontakty — {listing.address}</h1>
+
+          <form method="POST" action={`/api/listings/${listing.id}/contacts/create`}>
+            <div>
+              <label for="name">Imię i nazwisko</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+            <div>
+              <label for="phone">Telefon</label>
+              <input type="text" id="phone" name="phone" />
+            </div>
+            <div>
+              <label for="email">E-mail</label>
+              <input type="text" id="email" name="email" />
+            </div>
+            <div>
+              <label for="role">Rola</label>
+              <select id="role" name="role">
+                <option value="">— (nie dotyczy)</option>
+                <option value="kupujący">Kupujący</option>
+                <option value="najemca">Najemca</option>
+              </select>
+            </div>
+            <button type="submit">Dodaj kontakt</button>
+          </form>
+
+          <h2>Lista kontaktów</h2>
+          {contacts.length === 0 ? (
+            <p>Brak kontaktów dla tego ogłoszenia.</p>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Imię i nazwisko</th>
+                  <th>Rola</th>
+                  <th>Telefon</th>
+                  <th>E-mail</th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+                {contacts.map((contact) => (
+                  <tr>
+                    <td>{contact.name}</td>
+                    <td>{contact.role ? (roleLabels[contact.role] ?? contact.role) : "—"}</td>
+                    <td>{contact.phone ?? "—"}</td>
+                    <td>{contact.email ?? "—"}</td>
+                    <td>
+                      <form method="POST" action={`/api/listings/${listing.id}/contacts/${contact.id}/delete`}>
+                        <button
+                          type="submit"
+                          onclick="return confirm('Czy na pewno chcesz usunąć ten kontakt? Tej operacji nie można cofnąć.')"
+                        >
+                          Usuń
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+      )
+    }
+  </main>
+</Layout>
