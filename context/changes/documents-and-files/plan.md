@@ -385,15 +385,15 @@ Add Supabase Storage upload and delete for listing photos (multi-file, public bu
 
 #### Automated
 
-- [x] 3.1 `npm run typecheck` passes
-- [x] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run typecheck` passes — cc5c1fc
+- [x] 3.2 `npm run lint` passes — cc5c1fc
 
 #### Manual
 
-- [x] 3.3 Upload 2–3 photos on deployed Workers — thumbnails appear
-- [x] 3.4 Delete photo — removed from UI and Storage
-- [x] 3.5 Upload document file — download link works
-- [x] 3.6 Delete document file — removed from UI and Storage
-- [x] 3.7 File > 10 MB → Polish error banner, no file stored
-- [x] 3.8 No-file-selected submit → Polish error banner
-- [x] 3.9 ~9 MB file upload succeeds on Workers (no timeout)
+- [x] 3.3 Upload 2–3 photos on deployed Workers — thumbnails appear — cc5c1fc
+- [x] 3.4 Delete photo — removed from UI and Storage — cc5c1fc
+- [x] 3.5 Upload document file — download link works — cc5c1fc
+- [x] 3.6 Delete document file — removed from UI and Storage — cc5c1fc
+- [x] 3.7 File > 10 MB → Polish error banner, no file stored — cc5c1fc
+- [x] 3.8 No-file-selected submit → Polish error banner — cc5c1fc
+- [x] 3.9 ~9 MB file upload succeeds on Workers (no timeout) — cc5c1fc
