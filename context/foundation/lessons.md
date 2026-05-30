@@ -101,3 +101,95 @@
 **Rule:** Always schema-qualify the function name in `EXECUTE FUNCTION` — use `public.handle_updated_at()` (or whichever schema the function lives in), not just `handle_updated_at()`. Idempotent and portable.
 
 **Applies to:** All `supabase/migrations/*.sql` files that create a trigger. Re-check at `/10x-plan` (when designing a migration) and `/10x-impl-review` (when reviewing one).
+
+## Plan contracts must include the supabase null guard
+
+**Context:** `src/pages/api/**/*.ts` and `src/pages/dashboard/**/*.astro` — any Astro API route or page that calls `createClient()` and proceeds to call methods on the result.
+
+**Problem:** `createClient()` (in `src/lib/supabase.ts`) returns `null` when `SUPABASE_URL` or `SUPABASE_KEY` env vars are absent. Routes and pages that skip the null guard proceed to call `.auth.getUser()` or `.from()` on `null`, throwing an uncaught `TypeError` instead of a clean redirect or error banner. The guard pattern exists in every implemented file (pricing.astro, edit.astro, price/set.ts), but plan contracts have omitted it as an "implementation detail" — so it only gets caught at code review, not during planning.
+
+**Rule:** Every API route contract must specify `if (!supabase) { return context.redirect(...) }` immediately after `createClient()`. Every `.astro` page contract must specify an `if (!id || !supabase)` (or equivalent) null-check before any DB call. This guard is load-bearing for misconfigured environments and must appear in the plan contract explicitly — not be assumed from existing code.
+
+**Applies to:** All plan contracts for `src/pages/api/**` routes and `src/pages/dashboard/**` pages. Re-check at `/10x-plan` (when writing contracts) and `/10x-impl-review` (when reviewing them).
+
+## Delete route contracts must instruct the inline idempotency comment
+
+**Context:** Plan contracts for delete API routes (`src/pages/api/**/delete.ts`) that intentionally behave differently from sibling create/update routes — specifically, omitting `.select()` so that 0 rows deleted is not an error.
+
+**Problem:** A plan may correctly document the idempotency asymmetry in prose (e.g., "0 rows deleted is not an error"), but lessons.md rule 7 says the signal must live at the code site — not only in the plan document. If the plan contract does not explicitly instruct the implementer to leave an inline comment at the `.delete()` call, the comment is likely to be omitted. A future reader who sees no `.select()` may then "fix" the perceived missing check, breaking idempotency.
+
+**Rule:** Any delete route contract that uses an intentional asymmetry vs. sibling routes must include an explicit instruction: "Leave an inline comment at the `.delete()` call: `// Intentionally no .select() — idempotent delete, 0-row result is not an error. (<change-id> plan Phase N.)`"
+
+**Applies to:** All plan contracts for delete routes under `src/pages/api/**`. Re-check at `/10x-plan` (when writing delete route contracts) and `/10x-impl-review` (when reviewing them).
+
+## Plan contracts must specify .limit() on every list-rendering query
+
+**Context:** `context/changes/**/plan.md` — any Change Required contract that describes a list fetch in a page or API route (e.g. `.from('table').select('*').eq(...).order(...)`).
+
+**Problem:** The "Push ordering and bounds to the database" lesson correctly establishes that every list query needs an explicit `.limit()`, but plan contracts can omit it without triggering any automated check. During the `documents-and-files` plan review, three list queries were contracted without `.limit()` — the lesson existed but wasn't applied at plan time. The implementer would have no signal to add it.
+
+**Rule:** Every plan contract that specifies a list query (`select('*')` with `.order()`, no `.single()` or `.maybeSingle()`) must include the `.limit(N)` in the contract text, with a concrete number appropriate to the rendered page size (e.g. `.limit(50)` for checklist items, `.limit(100)` for photo/file lists). If the number is a design question, resolve it during planning — do not leave it implicit.
+
+**Why:** The code lesson alone is not enough because it is only read at implementation time (`/10x-implement`), not during planning. Encoding the limit in the contract makes it a planning output rather than a runtime guess.
+
+**Applies to:** All `context/changes/**/plan.md` files with list-rendering contracts. Re-check at `/10x-plan` (when writing contracts) and `/10x-impl-review` (when reviewing them).
+
+## Upload route contracts must verify entity ownership before Storage writes
+
+**Context:** `src/pages/api/listings/[id]/**/upload.ts` — any API route that writes to Supabase Storage using a path derived from URL params (e.g. `{user_id}/{listing_id}/{uuid}`).
+
+**Problem:** Table-level RLS on `listing_photos` / `listing_files` checks `user_id = auth.uid()` but not that `listing_id` (from `params.id`) belongs to that user. An upload route that skips an explicit ownership pre-check can write a Storage object under an arbitrary `listing_id` path before the DB insert fails via RLS — leaving an orphaned Storage object. The sibling mutation routes (e.g. `add.ts`) correctly verify listing ownership with a dedicated DB query before mutating. Not matching this pattern creates an undocumented asymmetry that violates the intentional-asymmetry lesson.
+
+**Rule:** Every upload route contract must include, as a step immediately before the Storage upload: verify listing ownership via `.from('listings').select('id').eq('id', params.id).eq('user_id', user.id).single()` — redirect with `?error=nie-znaleziono` if not found. This closes the orphaned-Storage-object risk and keeps all mutation routes consistent.
+
+**Applies to:** All `src/pages/api/listings/[id]/**/upload.ts` routes and any future route that writes to Storage using a URL param as a path segment. Re-check at `/10x-plan` (when writing upload contracts) and `/10x-impl-review` (when reviewing them).
+
+## Upload route contracts must specify server-side file size and type validation
+
+**Context:** `src/pages/api/listings/[id]/**/upload.ts` — any API route that accepts file input (`form.get('file')` or `form.getAll('files')`).
+
+**Problem:** HTML `accept` and `multiple` attributes are browser-only — any HTTP client can send arbitrary file types or sizes regardless. Bucket-level size limits produce a generic Storage error that maps to a generic Polish error banner with no indication of the cause. During the `documents-and-files` plan review, `photos/upload.ts` was contracted without explicit size or type checks even though the sibling `files/upload.ts` had both — creating an inconsistency and leaving the public photos bucket open to non-image uploads.
+
+**Rule:** Every upload route contract must explicitly specify, inside the per-file validation step before the Storage call: (1) `file.size <= N * 1024 * 1024` — redirect `?error=plik-za-duzy` if exceeded. (2) For type-restricted uploads (e.g. images), `file.type.startsWith('image/')` — redirect `?error=nieprawidlowy-typ` if the check fails. Both checks must appear in the plan contract, not be left as implementation assumptions relying on bucket-level enforcement.
+
+**Applies to:** All `src/pages/api/listings/[id]/**/upload.ts` contracts. Re-check at `/10x-plan` (when writing contracts) and `/10x-impl-review` (when reviewing them).
+
+## Migration plan contracts must state the full UUID PK DEFAULT expression
+
+**Context:** `context/changes/**/plan.md` — any Change Required contract for a migration that creates a table with a UUID primary key.
+
+**Problem:** The lessons.md rule "Migrations must declare extensions they depend on" correctly requires `create extension if not exists "pgcrypto" with schema extensions;` in migration files. But plan contracts typically shorthand the PK as `id uuid PK`, omitting both the extension declaration and the schema-qualified DEFAULT. An implementer following the contract literally writes `id uuid PRIMARY KEY` without a DEFAULT, or uses bare `gen_random_uuid()` instead of `extensions.gen_random_uuid()`, breaking on local stacks where pgcrypto is not pre-enabled. Discovered during `documents-and-files` plan review when three new tables were contracted with `id uuid PK` and no extension declaration.
+
+**Rule:** Every migration contract that creates a UUID-keyed table must specify the full PK form: `id uuid PRIMARY KEY DEFAULT extensions.gen_random_uuid()`. If the migration uses pgcrypto, the contract must also include: "Open the migration with: `create extension if not exists \"pgcrypto\" with schema extensions;`". Do not leave the DEFAULT as an implementation assumption.
+
+**Applies to:** All migration plan contracts in `context/changes/**/plan.md`. Re-check at `/10x-plan` (when writing migration contracts) and `/10x-impl-review` (when reviewing them).
+
+## Upload contracts must address the Storage-orphan risk on DB insert failure
+
+**Context:** `src/pages/api/listings/[id]/**/upload.ts` — any upload route that writes to Supabase Storage before inserting a DB metadata row.
+
+**Problem:** Plans that address the delete order (Storage first, then DB) often omit the symmetric upload risk: Storage upload succeeds → DB insert fails → orphaned Storage object with no DB record. The agent can't see or delete this object via the UI. During `documents-and-files` plan review, both upload contracts handled Storage failures but had no handler for DB insert failure — the orphan scenario was unacknowledged.
+
+**Rule:** Every upload route contract must include one of: (a) a best-effort Storage cleanup step on DB insert failure — "if DB insert fails, call `supabase.storage.from(bucket).remove([storagePath])`, then redirect `?error=blad-zapisu`; note this as accepted MVP risk if cleanup also fails"; or (b) an explicit "Accepted MVP risk: Storage orphan on DB insert failure — no cleanup attempted." Either form signals that the risk was considered.
+
+**Applies to:** All `src/pages/api/listings/[id]/**/upload.ts` contracts. Re-check at `/10x-plan` (when writing upload contracts) and `/10x-impl-review` (when reviewing them).
+
+## Document Storage cleanup gaps in "What We're NOT Doing" when tables use CASCADE
+
+**Context:** `context/changes/**/plan.md` — any plan that creates a table with `ON DELETE CASCADE` on a FK to `listings` (or any parent entity) AND stores associated Supabase Storage objects whose path is derived from the parent entity's ID.
+
+**Problem:** `ON DELETE CASCADE` removes DB rows but leaves Storage objects untouched. If the plan doesn't explicitly acknowledge this, the implementer has no signal that deletion of a listing (or other parent entity) leaves orphaned Storage files — which may be publicly accessible indefinitely if the bucket is public. During `documents-and-files`, `listing_photos` and `listing_files` both use CASCADE but the "What We're NOT Doing" section didn't mention the Storage cleanup gap.
+
+**Rule:** Any plan that introduces a table with `ON DELETE CASCADE` AND associated Storage objects must add to "What We're NOT Doing": "No Storage cleanup when a [parent entity] is deleted — orphaned Storage objects remain. Accepted MVP gap; [responsible slice] should address full cleanup." This makes the gap visible and defers it explicitly rather than losing it.
+
+**Applies to:** All `context/changes/**/plan.md` files that combine `ON DELETE CASCADE` FKs with Supabase Storage writes. Re-check at `/10x-plan` (when writing the "Not Doing" section) and `/10x-impl-review` (when reviewing).
+
+## Astro SSR page contracts must specify Promise.all for parallel async calls
+
+**Context:** `src/pages/dashboard/**/*.astro` — any Astro page that makes multiple independent async calls in the server frontmatter (e.g. generating N signed URLs, fetching N related records from separate tables).
+
+**Problem:** Plan contracts that say "for each item, generate X" imply a sequential loop even when the iterations are independent. In Astro SSR, a sequential `for` loop over N Storage `createSignedUrl()` calls adds N×latency to every page load. The contract-reader (implementer or agent) will default to a `for` loop unless `Promise.all` is explicitly specified. Discovered during `documents-and-files`: the files section contract implied sequential signed URL generation without stating the parallel alternative.
+
+**Rule:** Any contract that requires multiple independent async calls at page render time (signed URLs, sub-fetches, external API calls) must explicitly state `Promise.all(items.map(...))` rather than "for each item, call X". This makes the performance intent part of the contract rather than an implementation guess.
+
+**Applies to:** All `src/pages/dashboard/**/*.astro` contracts in plan files that involve per-item async calls. Re-check at `/10x-plan` (when writing page contracts) and `/10x-impl-review` (when reviewing them).
