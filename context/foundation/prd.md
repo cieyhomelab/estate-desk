@@ -1,6 +1,6 @@
 ---
 project: "EstateDesk"
-version: 1
+version: 2
 status: draft
 created: 2026-05-22
 context_type: greenfield
@@ -59,6 +59,7 @@ A real estate agent in Poland, affiliated with an agency. Manages property listi
 ### Authentication
 - FR-001: Agent can register an account with email and password. Priority: must-have
 - FR-002: Agent can log in and log out. Priority: must-have
+- FR-023: Agent can permanently delete their account and all associated data. Priority: must-have
 
 ### Listings
 - FR-003: Agent can create a listing (property type: sale or occasional rental / *najem okazjonalny*). Priority: must-have
