@@ -353,15 +353,15 @@ Add Supabase Storage upload and delete for listing photos (multi-file, public bu
 
 #### Automated
 
-- [ ] 1.1 `npx supabase db reset` completes without error
-- [ ] 1.2 `npm run typecheck` passes after adding `src/types/documents.ts`
+- [x] 1.1 `npx supabase db reset` completes without error
+- [x] 1.2 `npm run typecheck` passes after adding `src/types/documents.ts`
 
 #### Manual
 
-- [ ] 1.3 Sale listing creates 8 `listing_documents` rows (verified in Supabase Studio)
-- [ ] 1.4 Najem okazjonalny listing creates 5 `listing_documents` rows
-- [ ] 1.5 `listings.checklist_override` column visible, defaults to `false`
-- [ ] 1.6 Two storage buckets visible in Supabase Studio
+- [x] 1.3 Sale listing creates 8 `listing_documents` rows (verified in Supabase Studio)
+- [x] 1.4 Najem okazjonalny listing creates 5 `listing_documents` rows
+- [x] 1.5 `listings.checklist_override` column visible, defaults to `false`
+- [x] 1.6 Two storage buckets visible in Supabase Studio
 
 ### Phase 2: Document Checklist
 
