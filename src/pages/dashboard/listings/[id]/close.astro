@@ -170,16 +170,6 @@ const error = Astro.url.searchParams.get("error");
                     ))}
                   </ul>
                 )}
-                <label class="flex cursor-pointer items-center gap-2 text-sm text-blue-100/80">
-                  <input
-                    type="checkbox"
-                    id="override-checkbox"
-                    name="override_confirmed"
-                    value="true"
-                    class="accent-blue-400"
-                  />
-                  Pomiń weryfikację dokumentów
-                </label>
               </div>
             )}
 
@@ -216,6 +206,18 @@ const error = Astro.url.searchParams.get("error");
             )}
 
             <form method="POST" action={`/api/listings/${id}/close`} class="space-y-4">
+              {!gatePass && (
+                <label class="flex cursor-pointer items-center gap-2 text-sm text-blue-100/80">
+                  <input
+                    type="checkbox"
+                    id="override-checkbox"
+                    name="override_confirmed"
+                    value="true"
+                    class="accent-blue-400"
+                  />
+                  Pomiń weryfikację dokumentów
+                </label>
+              )}
               <div>
                 <label for="notary_name" class="mb-1 block text-sm font-medium text-blue-100/80">
                   Imię i nazwisko notariusza

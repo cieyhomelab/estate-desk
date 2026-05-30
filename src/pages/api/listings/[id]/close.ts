@@ -100,7 +100,8 @@ export const POST: APIRoute = async (context) => {
   });
 
   if (insertError) {
-    return context.redirect(`/dashboard/listings/${id}/close?error=blad-zapisu`);
+    const slug = insertError.code === "23505" ? "juz-zamknieta" : "blad-zapisu";
+    return context.redirect(`/dashboard/listings/${id}/close?error=${slug}`);
   }
 
   const { error: updateError } = await supabase

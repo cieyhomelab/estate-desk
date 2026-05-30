@@ -34,17 +34,8 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/listings/${id}/close?error=juz-aktywna`);
   }
 
-  // Intentionally preserves notary_name, notary_city, transaction_date, transaction_notes — reopen per plan transaction-close Phase 3
-  const { error: updateListingError } = await supabase
-    .from("listings")
-    .update({ status: "active", closed_at: null })
-    .eq("id", id)
-    .eq("user_id", user.id);
-
-  if (updateListingError) {
-    return context.redirect("/dashboard?error=blad-zapisu");
-  }
-
+  // Void snapshot first: if listing update later fails, re-running reopen retries cleanly.
+  // The void query is idempotent (WHERE voided_at IS NULL) — 0-row update on retry is not an error.
   const { error: voidError } = await supabase
     .from("transaction_snapshots")
     .update({ voided_at: new Date().toISOString() })
@@ -53,6 +44,17 @@ export const POST: APIRoute = async (context) => {
     .is("voided_at", null);
 
   if (voidError) {
+    return context.redirect("/dashboard?error=blad-zapisu");
+  }
+
+  // Intentionally preserves notary_name, notary_city, transaction_date, transaction_notes — reopen per plan transaction-close Phase 3
+  const { error: updateListingError } = await supabase
+    .from("listings")
+    .update({ status: "active", closed_at: null })
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (updateListingError) {
     return context.redirect("/dashboard?error=blad-zapisu");
   }
 

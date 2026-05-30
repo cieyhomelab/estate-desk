@@ -190,6 +190,26 @@
 
 **Problem:** Plan contracts that say "for each item, generate X" imply a sequential loop even when the iterations are independent. In Astro SSR, a sequential `for` loop over N Storage `createSignedUrl()` calls adds N×latency to every page load. The contract-reader (implementer or agent) will default to a `for` loop unless `Promise.all` is explicitly specified. Discovered during `documents-and-files`: the files section contract implied sequential signed URL generation without stating the parallel alternative.
 
-**Rule:** Any contract that requires multiple independent async calls at page render time (signed URLs, sub-fetches, external API calls) must explicitly state `Promise.all(items.map(...))` rather than "for each item, call X". This makes the performance intent part of the contract rather than an implementation guess.
+**Rule:** Any contract that requires multiple independent async calls at page render time must make parallelism explicit. Two forms: (a) per-item loops — "use `Promise.all(items.map(...))`" rather than "for each item, call X"; (b) multiple top-level independent single fetches — "use `const [a, b] = await Promise.all([fetchA(), fetchB()])`" rather than listing two sequential `await` calls. Without the explicit instruction, implementers default to sequential execution in both cases.
 
-**Applies to:** All `src/pages/dashboard/**/*.astro` contracts in plan files that involve per-item async calls. Re-check at `/10x-plan` (when writing page contracts) and `/10x-impl-review` (when reviewing them).
+**Applies to:** All `src/pages/dashboard/**/*.astro` contracts in plan files that involve multiple independent async calls at render time — whether per-item iterations or independent single fetches. Re-check at `/10x-plan` (when writing page contracts) and `/10x-impl-review` (when reviewing them).
+
+## Close API contracts must specify all DB fetches needed for computation
+
+**Context:** `context/changes/**/plan.md` — any Close or transaction API route contract that references computed values derived from user-configured settings (commission rates, tax rates, etc.).
+
+**Problem:** The close.ts commission computation in the `transaction-close` plan Phase 2 referenced `settings.agency_percent` and `settings.tax_rate` without the contract specifying a `commission_settings` fetch step. An implementer following the contract literally encounters an undefined variable at runtime. The DB fetch was specified in the page contract (close.astro) but silently omitted from the API route contract — two sibling artifacts drifted.
+
+**Rule:** Every API route contract that computes values from user-configured settings must list each DB fetch it depends on as an explicit step, in order: `auth → listing fetch → settings fetch → gate → compute → write`. A contract that references `settings.*` without a preceding fetch step is incomplete.
+
+**Applies to:** All `context/changes/**/plan.md` contracts for API routes under `src/pages/api/**` that compute or validate using separately-stored configuration (commission_settings, account preferences, etc.). Re-check at `/10x-plan` (when writing API contracts) and `/10x-impl-review` (when reviewing them).
+
+## Singleton-per-entity DB rows need a unique partial index to guard against duplicate inserts
+
+**Context:** `context/changes/**/plan.md` — any migration that creates a "one active row per entity" pattern, such as `transaction_snapshots(listing_id) WHERE voided_at IS NULL` or `commission_settings(user_id)`.
+
+**Problem:** The `transaction-close` plan creates `transaction_snapshots` with the intent of one active (voided_at IS NULL) snapshot per listing. The close.ts gate check reads `listing.status` to block double-close, but two concurrent requests can both pass that check before either completes the UPDATE. Both INSERT snapshot rows succeed, resulting in two active snapshots per listing. The close.astro done-state fetch uses `.maybeSingle()` which fails or returns null when multiple rows match — surfacing as a confusing error on a successfully closed listing.
+
+**Rule:** Any migration that creates a table where at most one row per entity should be active at a given time must include a unique partial index: `CREATE UNIQUE INDEX <name> ON <table>(<entity_id>) WHERE <active_condition>;`. This moves the "at most one active" constraint to the DB level, where it is enforced atomically, rather than relying on application-level gate checks that are vulnerable to race conditions.
+
+**Applies to:** All `supabase/migrations/*.sql` files that introduce a "one active row per parent entity" pattern. Re-check at `/10x-plan` (when writing migration contracts for such tables) and `/10x-impl-review` (when reviewing migrations).
