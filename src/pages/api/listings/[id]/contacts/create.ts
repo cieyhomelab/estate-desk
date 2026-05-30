@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { createClient } from '../../../../../lib/supabase';
+import { createClient } from '@/lib/supabase';
 
 const VALID_ROLES = ['kupujący', 'najemca'];
 

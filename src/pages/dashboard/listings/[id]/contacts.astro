@@ -1,9 +1,9 @@
 ---
-import Layout from '../../../../layouts/Layout.astro';
-import Banner from '../../../../components/Banner.astro';
-import { createClient } from '../../../../lib/supabase';
-import type { Listing } from '../../../../types/listings';
-import type { Contact } from '../../../../types/contacts';
+import Layout from '@/layouts/Layout.astro';
+import Banner from '@/components/Banner.astro';
+import { createClient } from '@/lib/supabase';
+import type { Listing } from '@/types/listings';
+import type { Contact } from '@/types/contacts';
 
 const { id } = Astro.params;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
