@@ -360,13 +360,13 @@ None in this slice.
 
 #### Automated
 
-- [x] 3.1 `npm run typecheck` passes
-- [x] 3.2 `npm run lint` passes (same pre-existing 6 errors; 0 new errors)
+- [x] 3.1 `npm run typecheck` passes — 5f53043
+- [x] 3.2 `npm run lint` passes (same pre-existing 6 errors; 0 new errors) — 5f53043
 
 #### Manual
 
-- [x] 3.3 Done listing card shows "Zysk agenta: X zł" with correct snapshot value
-- [x] 3.4 Done listing card shows "Wznów transakcję" button (no "Zamknij" link)
-- [x] 3.5 Reopen → listing active; `voided_at` non-null in Studio; `closed_at` null
-- [x] 3.6 Re-close after reopen → new snapshot row created; old voided row persists
-- [x] 3.7 No-commission listing closes without error; snapshot `agent_net = null`
+- [x] 3.3 Done listing card shows "Zysk agenta: X zł" with correct snapshot value — 5f53043
+- [x] 3.4 Done listing card shows "Wznów transakcję" button (no "Zamknij" link) — 5f53043
+- [x] 3.5 Reopen → listing active; `voided_at` non-null in Studio; `closed_at` null — 5f53043
+- [x] 3.6 Re-close after reopen → new snapshot row created; old voided row persists — 5f53043
+- [x] 3.7 No-commission listing closes without error; snapshot `agent_net = null` — 5f53043
