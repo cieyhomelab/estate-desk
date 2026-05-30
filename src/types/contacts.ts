@@ -1,4 +1,4 @@
-export type ContactRole = 'kupujący' | 'najemca';
+export type ContactRole = "kupujący" | "najemca";
 
 export interface Contact {
   id: string;
