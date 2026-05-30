@@ -266,14 +266,19 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Automated
 
-- [ ] 1.1 Migration applies without errors: `npx supabase db push`
+<!-- NOTE: Rows tagged [user-authorized, unverified] were marked done on the user's explicit
+     authority (this session), NOT by runtime verification. The sandbox had no Supabase link,
+     no Docker, and no DB credentials, so `supabase db push` and all manual browser checks
+     could not be executed here. The user owns these gates and will validate against a live DB. -->
+
+- [x] 1.1 Migration applies without errors: `npx supabase db push` — [user-authorized, unverified: no DB in sandbox]
 - [x] 1.2 Migration file tracked in git: `git status supabase/migrations/` shows the new file — 21f3b61
 
 #### Manual
 
-- [ ] 1.3 contacts table visible in Supabase Studio with all 7 columns
-- [ ] 1.4 RLS enabled and policy `owners_own_contacts` visible in Authentication → Policies → contacts
-- [ ] 1.5 role CHECK constraint rejects invalid values
+- [x] 1.3 contacts table visible in Supabase Studio with all 7 columns — [user-authorized, unverified: no DB in sandbox]
+- [x] 1.4 RLS enabled and policy `owners_own_contacts` visible in Authentication → Policies → contacts — [user-authorized, unverified: no DB in sandbox]
+- [x] 1.5 role CHECK constraint rejects invalid values — [user-authorized, unverified: no DB in sandbox]
 
 ### Phase 2: Server data layer
 
@@ -284,9 +289,9 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Manual
 
-- [ ] 2.3 POST to create route with valid name inserts a row and redirects to contacts page
-- [ ] 2.4 POST with empty name redirects with `?error=nazwa-wymagana`
-- [ ] 2.5 POST to delete route removes the row; cross-user delete has no effect
+- [x] 2.3 POST to create route with valid name inserts a row and redirects to contacts page — [user-authorized, unverified: no DB in sandbox]
+- [x] 2.4 POST with empty name redirects with `?error=nazwa-wymagana` — [user-authorized, unverified: no DB in sandbox]
+- [x] 2.5 POST to delete route removes the row; cross-user delete has no effect — [user-authorized, unverified: no DB in sandbox]
 
 ### Phase 3: Contacts page and ListingCard link
 
@@ -297,9 +302,9 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Manual
 
-- [ ] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links
-- [ ] 3.4 Contacts page loads with Polish heading and empty state message
-- [ ] 3.5 Adding contact with all fields shows correctly in list (Polish role labels)
-- [ ] 3.6 Adding contact with empty name shows Banner error; no contact created
-- [ ] 3.7 Delete shows Polish confirmation; confirming removes the contact
-- [ ] 3.8 Contact list displays in chronological order (oldest first)
+- [x] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links — [user-authorized, unverified: no DB in sandbox]
+- [x] 3.4 Contacts page loads with Polish heading and empty state message — [user-authorized, unverified: no DB in sandbox]
+- [x] 3.5 Adding contact with all fields shows correctly in list (Polish role labels) — [user-authorized, unverified: no DB in sandbox]
+- [x] 3.6 Adding contact with empty name shows Banner error; no contact created — [user-authorized, unverified: no DB in sandbox]
+- [x] 3.7 Delete shows Polish confirmation; confirming removes the contact — [user-authorized, unverified: no DB in sandbox]
+- [x] 3.8 Contact list displays in chronological order (oldest first) — [user-authorized, unverified: no DB in sandbox]
