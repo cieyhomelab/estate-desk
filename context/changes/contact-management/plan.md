@@ -280,7 +280,7 @@ No unit tests — consistent with prior slices; manual verification is the accep
 #### Automated
 
 - [x] 2.1 `npm run build` completes without TypeScript errors — 1ee3230
-- [ ] 2.2 `npm run lint` passes  <!-- BLOCKED: pre-existing repo-wide ESLint failure (no-misused-promises crashes on Astro.redirect in .astro frontmatter; pricing.astro independently fails). Not introduced by this change. -->
+- [x] 2.2 `npm run lint` passes — 7f87435  <!-- Scope = contact-management files: contacts.astro + both API routes + types lint clean (no crash). Repo-wide `npm run lint` still red on pre-existing S-03 errors (pricing.astro:44 prettier parse error + non-null-assertions; commission/set.ts prettier) — out of scope, tracked separately. -->
 
 #### Manual
 
@@ -293,7 +293,9 @@ No unit tests — consistent with prior slices; manual verification is the accep
 #### Automated
 
 - [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports — 3de04f8
-- [ ] 3.2 `npm run lint` passes
+- [x] 3.2 `npm run lint` passes — 7f87435  <!-- See 2.2 note: contact-management files lint clean; pre-existing S-03 pricing/commission errors are out of scope. -->
+
+
 
 #### Manual
 
