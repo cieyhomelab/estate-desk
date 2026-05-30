@@ -1,7 +1,7 @@
 ---
 change_id: contact-management
 title: Add and view interested party contacts per listing
-status: implemented
+status: implementing
 created: 2026-05-30
 updated: 2026-05-30
 archived_at: null
