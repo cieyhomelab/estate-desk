@@ -40,12 +40,13 @@ if (id && supabase) {
       .select("*")
       .eq("listing_id", id)
       .order("created_at", { ascending: true })
-      .limit(100);
+      .limit(100)
+      .overrideTypes<Contact[], { merge: false }>();
 
     if (contactsError) {
       loadError = true;
     } else {
-      contacts = contactsData ?? [];
+      contacts = contactsData;
     }
   }
 }
