@@ -14,4 +14,9 @@ export interface Listing {
   updated_at: string;
   asking_price: number | null;
   commission_percent: number | null;
+  notary_name: string | null;
+  notary_city: string | null;
+  transaction_date: string | null;
+  transaction_notes: string | null;
+  closed_at: string | null;
 }
