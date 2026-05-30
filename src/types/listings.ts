@@ -13,4 +13,5 @@ export interface Listing {
   created_at: string;
   updated_at: string;
   asking_price: number | null;
+  commission_percent: number | null;
 }

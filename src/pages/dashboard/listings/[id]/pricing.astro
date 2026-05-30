@@ -55,8 +55,6 @@ if (!listing) {
   return Astro.redirect("/dashboard");
 }
 
-const commissionParam = Astro.url.searchParams.get("commission");
-
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
   return `${d.getUTCDate().toString().padStart(2, "0")}.${(d.getUTCMonth() + 1).toString().padStart(2, "0")}.${d.getUTCFullYear()}`;
@@ -89,6 +87,12 @@ const success = Astro.url.searchParams.get("success");
       }
 
       {success === "cena-zapisana" && <Banner variant="info">Cena została pomyślnie zapisana.</Banner>}
+      {success === "prowizja-zapisana" && <Banner variant="info">Prowizja agenta została pomyślnie zapisana.</Banner>}
+      {
+        error === "prowizja-nieprawidlowa" && (
+          <Banner variant="error">Prowizja musi być liczbą większą od zera i nie większą niż 100%.</Banner>
+        )
+      }
 
       <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
         <h2 class="mb-4 text-xl font-bold text-white">Cena wywoławcza</h2>
@@ -143,36 +147,52 @@ const success = Astro.url.searchParams.get("success");
       </div>
 
       <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
-        <h2 class="mb-4 text-xl font-bold text-white">Kalkulator prowizji</h2>
+        <h2 class="mb-4 text-xl font-bold text-white">Prowizja agenta</h2>
+        {
+          listing.commission_percent && (
+            <p class="mb-4 text-lg text-blue-100/70">
+              Aktualna prowizja: <span class="font-semibold text-white">{listing.commission_percent}%</span>
+            </p>
+          )
+        }
+        <form method="POST" action={`/api/listings/${id}/commission/set`} class="mb-6 space-y-4">
+          <div>
+            <label for="commission_percent" class="mb-1 block text-sm font-medium text-blue-100/80">
+              Prowizja agenta (%)
+            </label>
+            <input
+              id="commission_percent"
+              type="number"
+              name="commission_percent"
+              step="0.01"
+              min="0.01"
+              max="100"
+              value={listing.commission_percent ?? ""}
+              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              placeholder="np. 3"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Zapisz prowizję
+          </button>
+        </form>
+
         {
           !commissionSettings ? (
             <p class="text-blue-100/70">
-              Aby obliczyć prowizję, skonfiguruj stawki w{" "}
+              Aby zobaczyć podział prowizji, skonfiguruj stawki w{" "}
               <a href="/dashboard/settings/commission" class="text-blue-400 underline hover:text-blue-300">
                 ustawieniach konta
               </a>
               .
             </p>
-          ) : (
+          ) : listing.asking_price && listing.commission_percent ? (
             <div>
-              <div class="mb-6 space-y-4">
-                <div>
-                  <label for="commission" class="mb-1 block text-sm font-medium text-blue-100/80">
-                    Prowizja ogółem (PLN)
-                  </label>
-                  <input
-                    id="commission"
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    value={commissionParam ?? ""}
-                    data-tax-rate={commissionSettings!.tax_rate}
-                    data-agency-percent={commissionSettings!.agency_percent}
-                    class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                  />
-                </div>
-              </div>
-              <table id="commission-breakdown" class="hidden w-full text-sm">
+              <h3 class="mb-3 text-sm font-medium text-blue-100/80">Podział prowizji</h3>
+              <table class="w-full text-sm" id="commission-breakdown">
                 <tbody>
                   <tr class="border-b border-white/10">
                     <td class="py-2 text-blue-100/70">Prowizja ogółem</td>
@@ -196,40 +216,37 @@ const success = Astro.url.searchParams.get("success");
                   </tr>
                 </tbody>
               </table>
-              <script>
-                const input = document.getElementById("commission") as HTMLInputElement;
-                const table = document.getElementById("commission-breakdown")!;
-                const taxRate = parseFloat(input.dataset.taxRate!);
-                const agencyPercent = parseFloat(input.dataset.agencyPercent!);
-
-                function fmt(amount: number) {
+              <script
+                define:vars={{
+                  askingPrice: listing.asking_price,
+                  commissionPercent: listing.commission_percent,
+                  taxRate: commissionSettings!.tax_rate,
+                  agencyPercent: commissionSettings!.agency_percent,
+                }}
+              >
+                function fmt(amount) {
                   return new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN" }).format(amount);
                 }
 
-                function recalc() {
-                  const total = parseFloat(input.value);
-                  if (!isFinite(total) || total <= 0) {
-                    table.classList.add("hidden");
-                    return;
-                  }
-                  const total_c = Math.round(total * 100);
-                  const agency_c = Math.round((total_c * agencyPercent) / 100);
-                  const gross_c = total_c - agency_c;
-                  const tax_c = Math.round((gross_c * taxRate) / 100);
-                  const agent_c = gross_c - tax_c;
+                const total_c = Math.round(((askingPrice * commissionPercent) / 100) * 100);
+                const agency_c = Math.round((total_c * agencyPercent) / 100);
+                const gross_c = total_c - agency_c;
+                const tax_c = Math.round((gross_c * taxRate) / 100);
+                const agent_c = gross_c - tax_c;
 
-                  document.getElementById("b-total")!.textContent = fmt(total_c / 100);
-                  document.getElementById("b-agency")!.textContent = fmt(agency_c / 100);
-                  document.getElementById("b-gross")!.textContent = fmt(gross_c / 100);
-                  document.getElementById("b-tax")!.textContent = fmt(tax_c / 100);
-                  document.getElementById("b-agent")!.textContent = fmt(agent_c / 100);
-                  table.classList.remove("hidden");
-                }
-
-                input.addEventListener("input", recalc);
-                recalc();
+                document.getElementById("b-total").textContent = fmt(total_c / 100);
+                document.getElementById("b-agency").textContent = fmt(agency_c / 100);
+                document.getElementById("b-gross").textContent = fmt(gross_c / 100);
+                document.getElementById("b-tax").textContent = fmt(tax_c / 100);
+                document.getElementById("b-agent").textContent = fmt(agent_c / 100);
               </script>
             </div>
+          ) : (
+            <p class="text-blue-100/50 text-sm">
+              {!listing.asking_price
+                ? "Ustaw cenę wywoławczą, aby zobaczyć podział prowizji."
+                : "Wprowadź prowizję i zapisz, aby zobaczyć podział."}
+            </p>
           )
         }
       </div>
