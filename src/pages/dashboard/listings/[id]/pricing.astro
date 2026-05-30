@@ -56,38 +56,6 @@ if (!listing) {
 }
 
 const commissionParam = Astro.url.searchParams.get("commission");
-const commissionTotal = commissionParam !== null ? parseFloat(commissionParam) : NaN;
-const hasValidCommission = isFinite(commissionTotal) && commissionTotal > 0;
-
-interface CommissionBreakdown {
-  total: number;
-  agency: number;
-  gross: number;
-  tax: number;
-  agentNet: number;
-}
-
-let breakdown: CommissionBreakdown | null = null;
-
-if (hasValidCommission && commissionSettings) {
-  const total_cents = Math.round(commissionTotal * 100);
-  const agency_cents = Math.round((total_cents * commissionSettings.agency_percent) / 100);
-  const gross_cents = total_cents - agency_cents;
-  const tax_cents = Math.round((gross_cents * commissionSettings.tax_rate) / 100);
-  const agent_cents = gross_cents - tax_cents;
-
-  // Formula is algebraically exact by construction (agent_cents is the remainder, not independently rounded).
-  // Guard catches only malformed inputs that somehow escape the preceding validation.
-  if (Math.abs(agency_cents + tax_cents + agent_cents - total_cents) <= 1) {
-    breakdown = {
-      total: total_cents / 100,
-      agency: agency_cents / 100,
-      gross: gross_cents / 100,
-      tax: tax_cents / 100,
-      agentNet: agent_cents / 100,
-    };
-  }
-}
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
@@ -187,7 +155,7 @@ const success = Astro.url.searchParams.get("success");
             </p>
           ) : (
             <div>
-              <form method="GET" class="mb-6 space-y-4">
+              <div class="mb-6 space-y-4">
                 <div>
                   <label for="commission" class="mb-1 block text-sm font-medium text-blue-100/80">
                     Prowizja ogółem (PLN)
@@ -195,46 +163,72 @@ const success = Astro.url.searchParams.get("success");
                   <input
                     id="commission"
                     type="number"
-                    name="commission"
                     step="0.01"
                     min="0.01"
                     value={commissionParam ?? ""}
+                    data-tax-rate={commissionSettings!.tax_rate}
+                    data-agency-percent={commissionSettings!.agency_percent}
                     class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   />
                 </div>
-                <button
-                  type="submit"
-                  class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-                >
-                  Oblicz
-                </button>
-              </form>
-              {breakdown && (
-                <table class="w-full text-sm">
-                  <tbody>
-                    <tr class="border-b border-white/10">
-                      <td class="py-2 text-blue-100/70">Prowizja ogółem</td>
-                      <td class="py-2 text-right text-white">{formatPLN(breakdown.total)}</td>
-                    </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-2 text-blue-100/70">Część agencji</td>
-                      <td class="py-2 text-right text-white">{formatPLN(breakdown.agency)}</td>
-                    </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-2 text-blue-100/70">Dochód brutto</td>
-                      <td class="py-2 text-right text-white">{formatPLN(breakdown.gross)}</td>
-                    </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-2 text-blue-100/70">Rezerwa podatkowa</td>
-                      <td class="py-2 text-right text-white">{formatPLN(breakdown.tax)}</td>
-                    </tr>
-                    <tr>
-                      <td class="py-2 font-medium text-white">Dochód netto agenta</td>
-                      <td class="py-2 text-right font-bold text-white">{formatPLN(breakdown.agentNet)}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              )}
+              </div>
+              <table id="commission-breakdown" class="hidden w-full text-sm">
+                <tbody>
+                  <tr class="border-b border-white/10">
+                    <td class="py-2 text-blue-100/70">Prowizja ogółem</td>
+                    <td id="b-total" class="py-2 text-right text-white"></td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-2 text-blue-100/70">Część agencji</td>
+                    <td id="b-agency" class="py-2 text-right text-white"></td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-2 text-blue-100/70">Dochód brutto</td>
+                    <td id="b-gross" class="py-2 text-right text-white"></td>
+                  </tr>
+                  <tr class="border-b border-white/5">
+                    <td class="py-2 text-blue-100/70">Rezerwa podatkowa</td>
+                    <td id="b-tax" class="py-2 text-right text-white"></td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 font-medium text-white">Dochód netto agenta</td>
+                    <td id="b-agent" class="py-2 text-right font-bold text-white"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <script>
+                const input = document.getElementById("commission") as HTMLInputElement;
+                const table = document.getElementById("commission-breakdown")!;
+                const taxRate = parseFloat(input.dataset.taxRate!);
+                const agencyPercent = parseFloat(input.dataset.agencyPercent!);
+
+                function fmt(amount: number) {
+                  return new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN" }).format(amount);
+                }
+
+                function recalc() {
+                  const total = parseFloat(input.value);
+                  if (!isFinite(total) || total <= 0) {
+                    table.classList.add("hidden");
+                    return;
+                  }
+                  const total_c = Math.round(total * 100);
+                  const agency_c = Math.round((total_c * agencyPercent) / 100);
+                  const gross_c = total_c - agency_c;
+                  const tax_c = Math.round((gross_c * taxRate) / 100);
+                  const agent_c = gross_c - tax_c;
+
+                  document.getElementById("b-total")!.textContent = fmt(total_c / 100);
+                  document.getElementById("b-agency")!.textContent = fmt(agency_c / 100);
+                  document.getElementById("b-gross")!.textContent = fmt(gross_c / 100);
+                  document.getElementById("b-tax")!.textContent = fmt(tax_c / 100);
+                  document.getElementById("b-agent")!.textContent = fmt(agent_c / 100);
+                  table.classList.remove("hidden");
+                }
+
+                input.addEventListener("input", recalc);
+                recalc();
+              </script>
             </div>
           )
         }
