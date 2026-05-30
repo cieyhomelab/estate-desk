@@ -220,8 +220,8 @@ const success = Astro.url.searchParams.get("success");
                 define:vars={{
                   askingPrice: listing.asking_price,
                   commissionPercent: listing.commission_percent,
-                  taxRate: commissionSettings!.tax_rate,
-                  agencyPercent: commissionSettings!.agency_percent,
+                  taxRate: commissionSettings.tax_rate,
+                  agencyPercent: commissionSettings.agency_percent,
                 }}
               >
                 function fmt(amount) {
