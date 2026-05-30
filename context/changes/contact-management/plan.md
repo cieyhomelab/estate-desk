@@ -266,14 +266,14 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Automated
 
-- [ ] 1.1 Migration applies without errors: `npx supabase db push`
-- [ ] 1.2 Migration file tracked in git: `git status supabase/migrations/` shows the new file
+- [x] 1.1 Migration applies without errors: `npx supabase db push`
+- [x] 1.2 Migration file tracked in git: `git status supabase/migrations/` shows the new file
 
 #### Manual
 
-- [ ] 1.3 contacts table visible in Supabase Studio with all 7 columns
-- [ ] 1.4 RLS enabled and policy `owners_own_contacts` visible in Authentication → Policies → contacts
-- [ ] 1.5 role CHECK constraint rejects invalid values
+- [x] 1.3 contacts table visible in Supabase Studio with all 7 columns
+- [x] 1.4 RLS enabled and policy `owners_own_contacts` visible in Authentication → Policies → contacts
+- [x] 1.5 role CHECK constraint rejects invalid values
 
 ### Phase 2: Server data layer
 
