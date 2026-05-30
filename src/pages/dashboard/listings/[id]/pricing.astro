@@ -6,12 +6,18 @@ import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
 import type { PriceHistoryEntry, CommissionSettings } from "@/types/pricing";
 
+interface PriceHistoryOverrideOpts {
+  merge: false;
+}
+type PriceHistoryItems = PriceHistoryEntry[];
+
 const { id } = Astro.params;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 let listing: Listing | null = null;
 let priceHistory: PriceHistoryEntry[] = [];
 let commissionSettings: CommissionSettings | null = null;
+const historyOrder = { ascending: false } as const;
 
 if (id && supabase) {
   const {
@@ -36,9 +42,9 @@ if (id && supabase) {
         .from("price_history")
         .select("*")
         .eq("listing_id", id)
-        .order("set_at", { ascending: false })
+        .order("set_at", historyOrder)
         .limit(100)
-        .overrideTypes<PriceHistoryEntry[], { merge: false }>();
+        .overrideTypes<PriceHistoryItems, PriceHistoryOverrideOpts>();
       priceHistory = historyData ?? [];
 
       const { data: settingsData } = await supabase
@@ -67,12 +73,20 @@ const success = Astro.url.searchParams.get("success");
 <Layout title="Cena i prowizja — EstateDesk">
   <div class="bg-cosmic min-h-screen p-6">
     <div class="mx-auto max-w-lg">
-      <a
-        href={`/dashboard/listings/${listing.id}/edit`}
-        class="mb-6 inline-block text-sm text-blue-200/70 transition-colors hover:text-blue-200"
-      >
-        ← Powrót do edycji
-      </a>
+      <div class="mb-6 flex items-center justify-between">
+        <a
+          href={`/dashboard/listings/${listing.id}/edit`}
+          class="text-sm text-blue-200/70 transition-colors hover:text-blue-200"
+        >
+          ← Powrót do edycji
+        </a>
+        <a
+          href={`/dashboard/listings/${listing.id}/documents`}
+          class="text-sm text-blue-400 transition-colors hover:text-blue-300"
+        >
+          Dokumenty i zdjęcia →
+        </a>
+      </div>
 
       {
         error && (
@@ -220,8 +234,8 @@ const success = Astro.url.searchParams.get("success");
                 define:vars={{
                   askingPrice: listing.asking_price,
                   commissionPercent: listing.commission_percent,
-                  taxRate: commissionSettings!.tax_rate,
-                  agencyPercent: commissionSettings!.agency_percent,
+                  taxRate: commissionSettings.tax_rate,
+                  agencyPercent: commissionSettings.agency_percent,
                 }}
               >
                 function fmt(amount) {
