@@ -292,14 +292,14 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Automated
 
-- [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports
-- [x] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports — 3d3a8c0
+- [x] 3.2 `npm run lint` passes — 3d3a8c0
 
 #### Manual
 
-- [x] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links
-- [x] 3.4 Contacts page loads with Polish heading and empty state message
-- [x] 3.5 Adding contact with all fields shows correctly in list (Polish role labels)
-- [x] 3.6 Adding contact with empty name shows Banner error; no contact created
-- [x] 3.7 Delete shows Polish confirmation; confirming removes the contact
-- [x] 3.8 Contact list displays in chronological order (oldest first)
+- [x] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links — 3d3a8c0
+- [x] 3.4 Contacts page loads with Polish heading and empty state message — 3d3a8c0
+- [x] 3.5 Adding contact with all fields shows correctly in list (Polish role labels) — 3d3a8c0
+- [x] 3.6 Adding contact with empty name shows Banner error; no contact created — 3d3a8c0
+- [x] 3.7 Delete shows Polish confirmation; confirming removes the contact — 3d3a8c0
+- [x] 3.8 Contact list displays in chronological order (oldest first) — 3d3a8c0
