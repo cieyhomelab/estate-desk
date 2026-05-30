@@ -279,27 +279,27 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Automated
 
-- [x] 2.1 `npm run build` completes without TypeScript errors
-- [x] 2.2 `npm run lint` passes
+- [x] 2.1 `npm run build` completes without TypeScript errors — 1077f99
+- [x] 2.2 `npm run lint` passes — 1077f99
 
 #### Manual
 
-- [x] 2.3 POST to create route with valid name inserts a row and redirects to contacts page
-- [x] 2.4 POST with empty name redirects with `?error=nazwa-wymagana`
-- [x] 2.5 POST to delete route removes the row; cross-user delete has no effect
+- [x] 2.3 POST to create route with valid name inserts a row and redirects to contacts page — 1077f99
+- [x] 2.4 POST with empty name redirects with `?error=nazwa-wymagana` — 1077f99
+- [x] 2.5 POST to delete route removes the row; cross-user delete has no effect — 1077f99
 
 ### Phase 3: Contacts page and ListingCard link
 
 #### Automated
 
-- [ ] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports
-- [ ] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run build` succeeds with no TypeScript errors or missing imports
+- [x] 3.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links
-- [ ] 3.4 Contacts page loads with Polish heading and empty state message
-- [ ] 3.5 Adding contact with all fields shows correctly in list (Polish role labels)
-- [ ] 3.6 Adding contact with empty name shows Banner error; no contact created
-- [ ] 3.7 Delete shows Polish confirmation; confirming removes the contact
-- [ ] 3.8 Contact list displays in chronological order (oldest first)
+- [x] 3.3 Dashboard card shows 'Kontakty' link alongside existing action links
+- [x] 3.4 Contacts page loads with Polish heading and empty state message
+- [x] 3.5 Adding contact with all fields shows correctly in list (Polish role labels)
+- [x] 3.6 Adding contact with empty name shows Banner error; no contact created
+- [x] 3.7 Delete shows Polish confirmation; confirming removes the contact
+- [x] 3.8 Contact list displays in chronological order (oldest first)
