@@ -343,30 +343,30 @@ None in this slice.
 
 #### Automated
 
-- [x] 2.1 `npm run typecheck` passes
-- [x] 2.2 `npm run lint` passes (6 pre-existing errors in commission/set.ts + pricing.astro; 0 new errors)
+- [x] 2.1 `npm run typecheck` passes — 151e2d2
+- [x] 2.2 `npm run lint` passes (6 pre-existing errors in commission/set.ts + pricing.astro; 0 new errors) — 151e2d2
 
 #### Manual
 
-- [x] 2.3 ListingCard "Zamknij transakcję" button navigates to `/close` for active listings
-- [x] 2.4 Close page with all docs checked: gate shows ✅, submit enabled
-- [x] 2.5 Close page with unchecked docs: gate shows ⚠️ with missing items; submit disabled until override ticked
-- [x] 2.6 Submit close form → `listings.status = 'done'`, `transaction_snapshots` row in Studio with correct values
-- [x] 2.7 Close page done-state shows locked commission + notary details
-- [x] 2.8 Error banners render for `?error=` params
-- [x] 2.9 Documents page "Zamknij transakcję →" link navigates to close page
+- [x] 2.3 ListingCard "Zamknij transakcję" button navigates to `/close` for active listings — 151e2d2
+- [x] 2.4 Close page with all docs checked: gate shows ✅, submit enabled — 151e2d2
+- [x] 2.5 Close page with unchecked docs: gate shows ⚠️ with missing items; submit disabled until override ticked — 151e2d2
+- [x] 2.6 Submit close form → `listings.status = 'done'`, `transaction_snapshots` row in Studio with correct values — 151e2d2
+- [x] 2.7 Close page done-state shows locked commission + notary details — 151e2d2
+- [x] 2.8 Error banners render for `?error=` params — 151e2d2
+- [x] 2.9 Documents page "Zamknij transakcję →" link navigates to close page — 151e2d2
 
 ### Phase 3: Reopen + Done Listing Display
 
 #### Automated
 
-- [ ] 3.1 `npm run typecheck` passes
-- [ ] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run typecheck` passes
+- [x] 3.2 `npm run lint` passes (same pre-existing 6 errors; 0 new errors)
 
 #### Manual
 
-- [ ] 3.3 Done listing card shows "Zysk agenta: X zł" with correct snapshot value
-- [ ] 3.4 Done listing card shows "Wznów transakcję" button (no "Zamknij" link)
-- [ ] 3.5 Reopen → listing active; `voided_at` non-null in Studio; `closed_at` null
-- [ ] 3.6 Re-close after reopen → new snapshot row created; old voided row persists
-- [ ] 3.7 No-commission listing closes without error; snapshot `agent_net = null`
+- [x] 3.3 Done listing card shows "Zysk agenta: X zł" with correct snapshot value
+- [x] 3.4 Done listing card shows "Wznów transakcję" button (no "Zamknij" link)
+- [x] 3.5 Reopen → listing active; `voided_at` non-null in Studio; `closed_at` null
+- [x] 3.6 Re-close after reopen → new snapshot row created; old voided row persists
+- [x] 3.7 No-commission listing closes without error; snapshot `agent_net = null`
