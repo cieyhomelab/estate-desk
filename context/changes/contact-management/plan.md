@@ -266,27 +266,27 @@ No unit tests — consistent with prior slices; manual verification is the accep
 
 #### Automated
 
-- [x] 1.1 Migration applies without errors: `npx supabase db push`
-- [x] 1.2 Migration file tracked in git: `git status supabase/migrations/` shows the new file
+- [x] 1.1 Migration applies without errors: `npx supabase db push` — 8a8f4ce
+- [x] 1.2 Migration file tracked in git: `git status supabase/migrations/` shows the new file — 8a8f4ce
 
 #### Manual
 
-- [x] 1.3 contacts table visible in Supabase Studio with all 7 columns
-- [x] 1.4 RLS enabled and policy `owners_own_contacts` visible in Authentication → Policies → contacts
-- [x] 1.5 role CHECK constraint rejects invalid values
+- [x] 1.3 contacts table visible in Supabase Studio with all 7 columns — 8a8f4ce
+- [x] 1.4 RLS enabled and policy `owners_own_contacts` visible in Authentication → Policies → contacts — 8a8f4ce
+- [x] 1.5 role CHECK constraint rejects invalid values — 8a8f4ce
 
 ### Phase 2: Server data layer
 
 #### Automated
 
-- [ ] 2.1 `npm run build` completes without TypeScript errors
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npm run build` completes without TypeScript errors
+- [x] 2.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.3 POST to create route with valid name inserts a row and redirects to contacts page
-- [ ] 2.4 POST with empty name redirects with `?error=nazwa-wymagana`
-- [ ] 2.5 POST to delete route removes the row; cross-user delete has no effect
+- [x] 2.3 POST to create route with valid name inserts a row and redirects to contacts page
+- [x] 2.4 POST with empty name redirects with `?error=nazwa-wymagana`
+- [x] 2.5 POST to delete route removes the row; cross-user delete has no effect
 
 ### Phase 3: Contacts page and ListingCard link
 
