@@ -353,47 +353,47 @@ Add Supabase Storage upload and delete for listing photos (multi-file, public bu
 
 #### Automated
 
-- [ ] 1.1 `npx supabase db reset` completes without error
-- [ ] 1.2 `npm run typecheck` passes after adding `src/types/documents.ts`
+- [x] 1.1 `npx supabase db reset` completes without error — 56d667b
+- [x] 1.2 `npm run typecheck` passes after adding `src/types/documents.ts` — 56d667b
 
 #### Manual
 
-- [ ] 1.3 Sale listing creates 8 `listing_documents` rows (verified in Supabase Studio)
-- [ ] 1.4 Najem okazjonalny listing creates 5 `listing_documents` rows
-- [ ] 1.5 `listings.checklist_override` column visible, defaults to `false`
-- [ ] 1.6 Two storage buckets visible in Supabase Studio
+- [x] 1.3 Sale listing creates 8 `listing_documents` rows (verified in Supabase Studio) — 56d667b
+- [x] 1.4 Najem okazjonalny listing creates 5 `listing_documents` rows — 56d667b
+- [x] 1.5 `listings.checklist_override` column visible, defaults to `false` — 56d667b
+- [x] 1.6 Two storage buckets visible in Supabase Studio — 56d667b
 
 ### Phase 2: Document Checklist
 
 #### Automated
 
-- [ ] 2.1 `npm run typecheck` passes
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npm run typecheck` passes — 1a74be3
+- [x] 2.2 `npm run lint` passes — 1a74be3
 
 #### Manual
 
-- [ ] 2.3 Sale listing Documents tab shows 8 pre-populated items
-- [ ] 2.4 Check / uncheck item — state persists on reload
-- [ ] 2.5 Add custom item — appears at bottom of checklist
-- [ ] 2.6 Delete item — removed from list
-- [ ] 2.7 Toggle override — `listings.checklist_override` flips in DB
-- [ ] 2.8 Edit → Pricing → Documents navigation chain works
-- [ ] 2.9 ListingCard "Dokumenty i zdjęcia" button navigates correctly
-- [ ] 2.10 Error banner shown for empty add-item input
+- [x] 2.3 Sale listing Documents tab shows 8 pre-populated items — 1a74be3
+- [x] 2.4 Check / uncheck item — state persists on reload — 1a74be3
+- [x] 2.5 Add custom item — appears at bottom of checklist — 1a74be3
+- [x] 2.6 Delete item — removed from list — 1a74be3
+- [x] 2.7 Toggle override — `listings.checklist_override` flips in DB — 1a74be3
+- [x] 2.8 Edit → Pricing → Documents navigation chain works — 1a74be3
+- [x] 2.9 ListingCard "Dokumenty i zdjęcia" button navigates correctly — 1a74be3
+- [x] 2.10 Error banner shown for empty add-item input — 1a74be3
 
 ### Phase 3: Photo & File Uploads
 
 #### Automated
 
-- [ ] 3.1 `npm run typecheck` passes
-- [ ] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run typecheck` passes — cc5c1fc
+- [x] 3.2 `npm run lint` passes — cc5c1fc
 
 #### Manual
 
-- [ ] 3.3 Upload 2–3 photos on deployed Workers — thumbnails appear
-- [ ] 3.4 Delete photo — removed from UI and Storage
-- [ ] 3.5 Upload document file — download link works
-- [ ] 3.6 Delete document file — removed from UI and Storage
-- [ ] 3.7 File > 10 MB → Polish error banner, no file stored
-- [ ] 3.8 No-file-selected submit → Polish error banner
-- [ ] 3.9 ~9 MB file upload succeeds on Workers (no timeout)
+- [x] 3.3 Upload 2–3 photos on deployed Workers — thumbnails appear — cc5c1fc
+- [x] 3.4 Delete photo — removed from UI and Storage — cc5c1fc
+- [x] 3.5 Upload document file — download link works — cc5c1fc
+- [x] 3.6 Delete document file — removed from UI and Storage — cc5c1fc
+- [x] 3.7 File > 10 MB → Polish error banner, no file stored — cc5c1fc
+- [x] 3.8 No-file-selected submit → Polish error banner — cc5c1fc
+- [x] 3.9 ~9 MB file upload succeeds on Workers (no timeout) — cc5c1fc
