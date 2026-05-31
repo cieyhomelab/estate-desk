@@ -37,7 +37,6 @@ Pojedynczy agent nieruchomości w Polsce zarządza pełnym cyklem życia ogłosz
 | S-04  | contact-management      | dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia                           | S-02, F-01           | FR-013, FR-014                        | proposed |
 | S-05  | documents-and-files     | uploadować zdjęcia, zaznaczać dokumenty na liście kontrolnej i uploadować pliki dokumentów   | S-02, F-01           | FR-005, FR-015, FR-016, US-01         | proposed |
 | S-06  | transaction-close       | zamknąć transakcję przez bramkę dokumentową, nagrać dane notariusza i datę, ponownie otworzyć ogłoszenie | S-02, S-03, S-05, F-01 | FR-007, FR-017, FR-018, US-01  | proposed |
-| S-07  | account-deletion        | trwale usunąć konto i wszystkie powiązane dane                                                            | S-01, F-01             | FR-023                         | ready    |
 
 ## Strumienie
 
@@ -154,18 +153,6 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Ryzyko:** S-06 (gwiazda przewodnia) zależy od listy kontrolnej z tego slice — bramka dokumentowa sprawdza stan listy przed zamknięciem transakcji. S-05 musi być ukończony przed S-06.
 - **Status:** proposed
 
-### S-07: Usunięcie konta
-
-- **Rezultat:** agent może trwale usunąć swoje konto wraz ze wszystkimi powiązanymi danymi (ogłoszenia, właściciele, kontakty, historia cen, ustawienia prowizji, pliki) — akcja jest nieodwracalna i wymaga potwierdzenia.
-- **Change ID:** `account-deletion`
-- **Odniesienia PRD:** FR-023
-- **Zależności:** S-01, F-01
-- **Równolegle z:** S-02, S-03, S-04, S-05, S-06
-- **Blokery:** —
-- **Nieznane:** —
-- **Ryzyko:** Kaskadowe usunięcie danych musi być kompletne — każda tabela z kluczem obcym do `users` musi obsługiwać `ON DELETE CASCADE` lub jawne czyszczenie; pominięcie powoduje osierocone dane osobowe (RODO).
-- **Status:** ready
-
 ### S-06: Zamknięcie transakcji (gwiazda przewodnia)
 
 - **Rezultat:** agent może oznaczyć ogłoszenie jako „ukończone" — po weryfikacji że wszystkie wymagane dokumenty są odfajkowane lub aktywowany jest override — z zablokowaną i zapisaną kwotą prowizji (brutto / podatek / agencja / agent), nagrać dane kancelarii notarialnej i datę transakcji oraz ponownie otworzyć zamkniętą transakcję jeśli umowa się nie domknęła.
@@ -190,7 +177,6 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 | S-04       | contact-management      | Kontakty zainteresowanych stron do ogłoszenia                          | no                    | Wymaga S-02 + F-01                                               |
 | S-05       | documents-and-files     | Zdjęcia + lista kontrolna dokumentów + upload plików                   | no                    | Wymaga S-02 + F-01; wyjaśnij listę dokumentów z agentem przed planowaniem |
 | S-06       | transaction-close       | Zamknięcie transakcji: bramka dokumentowa + prowizja + notariusz       | no                    | Wymaga S-02 + S-03 + S-05 + F-01; gwiazda przewodnia             |
-| S-07       | account-deletion        | Trwałe usunięcie konta i wszystkich danych agenta                      | yes                   | Uruchom `/10x-plan account-deletion`                              |
 
 ## Otwarte pytania roadmapy
 
