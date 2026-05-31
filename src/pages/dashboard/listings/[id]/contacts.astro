@@ -18,7 +18,7 @@ if (id && supabase) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return Astro.redirect("/auth/signin");
+    throw Astro.redirect("/auth/signin");
   }
 
   const { data: listingData, error: fetchError } = await supabase
@@ -31,7 +31,7 @@ if (id && supabase) {
   if (fetchError && fetchError.code !== "PGRST116") {
     loadError = true;
   } else if (!listingData) {
-    return Astro.redirect("/dashboard");
+    throw Astro.redirect("/dashboard");
   } else {
     listing = listingData;
 
