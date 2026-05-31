@@ -141,9 +141,15 @@ const roleLabels: Record<string, string> = {
                     name="role"
                     class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   >
-                    <option value="" class="bg-gray-900">— (nie dotyczy)</option>
-                    <option value="kupujący" class="bg-gray-900">Kupujący</option>
-                    <option value="najemca" class="bg-gray-900">Najemca</option>
+                    <option value="" class="bg-gray-900">
+                      — (nie dotyczy)
+                    </option>
+                    <option value="kupujący" class="bg-gray-900">
+                      Kupujący
+                    </option>
+                    <option value="najemca" class="bg-gray-900">
+                      Najemca
+                    </option>
                   </select>
                 </div>
                 <button
@@ -174,7 +180,9 @@ const roleLabels: Record<string, string> = {
                     {contacts.map((contact) => (
                       <tr class="border-b border-white/5 last:border-0">
                         <td class="py-2 text-white">{contact.name}</td>
-                        <td class="py-2 text-blue-100/70">{contact.role ? (roleLabels[contact.role] ?? contact.role) : "—"}</td>
+                        <td class="py-2 text-blue-100/70">
+                          {contact.role ? (roleLabels[contact.role] ?? contact.role) : "—"}
+                        </td>
                         <td class="py-2 text-blue-100/70">{contact.phone ?? "—"}</td>
                         <td class="py-2 text-blue-100/70">{contact.email ?? "—"}</td>
                         <td class="py-2">
