@@ -39,7 +39,7 @@ const error = Astro.url.searchParams.get("error");
 <Layout title="Edytuj ogłoszenie — EstateDesk">
   <div class="bg-cosmic min-h-screen p-6">
     <div class="mx-auto max-w-lg">
-      <div class="mb-6 flex items-center justify-between">
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-2">
         <a href="/dashboard" class="text-sm text-blue-200/70 transition-colors hover:text-blue-200"> ← Powrót </a>
         <div class="flex gap-4">
           <a
@@ -49,10 +49,10 @@ const error = Astro.url.searchParams.get("error");
             Cena i prowizja →
           </a>
           <a
-            href={`/dashboard/listings/${listing.id}/documents`}
+            href={`/dashboard/listings/${listing.id}/close`}
             class="text-sm text-blue-400 transition-colors hover:text-blue-300"
           >
-            Dokumenty i zdjęcia →
+            Zamknij transakcję →
           </a>
         </div>
       </div>

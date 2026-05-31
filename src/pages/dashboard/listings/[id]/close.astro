@@ -1,0 +1,383 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Banner from "@/components/Banner.astro";
+import { createClient } from "@/lib/supabase";
+import { formatPLN } from "@/lib/utils";
+import type { Listing } from "@/types/listings";
+import type { TransactionSnapshot } from "@/types/transaction";
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+if (!id || !supabase) {
+  return Astro.redirect("/auth/signin");
+}
+
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (!user) {
+  return Astro.redirect("/auth/signin");
+}
+
+const [listingResult, settingsResult] = await Promise.all([
+  supabase.from("listings").select("*").eq("id", id).eq("user_id", user.id).single<Listing>(),
+  supabase
+    .from("commission_settings")
+    .select("tax_rate, agency_percent")
+    .eq("user_id", user.id)
+    .maybeSingle<{ tax_rate: number; agency_percent: number }>(),
+]);
+
+if (listingResult.error) {
+  return Astro.redirect("/dashboard?error=nie-znaleziono");
+}
+
+const listing = listingResult.data;
+const settings = settingsResult.data;
+
+let uncheckedCount = 0;
+let uncheckedLabels: string[] = [];
+let activeSnapshot: TransactionSnapshot | null = null;
+
+if (listing.status === "active") {
+  // listing_documents may not exist yet (S-05 not implemented) — default to 0 on error
+  const { count, error: countError } = await supabase
+    .from("listing_documents")
+    .select("id", { count: "exact", head: true })
+    .eq("listing_id", id)
+    .eq("is_checked", false);
+
+  if (!countError) {
+    uncheckedCount = count ?? 0;
+  }
+
+  if (uncheckedCount > 0) {
+    const { data: labelsData } = await supabase
+      .from("listing_documents")
+      .select("label")
+      .eq("listing_id", id)
+      .eq("is_checked", false)
+      .order("position")
+      .limit(50);
+    uncheckedLabels = (labelsData ?? []).map((d: { label: string }) => d.label);
+  }
+} else {
+  const { data: snapshotData } = await supabase
+    .from("transaction_snapshots")
+    .select("*")
+    .eq("listing_id", id)
+    .is("voided_at", null)
+    .maybeSingle<TransactionSnapshot>();
+  activeSnapshot = snapshotData;
+}
+
+// checklist_override (S-05) not yet available; gate passes when 0 unchecked
+const gatePass = uncheckedCount === 0;
+
+interface CommissionPreview {
+  brutto: number;
+  agencyAmount: number;
+  grossIncome: number;
+  taxAmount: number;
+  agentNet: number;
+}
+
+let commissionPreview: CommissionPreview | null = null;
+
+if (listing.asking_price !== null && listing.commission_percent !== null && settings !== null) {
+  const brutto_c = Math.round(listing.asking_price * listing.commission_percent);
+  const agency_c = Math.round((brutto_c * settings.agency_percent) / 100);
+  const gross_c = brutto_c - agency_c;
+  const tax_c = Math.round((gross_c * settings.tax_rate) / 100);
+  const agent_c = gross_c - tax_c;
+  commissionPreview = {
+    brutto: brutto_c / 100,
+    agencyAmount: agency_c / 100,
+    grossIncome: gross_c / 100,
+    taxAmount: tax_c / 100,
+    agentNet: agent_c / 100,
+  };
+}
+
+function formatDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-");
+  return `${d}.${m}.${y}`;
+}
+
+function formatTimestamp(tsStr: string): string {
+  const dt = new Date(tsStr);
+  const d = dt.getUTCDate().toString().padStart(2, "0");
+  const mo = (dt.getUTCMonth() + 1).toString().padStart(2, "0");
+  return `${d}.${mo}.${dt.getUTCFullYear()}`;
+}
+
+const success = Astro.url.searchParams.get("success");
+const error = Astro.url.searchParams.get("error");
+---
+
+<Layout title="Zamknij transakcję — EstateDesk">
+  <div class="bg-cosmic min-h-screen p-6">
+    <div class="mx-auto max-w-lg">
+      <div class="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+        <a href="/dashboard" class="text-blue-200/70 transition-colors hover:text-blue-200">← Powrót</a>
+        <span class="text-white/20">|</span>
+        <a
+          href={`/dashboard/listings/${listing.id}/edit`}
+          class="text-blue-200/70 transition-colors hover:text-blue-200">Edytuj</a
+        >
+        <span class="text-white/30">→</span>
+        <a
+          href={`/dashboard/listings/${listing.id}/pricing`}
+          class="text-blue-200/70 transition-colors hover:text-blue-200">Cena i prowizja</a
+        >
+        <span class="text-white/30">→</span>
+        <span class="font-medium text-white">Zamknij</span>
+      </div>
+
+      {success === "zamknieto" && <Banner variant="info">Transakcja została pomyślnie zamknięta.</Banner>}
+      {error === "juz-zamknieta" && <Banner variant="error">Transakcja jest już zamknięta.</Banner>}
+      {
+        error === "brakujace-dokumenty" && (
+          <Banner variant="error">Nie można zamknąć transakcji — brakuje wymaganych dokumentów.</Banner>
+        )
+      }
+      {error === "blad-zapisu" && <Banner variant="error">Nie udało się zapisać. Spróbuj ponownie.</Banner>}
+      {
+        error && !["juz-zamknieta", "brakujace-dokumenty", "blad-zapisu"].includes(error) && (
+          <Banner variant="error">Wystąpił nieoczekiwany błąd. Spróbuj ponownie.</Banner>
+        )
+      }
+
+      {
+        listing.status === "active" ? (
+          <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+            <h1 class="mb-2 text-2xl font-bold text-white">Zamknij transakcję</h1>
+            <p class="mb-6 text-sm text-blue-100/70">{listing.address}</p>
+
+            {gatePass ? (
+              <p class="mb-6 text-green-300">✅ Dokumenty gotowe — transakcja może zostać zamknięta.</p>
+            ) : (
+              <div class="mb-6 space-y-3 rounded-lg border border-yellow-400/20 bg-yellow-400/5 p-4">
+                <p class="text-yellow-300">
+                  ⚠️ Brakuje {uncheckedCount} {uncheckedCount === 1 ? "dokumentu" : "dokumentów"}.
+                </p>
+                {uncheckedLabels.length > 0 && (
+                  <ul class="list-inside list-disc space-y-1 text-sm text-blue-100/70">
+                    {uncheckedLabels.map((label) => (
+                      <li>{label}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {commissionPreview ? (
+              <div class="mb-6 space-y-2">
+                <h2 class="text-sm font-medium text-blue-100/80">Podgląd prowizji</h2>
+                <table class="w-full text-sm">
+                  <tbody>
+                    <tr class="border-b border-white/10">
+                      <td class="py-1.5 text-blue-100/70">Prowizja ogółem</td>
+                      <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.brutto)}</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-1.5 text-blue-100/70">Część agencji</td>
+                      <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.agencyAmount)}</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-1.5 text-blue-100/70">Dochód brutto</td>
+                      <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.grossIncome)}</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-1.5 text-blue-100/70">Rezerwa podatkowa</td>
+                      <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.taxAmount)}</td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 font-medium text-white">Zysk agenta</td>
+                      <td class="py-1.5 text-right font-bold text-white">{formatPLN(commissionPreview.agentNet)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p class="mb-6 text-sm text-blue-100/50">Brak danych prowizji — snapshot będzie pusty.</p>
+            )}
+
+            <form method="POST" action={`/api/listings/${id}/close`} class="space-y-4">
+              {!gatePass && (
+                <label class="flex cursor-pointer items-center gap-2 text-sm text-blue-100/80">
+                  <input
+                    type="checkbox"
+                    id="override-checkbox"
+                    name="override_confirmed"
+                    value="true"
+                    class="accent-blue-400"
+                  />
+                  Pomiń weryfikację dokumentów
+                </label>
+              )}
+              <div>
+                <label for="notary_name" class="mb-1 block text-sm font-medium text-blue-100/80">
+                  Imię i nazwisko notariusza
+                </label>
+                <input
+                  id="notary_name"
+                  type="text"
+                  name="notary_name"
+                  value={listing.notary_name ?? ""}
+                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label for="notary_city" class="mb-1 block text-sm font-medium text-blue-100/80">
+                  Miasto kancelarii notarialnej
+                </label>
+                <input
+                  id="notary_city"
+                  type="text"
+                  name="notary_city"
+                  value={listing.notary_city ?? ""}
+                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label for="transaction_date" class="mb-1 block text-sm font-medium text-blue-100/80">
+                  Data transakcji
+                </label>
+                <input
+                  id="transaction_date"
+                  type="date"
+                  name="transaction_date"
+                  value={listing.transaction_date ?? ""}
+                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label for="transaction_notes" class="mb-1 block text-sm font-medium text-blue-100/80">
+                  Notatki
+                </label>
+                <textarea
+                  id="transaction_notes"
+                  name="transaction_notes"
+                  rows={3}
+                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                >
+                  {listing.transaction_notes ?? ""}
+                </textarea>
+              </div>
+
+              <button
+                id="submit-btn"
+                type="submit"
+                disabled={!gatePass}
+                class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Zamknij transakcję
+              </button>
+              {!gatePass && (
+                <p class="text-center text-sm text-blue-100/50">
+                  Zaznacz "Pomiń weryfikację dokumentów", aby odblokować przycisk.
+                </p>
+              )}
+            </form>
+          </div>
+        ) : (
+          <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+            <h1 class="mb-1 text-2xl font-bold text-white">Transakcja zamknięta</h1>
+            {listing.closed_at && <p class="mb-6 text-sm text-blue-100/70">{formatTimestamp(listing.closed_at)}</p>}
+
+            <div class="mb-6 space-y-4">
+              {listing.notary_name && (
+                <div>
+                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Notariusz</span>
+                  <p class="text-white">{listing.notary_name}</p>
+                </div>
+              )}
+              {listing.notary_city && (
+                <div>
+                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Miasto</span>
+                  <p class="text-white">{listing.notary_city}</p>
+                </div>
+              )}
+              {listing.transaction_date && (
+                <div>
+                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Data transakcji</span>
+                  <p class="text-white">{formatDate(listing.transaction_date)}</p>
+                </div>
+              )}
+              {listing.transaction_notes && (
+                <div>
+                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Notatki</span>
+                  <p class="whitespace-pre-wrap text-white">{listing.transaction_notes}</p>
+                </div>
+              )}
+            </div>
+
+            {activeSnapshot?.agent_net !== null && activeSnapshot?.agent_net !== undefined ? (
+              <div class="mb-6 space-y-2">
+                <h2 class="text-sm font-medium text-blue-100/80">Prowizja (zablokowana)</h2>
+                <table class="w-full text-sm">
+                  <tbody>
+                    <tr class="border-b border-white/10">
+                      <td class="py-1.5 text-blue-100/70">Prowizja ogółem</td>
+                      <td class="py-1.5 text-right text-white">
+                        {activeSnapshot.brutto !== null ? formatPLN(activeSnapshot.brutto) : "—"}
+                      </td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-1.5 text-blue-100/70">Część agencji</td>
+                      <td class="py-1.5 text-right text-white">
+                        {activeSnapshot.agency_amount !== null ? formatPLN(activeSnapshot.agency_amount) : "—"}
+                      </td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-1.5 text-blue-100/70">Dochód brutto</td>
+                      <td class="py-1.5 text-right text-white">
+                        {activeSnapshot.gross_income !== null ? formatPLN(activeSnapshot.gross_income) : "—"}
+                      </td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                      <td class="py-1.5 text-blue-100/70">Rezerwa podatkowa</td>
+                      <td class="py-1.5 text-right text-white">
+                        {activeSnapshot.tax_amount !== null ? formatPLN(activeSnapshot.tax_amount) : "—"}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="py-1.5 font-medium text-white">Zysk agenta</td>
+                      <td class="py-1.5 text-right font-bold text-white">{formatPLN(activeSnapshot.agent_net)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p class="mb-6 text-sm text-blue-100/50">Brak danych prowizji.</p>
+            )}
+
+            {/* Intentionally no confirmation dialog — reopen is reversible per plan transaction-close Phase 3 */}
+            <form method="POST" action={`/api/listings/${id}/reopen`}>
+              <button
+                type="submit"
+                class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 font-medium text-white transition-colors hover:bg-white/20"
+              >
+                Wznów transakcję
+              </button>
+            </form>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const checkbox = document.getElementById("override-checkbox") as HTMLInputElement | null;
+  const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement | null;
+
+  if (checkbox && submitBtn) {
+    checkbox.addEventListener("change", () => {
+      submitBtn.disabled = !checkbox.checked;
+    });
+  }
+</script>

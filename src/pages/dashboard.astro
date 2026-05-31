@@ -9,6 +9,7 @@ const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 let listings: Listing[] = [];
 let fetchError: string | null = null;
+let snapshotMap = new Map<string, number | null>();
 
 if (!supabase) {
   fetchError = "Błąd konfiguracji bazy danych";
@@ -25,10 +26,25 @@ if (!supabase) {
     fetchError = error.message;
   } else {
     listings = data;
+
+    const doneIds = listings.filter((l) => l.status === "done").map((l) => l.id);
+    if (doneIds.length > 0) {
+      const { data: snapshots } = await supabase
+        .from("transaction_snapshots")
+        .select("listing_id, agent_net")
+        .in("listing_id", doneIds)
+        .is("voided_at", null)
+        .limit(100)
+        .overrideTypes<{ listing_id: string; agent_net: number | null }[], { merge: false }>();
+      if (snapshots) {
+        snapshotMap = new Map(snapshots.map((s) => [s.listing_id, s.agent_net]));
+      }
+    }
   }
 }
 
 const urlError = Astro.url.searchParams.get("error");
+const urlSuccess = Astro.url.searchParams.get("success");
 ---
 
 <Layout title="Dashboard — EstateDesk">
@@ -52,6 +68,7 @@ const urlError = Astro.url.searchParams.get("error");
         </div>
       </div>
 
+      {urlSuccess === "wznowiono" && <Banner variant="info">Ogłoszenie zostało wznowione.</Banner>}
       {urlError && <Banner variant="error">{urlError}</Banner>}
       {fetchError && <Banner variant="error">{fetchError}</Banner>}
 
@@ -66,7 +83,7 @@ const urlError = Astro.url.searchParams.get("error");
         ) : (
           <div class="grid gap-4 sm:grid-cols-2">
             {listings.map((listing) => (
-              <ListingCard listing={listing} />
+              <ListingCard listing={listing} agentNet={snapshotMap.get(listing.id) ?? null} />
             ))}
           </div>
         )

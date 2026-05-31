@@ -4,9 +4,10 @@ import { formatPLN } from "@/lib/utils";
 
 interface Props {
   listing: Listing;
+  agentNet?: number | null;
 }
 
-const { listing } = Astro.props;
+const { listing, agentNet = null } = Astro.props;
 
 const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem okazjonalny";
 const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
@@ -32,9 +33,16 @@ const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
 
   {listing.owner_name && <p class="mb-1 text-sm text-blue-100/70">{listing.owner_name}</p>}
 
-  <p class="mb-4 text-sm font-medium text-white/80">
+  <p class:list={["text-sm font-medium text-white/80", listing.status === "done" ? "mb-1" : "mb-4"]}>
     {listing.asking_price ? formatPLN(listing.asking_price) : "Brak ceny"}
   </p>
+  {
+    listing.status === "done" && (
+      <p class="mb-4 text-sm text-blue-100/70">
+        Zysk agenta: <span class="font-medium text-white">{agentNet !== null ? formatPLN(agentNet) : "—"}</span>
+      </p>
+    )
+  }
 
   <div class="flex flex-wrap gap-2">
     <a
@@ -49,12 +57,26 @@ const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
     >
       Cena i prowizja
     </a>
-    <a
-      href={`/dashboard/listings/${listing.id}/documents`}
-      class="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
-    >
-      Dokumenty i zdjęcia
-    </a>
+    {
+      listing.status === "active" ? (
+        <a
+          href={`/dashboard/listings/${listing.id}/close`}
+          class="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
+        >
+          Zamknij transakcję
+        </a>
+      ) : (
+        /* Intentionally no confirmation dialog — reopen is reversible per plan transaction-close Phase 3 */
+        <form method="POST" action={`/api/listings/${listing.id}/reopen`}>
+          <button
+            type="submit"
+            class="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/20"
+          >
+            Wznów transakcję
+          </button>
+        </form>
+      )
+    }
     <form method="POST" action={`/api/listings/${listing.id}/delete`}>
       <button
         type="submit"
