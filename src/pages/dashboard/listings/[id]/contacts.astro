@@ -33,20 +33,33 @@ if (id && supabase) {
   } else if (!listingData) {
     throw Astro.redirect("/dashboard");
   } else {
-    listing = listingData;
-
-    const { data: contactsData, error: contactsError } = await supabase
-      .from("contacts")
+    const { data: listingData, error: fetchError } = await supabase
+      .from("listings")
       .select("*")
-      .eq("listing_id", id)
-      .order("created_at", { ascending: true })
-      .limit(100)
-      .overrideTypes<Contact[], { merge: false }>();
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .single<Listing>();
 
-    if (contactsError) {
+    if (fetchError && fetchError.code !== "PGRST116") {
       loadError = true;
+    } else if (!listingData) {
+      Astro.redirect("/dashboard");
     } else {
-      contacts = contactsData;
+      listing = listingData;
+
+      const { data: contactsData, error: contactsError } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("listing_id", id)
+        .order("created_at", { ascending: true })
+        .limit(100)
+        .overrideTypes<Contact[], { merge: false }>();
+
+      if (contactsError) {
+        loadError = true;
+      } else {
+        contacts = contactsData;
+      }
     }
   }
 }
