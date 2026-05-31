@@ -3,7 +3,7 @@ project: EstateDesk
 version: 1
 status: draft
 created: 2026-05-24
-updated: 2026-05-30
+updated: 2026-05-31
 prd_version: 2
 main_goal: speed
 top_blocker: time
@@ -32,11 +32,11 @@ Pojedynczy agent nieruchomości w Polsce zarządza pełnym cyklem życia ogłosz
 | F-01  | database-schema         | (foundation) schemat bazy danych i migracje gotowe w Supabase                               | —                    | FR-003–FR-018                         | ready    |
 | F-02  | cloudflare-first-deploy | (foundation) aplikacja dostępna pod workers.dev z działającymi sekretami Supabase            | —                    | NFR (czas ładowania ≤3s, trwałość)   | ready    |
 | S-01  | auth-flow               | zarejestrować konto, zalogować się i wylogować z aplikacji                                   | —                    | FR-001, FR-002                        | ready    |
-| S-02  | listing-crud            | dodawać, edytować i usuwać ogłoszenia, przeglądać dashboard, rejestrować dane właściciela    | S-01, F-01           | FR-003, FR-004, FR-006, FR-008, US-01 | proposed |
-| S-03  | pricing-and-commission  | ustawiać cenę, przeglądać historię cen i widzieć podział prowizji według swoich stawek       | S-02, F-01           | FR-009, FR-010, FR-011, FR-012, US-01 | proposed |
-| S-04  | contact-management      | dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia                           | S-02, F-01           | FR-013, FR-014                        | proposed |
-| S-05  | documents-and-files     | uploadować zdjęcia, zaznaczać dokumenty na liście kontrolnej i uploadować pliki dokumentów   | S-02, F-01           | FR-005, FR-015, FR-016, US-01         | proposed |
-| S-06  | transaction-close       | zamknąć transakcję przez bramkę dokumentową, nagrać dane notariusza i datę, ponownie otworzyć ogłoszenie | S-02, S-03, S-05, F-01 | FR-007, FR-017, FR-018, US-01  | proposed |
+| S-02  | listing-crud            | dodawać, edytować i usuwać ogłoszenia, przeglądać dashboard, rejestrować dane właściciela    | S-01, F-01           | FR-003, FR-004, FR-006, FR-008, US-01 | done     |
+| S-03  | pricing-and-commission  | ustawiać cenę, przeglądać historię cen i widzieć podział prowizji według swoich stawek       | S-02, F-01           | FR-009, FR-010, FR-011, FR-012, US-01 | done     |
+| S-04  | contact-management      | dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia                           | S-02, F-01           | FR-013, FR-014                        | done     |
+| S-05  | documents-and-files     | uploadować zdjęcia, zaznaczać dokumenty na liście kontrolnej i uploadować pliki dokumentów   | S-02, F-01           | FR-005, FR-015, FR-016, US-01         | done     |
+| S-06  | transaction-close       | zamknąć transakcję przez bramkę dokumentową, nagrać dane notariusza i datę, ponownie otworzyć ogłoszenie | S-02, S-03, S-05, F-01 | FR-007, FR-017, FR-018, US-01  | done     |
 
 ## Strumienie
 
@@ -112,7 +112,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Pierwsza funkcja zależna od schematu bazy — błędnie zaprojektowane tabele propagują się do wszystkich późniejszych slices; warto zweryfikować schemat pod kątem US-01 przed rozpoczęciem UI.
-- **Status:** proposed
+- **Status:** done (impl_reviewed 2026-05-27)
 
 ### S-03: Cennik i podział prowizji
 
@@ -125,7 +125,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Nieznane:**
   - Czy kolejność i podstawa wyliczeń podziału prowizji to: prowizja brutto → rezerwa podatkowa (% brutto) → część agencji (% brutto) → część agenta (brutto − podatek − agencja)? — Owner: user. Block: no (do potwierdzenia podczas planowania `/10x-plan pricing-and-commission`).
 - **Ryzyko:** PRD guardrail: "rounding difference surfaces as a validation error" — logika zaokrąglania musi być przetestowana przed S-06, gdzie prowizja jest blokowana przy zamknięciu transakcji.
-- **Status:** proposed
+- **Status:** done (impl_reviewed 2026-05-29)
 
 ### S-04: Kontakty zainteresowanych stron
 
@@ -137,7 +137,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Minimalny — prosty CRUD encji powiązanej z ogłoszeniem. Nie blokuje gwiazdy przewodniej (S-06); może być implementowany równolegle ze ścieżką do S-06.
-- **Status:** proposed
+- **Status:** done (implemented 2026-05-30)
 
 ### S-05: Zdjęcia, lista kontrolna dokumentów i pliki
 
@@ -151,7 +151,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
   - Jakie dokładnie pozycje wchodzą w skład domyślnej listy dokumentów dla sprzedaży i dla najmu okazjonalnego? — Owner: user (agent zna listę). Block: no (potrzebne przed implementacją UI listy, nie blokuje schematu).
   - Czy upload plików przez Supabase Storage działa poprawnie w środowisku Cloudflare Workers workerd przy rozmiarach do 10 MB? (Rejestr ryzyk `infrastructure.md` wymaga testu na wdrożonym Workers.) — Owner: TBD. Block: no (F-02 umożliwia test; workaround możliwy).
 - **Ryzyko:** S-06 (gwiazda przewodnia) zależy od listy kontrolnej z tego slice — bramka dokumentowa sprawdza stan listy przed zamknięciem transakcji. S-05 musi być ukończony przed S-06.
-- **Status:** proposed
+- **Status:** done (implemented 2026-05-30)
 
 ### S-06: Zamknięcie transakcji (gwiazda przewodnia)
 
@@ -163,7 +163,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Centralny przepływ biznesowy PRD — bramka dokumentowa musi precyzyjnie implementować logikę z §Business Logic: „ready-to-close (all items checked or override active) or blocked". Błąd tutaj neguje główną wartość produktu.
-- **Status:** proposed
+- **Status:** done (impl_reviewed 2026-05-30)
 
 ## Backlog Handoff
 
@@ -172,11 +172,11 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 | F-01       | database-schema         | Zaprojektuj i zaaplikuj schemat Supabase + migracje                    | yes                   | Uruchom `/10x-plan database-schema`                               |
 | F-02       | cloudflare-first-deploy | Pierwsze wdrożenie na Cloudflare Workers (rename + sekrety + deploy)   | yes                   | Uruchom `/10x-plan cloudflare-first-deploy`                       |
 | S-01       | auth-flow               | Zweryfikuj i dopracuj przepływ rejestracji i logowania                 | yes                   | Uruchom `/10x-plan auth-flow`                                     |
-| S-02       | listing-crud            | Dashboard ogłoszeń: CRUD + dane właściciela                           | no                    | Wymaga F-01 + S-01                                               |
-| S-03       | pricing-and-commission  | Cennik i podział prowizji (historia cen + konfiguracja stawek)         | no                    | Wymaga S-02 + F-01; potwierdź formułę prowizji podczas planowania |
-| S-04       | contact-management      | Kontakty zainteresowanych stron do ogłoszenia                          | no                    | Wymaga S-02 + F-01                                               |
-| S-05       | documents-and-files     | Zdjęcia + lista kontrolna dokumentów + upload plików                   | no                    | Wymaga S-02 + F-01; wyjaśnij listę dokumentów z agentem przed planowaniem |
-| S-06       | transaction-close       | Zamknięcie transakcji: bramka dokumentowa + prowizja + notariusz       | no                    | Wymaga S-02 + S-03 + S-05 + F-01; gwiazda przewodnia             |
+| S-02       | listing-crud            | Dashboard ogłoszeń: CRUD + dane właściciela                           | done                  | impl_reviewed 2026-05-27                                          |
+| S-03       | pricing-and-commission  | Cennik i podział prowizji (historia cen + konfiguracja stawek)         | done                  | impl_reviewed 2026-05-29                                          |
+| S-04       | contact-management      | Kontakty zainteresowanych stron do ogłoszenia                          | done                  | implemented 2026-05-30                                            |
+| S-05       | documents-and-files     | Zdjęcia + lista kontrolna dokumentów + upload plików                   | done                  | implemented 2026-05-30                                            |
+| S-06       | transaction-close       | Zamknięcie transakcji: bramka dokumentowa + prowizja + notariusz       | done                  | impl_reviewed 2026-05-30; gwiazda przewodnia osiągnięta           |
 
 ## Otwarte pytania roadmapy
 
@@ -196,4 +196,10 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 
 ## Ukończone
 
-*(puste przy pierwszej generacji — `/10x-archive` dodaje wpisy tutaj po zamknięciu zmiany)*
+| ID   | Change ID              | Ukończono  | Status zmiany  |
+| ---- | ---------------------- | ---------- | -------------- |
+| S-02 | listing-crud           | 2026-05-27 | impl_reviewed  |
+| S-03 | pricing-and-commission | 2026-05-29 | impl_reviewed  |
+| S-04 | contact-management     | 2026-05-30 | implemented    |
+| S-05 | documents-and-files    | 2026-05-30 | implemented    |
+| S-06 | transaction-close      | 2026-05-30 | impl_reviewed  |
