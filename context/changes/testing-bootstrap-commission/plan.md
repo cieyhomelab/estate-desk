@@ -357,12 +357,12 @@ pricing page and close flow before marking this plan complete.
 
 #### Automated
 
-- [x] 2.1 `npm run test` exits 0 with 4 tests passing
-- [x] 2.2 `npx astro check` passes (no new type errors)
-- [x] 2.3 `npm run lint` passes on changed files
-- [x] 2.4 `npm run build` passes after pricing.astro SSR refactor
+- [x] 2.1 `npm run test` exits 0 with 4 tests passing — fa0ad58
+- [x] 2.2 `npx astro check` passes (no new type errors) — fa0ad58
+- [x] 2.3 `npm run lint` passes on changed files — fa0ad58
+- [x] 2.4 `npm run build` passes after pricing.astro SSR refactor — fa0ad58
 
 #### Manual
 
-- [x] 2.5 Pricing page commission breakdown renders correctly
-- [x] 2.6 Transaction close commission snapshot is correct
+- [x] 2.5 Pricing page commission breakdown renders correctly — fa0ad58
+- [x] 2.6 Transaction close commission snapshot is correct — fa0ad58
