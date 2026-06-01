@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
+import { calculateCommissionSplit, type CommissionSplit } from "@/lib/commission";
 import type { Listing } from "@/types/listings";
 import type { PriceHistoryEntry, CommissionSettings } from "@/types/pricing";
 
@@ -60,6 +61,16 @@ if (id && supabase) {
 if (!listing) {
   return Astro.redirect("/dashboard");
 }
+
+const commissionSplit: CommissionSplit | null =
+  listing.asking_price && listing.commission_percent && commissionSettings
+    ? calculateCommissionSplit({
+        askingPrice: listing.asking_price,
+        commissionPercent: listing.commission_percent,
+        agencyPercent: commissionSettings.agency_percent,
+        taxRate: commissionSettings.tax_rate,
+      })
+    : null;
 
 function formatDate(dateStr: string): string {
   const d = new Date(dateStr);
@@ -200,57 +211,33 @@ const success = Astro.url.searchParams.get("success");
               </a>
               .
             </p>
-          ) : listing.asking_price && listing.commission_percent ? (
+          ) : commissionSplit ? (
             <div>
               <h3 class="mb-3 text-sm font-medium text-blue-100/80">Podział prowizji</h3>
-              <table class="w-full text-sm" id="commission-breakdown">
+              <table class="w-full text-sm">
                 <tbody>
                   <tr class="border-b border-white/10">
                     <td class="py-2 text-blue-100/70">Prowizja ogółem</td>
-                    <td id="b-total" class="py-2 text-right text-white"></td>
+                    <td class="py-2 text-right text-white">{formatPLN(commissionSplit.brutto)}</td>
                   </tr>
                   <tr class="border-b border-white/5">
                     <td class="py-2 text-blue-100/70">Część agencji</td>
-                    <td id="b-agency" class="py-2 text-right text-white"></td>
+                    <td class="py-2 text-right text-white">{formatPLN(commissionSplit.agencyAmount)}</td>
                   </tr>
                   <tr class="border-b border-white/5">
                     <td class="py-2 text-blue-100/70">Dochód brutto</td>
-                    <td id="b-gross" class="py-2 text-right text-white"></td>
+                    <td class="py-2 text-right text-white">{formatPLN(commissionSplit.grossIncome)}</td>
                   </tr>
                   <tr class="border-b border-white/5">
                     <td class="py-2 text-blue-100/70">Rezerwa podatkowa</td>
-                    <td id="b-tax" class="py-2 text-right text-white"></td>
+                    <td class="py-2 text-right text-white">{formatPLN(commissionSplit.taxAmount)}</td>
                   </tr>
                   <tr>
                     <td class="py-2 font-medium text-white">Dochód netto agenta</td>
-                    <td id="b-agent" class="py-2 text-right font-bold text-white"></td>
+                    <td class="py-2 text-right font-bold text-white">{formatPLN(commissionSplit.agentNet)}</td>
                   </tr>
                 </tbody>
               </table>
-              <script
-                define:vars={{
-                  askingPrice: listing.asking_price,
-                  commissionPercent: listing.commission_percent,
-                  taxRate: commissionSettings.tax_rate,
-                  agencyPercent: commissionSettings.agency_percent,
-                }}
-              >
-                function fmt(amount) {
-                  return new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN" }).format(amount);
-                }
-
-                const total_c = Math.round(((askingPrice * commissionPercent) / 100) * 100);
-                const agency_c = Math.round((total_c * agencyPercent) / 100);
-                const gross_c = total_c - agency_c;
-                const tax_c = Math.round((gross_c * taxRate) / 100);
-                const agent_c = gross_c - tax_c;
-
-                document.getElementById("b-total").textContent = fmt(total_c / 100);
-                document.getElementById("b-agency").textContent = fmt(agency_c / 100);
-                document.getElementById("b-gross").textContent = fmt(gross_c / 100);
-                document.getElementById("b-tax").textContent = fmt(tax_c / 100);
-                document.getElementById("b-agent").textContent = fmt(agent_c / 100);
-              </script>
             </div>
           ) : (
             <p class="text-blue-100/50 text-sm">

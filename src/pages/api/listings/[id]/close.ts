@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { calculateCommissionSplit } from "@/lib/commission";
 
 export const POST: APIRoute = async (context) => {
   const id = context.params.id;
@@ -70,16 +71,17 @@ export const POST: APIRoute = async (context) => {
   let agent_net: number | null = null;
 
   if (listing.asking_price !== null && listing.commission_percent !== null && settings !== null) {
-    const brutto_c = Math.round(listing.asking_price * listing.commission_percent);
-    const agency_c = Math.round((brutto_c * settings.agency_percent) / 100);
-    const gross_c = brutto_c - agency_c;
-    const tax_c = Math.round((gross_c * settings.tax_rate) / 100);
-    const agent_c = gross_c - tax_c;
-    brutto = brutto_c / 100;
-    agency_amount = agency_c / 100;
-    gross_income = gross_c / 100;
-    tax_amount = tax_c / 100;
-    agent_net = agent_c / 100;
+    const split = calculateCommissionSplit({
+      askingPrice: listing.asking_price,
+      commissionPercent: listing.commission_percent,
+      agencyPercent: settings.agency_percent,
+      taxRate: settings.tax_rate,
+    });
+    brutto = split.brutto;
+    agency_amount = split.agencyAmount;
+    gross_income = split.grossIncome;
+    tax_amount = split.taxAmount;
+    agent_net = split.agentNet;
   }
 
   const { error: insertError } = await supabase.from("transaction_snapshots").insert({

@@ -344,25 +344,25 @@ pricing page and close flow before marking this plan complete.
 
 #### Automated
 
-- [x] 1.1 `npm run test` exits 0
-- [x] 1.2 `npm run lint` passes with vitest.config.ts
-- [x] 1.3 `npm run build` still passes
+- [x] 1.1 `npm run test` exits 0 — 4cd7fa3
+- [x] 1.2 `npm run lint` passes with vitest.config.ts — 4cd7fa3
+- [x] 1.3 `npm run build` still passes — 4cd7fa3
 
 #### Manual
 
-- [x] 1.4 CI run passes including the new test step
-- [x] 1.5 `npm run test:watch` launches locally without errors
+- [x] 1.4 CI run passes including the new test step — 4cd7fa3
+- [x] 1.5 `npm run test:watch` launches locally without errors — 4cd7fa3
 
 ### Phase 2: Commission Formula Extraction + Unit Tests
 
 #### Automated
 
-- [ ] 2.1 `npm run test` exits 0 with 4 tests passing
-- [ ] 2.2 `npx astro check` passes (no new type errors)
-- [ ] 2.3 `npm run lint` passes on changed files
-- [ ] 2.4 `npm run build` passes after pricing.astro SSR refactor
+- [x] 2.1 `npm run test` exits 0 with 4 tests passing
+- [x] 2.2 `npx astro check` passes (no new type errors)
+- [x] 2.3 `npm run lint` passes on changed files
+- [x] 2.4 `npm run build` passes after pricing.astro SSR refactor
 
 #### Manual
 
-- [ ] 2.5 Pricing page commission breakdown renders correctly
-- [ ] 2.6 Transaction close commission snapshot is correct
+- [x] 2.5 Pricing page commission breakdown renders correctly
+- [x] 2.6 Transaction close commission snapshot is correct
