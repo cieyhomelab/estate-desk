@@ -4,6 +4,7 @@ import Banner from "@/components/Banner.astro";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
+import { calculateCommissionSplit, type CommissionSplit } from "@/lib/commission";
 import type { TransactionSnapshot } from "@/types/transaction";
 
 const { id } = Astro.params;
@@ -76,30 +77,15 @@ if (listing.status === "active") {
 // checklist_override (S-05) not yet available; gate passes when 0 unchecked
 const gatePass = uncheckedCount === 0;
 
-interface CommissionPreview {
-  brutto: number;
-  agencyAmount: number;
-  grossIncome: number;
-  taxAmount: number;
-  agentNet: number;
-}
-
-let commissionPreview: CommissionPreview | null = null;
-
-if (listing.asking_price !== null && listing.commission_percent !== null && settings !== null) {
-  const brutto_c = Math.round(listing.asking_price * listing.commission_percent);
-  const agency_c = Math.round((brutto_c * settings.agency_percent) / 100);
-  const gross_c = brutto_c - agency_c;
-  const tax_c = Math.round((gross_c * settings.tax_rate) / 100);
-  const agent_c = gross_c - tax_c;
-  commissionPreview = {
-    brutto: brutto_c / 100,
-    agencyAmount: agency_c / 100,
-    grossIncome: gross_c / 100,
-    taxAmount: tax_c / 100,
-    agentNet: agent_c / 100,
-  };
-}
+const commissionPreview: CommissionSplit | null =
+  listing.asking_price !== null && listing.commission_percent !== null && settings !== null
+    ? calculateCommissionSplit({
+        askingPrice: listing.asking_price,
+        commissionPercent: listing.commission_percent,
+        agencyPercent: settings.agency_percent,
+        taxRate: settings.tax_rate,
+      })
+    : null;
 
 function formatDate(dateStr: string): string {
   const [y, m, d] = dateStr.split("-");

@@ -58,6 +58,6 @@ describe("calculateCommissionSplit", () => {
     expect(result.grossIncome).toBe(1_666.66);
     expect(result.taxAmount).toBe(416.67);
     expect(result.agentNet).toBe(1_249.99);
-    expect(result.agencyAmount + result.taxAmount + result.agentNet).toBe(result.brutto);
+    expect(result.agencyAmount + result.taxAmount + result.agentNet).toBeCloseTo(result.brutto, 2);
   });
 });

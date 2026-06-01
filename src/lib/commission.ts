@@ -14,8 +14,8 @@ export interface CommissionSplit {
 }
 
 export function calculateCommissionSplit(input: CommissionInput): CommissionSplit {
-  // Integer-grosz arithmetic: askingPrice × commissionPercent yields grosze
-  // because PLN × % = PLN/100 × 100 = grosze (coincidental unit identity).
+  // askingPrice (PLN) × commissionPercent (%) = price × p/100 × 100 grosze
+  // by unit cancellation; divide by 100 to recover PLN.
   const brutto_c = Math.round(input.askingPrice * input.commissionPercent);
   const agency_c = Math.round((brutto_c * input.agencyPercent) / 100);
   const gross_c = brutto_c - agency_c;
