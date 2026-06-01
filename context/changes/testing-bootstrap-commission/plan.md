@@ -350,8 +350,8 @@ pricing page and close flow before marking this plan complete.
 
 #### Manual
 
-- [ ] 1.4 CI run passes including the new test step
-- [ ] 1.5 `npm run test:watch` launches locally without errors
+- [x] 1.4 CI run passes including the new test step
+- [x] 1.5 `npm run test:watch` launches locally without errors
 
 ### Phase 2: Commission Formula Extraction + Unit Tests
 
