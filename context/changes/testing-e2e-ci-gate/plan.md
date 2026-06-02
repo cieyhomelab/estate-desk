@@ -463,9 +463,9 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [x] 1.1 `npx playwright install chromium --with-deps` exits 0
-- [x] 1.2 `npm run test:e2e -- --list` exits 0 with empty test list
-- [x] 1.3 `npx tsc --noEmit` passes with new config and helpers
+- [x] 1.1 `npx playwright install chromium --with-deps` exits 0 — d1b00ae
+- [x] 1.2 `npm run test:e2e -- --list` exits 0 with empty test list — d1b00ae
+- [x] 1.3 `npx tsc --noEmit` passes with new config and helpers — d1b00ae
 
 #### Manual
 
@@ -476,8 +476,8 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [ ] 2.1 `npm run test:e2e -- listing-persistence` passes (both tests green)
-- [ ] 2.2 `npx tsc --noEmit` passes
+- [x] 2.1 `npm run test:e2e -- listing-persistence` passes (both tests green)
+- [x] 2.2 `npx tsc --noEmit` passes
 
 #### Manual
 
