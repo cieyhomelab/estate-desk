@@ -607,9 +607,9 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Automated
 
-- [x] 1.1 `npm run test:integration` still passes (Phase 2 tests unaffected by config change)
-- [x] 1.2 `npm run test:integration:api` exits without "Dev server did not respond" error
-- [x] 1.3 `npx tsc --noEmit` passes with new helper files
+- [x] 1.1 `npm run test:integration` still passes (Phase 2 tests unaffected by config change) — b90ebe9
+- [x] 1.2 `npm run test:integration:api` exits without "Dev server did not respond" error — b90ebe9
+- [x] 1.3 `npx tsc --noEmit` passes with new helper files — b90ebe9
 
 #### Manual
 
@@ -620,9 +620,9 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Automated
 
-- [ ] 2.1 All three gate-logic tests pass (`npm run test:integration:api`)
-- [ ] 2.2 Blocked test DB read-back confirms listing status is still `active`
-- [ ] 2.3 Both success tests DB read-backs confirm listing status is `done`
+- [x] 2.1 All three gate-logic tests pass (`npm run test:integration:api`)
+- [x] 2.2 Blocked test DB read-back confirms listing status is still `active`
+- [x] 2.3 Both success tests DB read-backs confirm listing status is `done`
 
 #### Manual
 
