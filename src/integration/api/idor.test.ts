@@ -85,30 +85,23 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     expect(location).not.toContain("zamknieto");
     expect(location).toContain("nie-znaleziono");
 
-    const { data } = await supabase
-      .from("listings")
-      .select("status")
-      .eq("id", userAListingId)
-      .single();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    const { data } = await supabase.from("listings").select("status").eq("id", userAListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
     expect((data as any).status).toBe("active");
   });
 
   it("user B cannot create contact on user A listing (RLS subquery)", async () => {
     expect(userAListingId).toBeDefined();
-    const res = await fetch(
-      `${TEST_BASE_URL}/api/listings/${userAListingId}/contacts/create`,
-      {
-        method: "POST",
-        headers: {
-          Cookie: userBCookie,
-          "Content-Type": "application/x-www-form-urlencoded",
-          Origin: TEST_BASE_URL,
-        },
-        body: new URLSearchParams({ name: "AttackerContact", role: "kupujący" }),
-        redirect: "manual",
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/contacts/create`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
       },
-    );
+      body: new URLSearchParams({ name: "AttackerContact", role: "kupujący" }),
+      redirect: "manual",
+    });
 
     expect(res.status).toBe(302);
     const location = res.headers.get("location") ?? "";

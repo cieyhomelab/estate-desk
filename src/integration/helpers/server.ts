@@ -6,13 +6,9 @@ const TEST_SERVER_PORT = 4322;
 let serverProcess: ReturnType<typeof spawn> | undefined;
 
 export async function setup(): Promise<void> {
-  serverProcess = spawn(
-    "npm",
-    ["run", "dev", "--", "--port", String(TEST_SERVER_PORT), "--no-open"],
-    {
-      stdio: "ignore",
-    },
-  );
+  serverProcess = spawn("npm", ["run", "dev", "--", "--port", String(TEST_SERVER_PORT), "--no-open"], {
+    stdio: "ignore",
+  });
 
   const deadline = Date.now() + 60_000;
   while (Date.now() < deadline) {
@@ -23,13 +19,11 @@ export async function setup(): Promise<void> {
       await new Promise((r) => setTimeout(r, 500));
     }
   }
-  serverProcess?.kill("SIGTERM");
+  serverProcess.kill("SIGTERM");
   serverProcess = undefined;
-  throw new Error(
-    `Dev server did not respond on port ${TEST_SERVER_PORT} within 60 s`,
-  );
+  throw new Error(`Dev server did not respond on port ${TEST_SERVER_PORT} within 60 s`);
 }
 
-export async function teardown(): Promise<void> {
+export function teardown(): void {
   serverProcess?.kill("SIGTERM");
 }

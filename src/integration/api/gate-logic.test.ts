@@ -3,11 +3,7 @@ import { createServiceRoleClient } from "../helpers/supabase";
 import { getAuthCookieHeader } from "../helpers/auth";
 import { TEST_BASE_URL } from "../helpers/server";
 
-async function postClose(
-  listingId: string,
-  fields: Record<string, string> = {},
-  cookie: string,
-) {
+async function postClose(listingId: string, fields: Record<string, string> = {}, cookie: string) {
   const body = new URLSearchParams(fields);
   return fetch(`${TEST_BASE_URL}/api/listings/${listingId}/close`, {
     method: "POST",
@@ -61,9 +57,9 @@ describe("gate logic — POST close", () => {
       ])
       .select("id");
     if (listingError) throw new Error(`Failed to insert listings: ${listingError.message}`);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- supabase-js returns any without DB type definitions
+
     [blockedListingId, overrideListingId, allCheckedListingId] = listings.map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- supabase-js id field
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js id field
       (l: any) => l.id as string,
     );
 
@@ -72,16 +68,14 @@ describe("gate logic — POST close", () => {
       { listing_id: blockedListingId, user_id: testUserId, label: "Akt notarialny", is_checked: false, position: 0 },
       { listing_id: blockedListingId, user_id: testUserId, label: "Zaświadczenie", is_checked: false, position: 1 },
     ]);
-    if (docsBlockedError)
-      throw new Error(`Failed to insert docs for blocked listing: ${docsBlockedError.message}`);
+    if (docsBlockedError) throw new Error(`Failed to insert docs for blocked listing: ${docsBlockedError.message}`);
 
     // Same for overrideListingId — trigger + explicit, only count > 0 matters
     const { error: docsOverrideError } = await supabase.from("listing_documents").insert([
       { listing_id: overrideListingId, user_id: testUserId, label: "Akt notarialny", is_checked: false, position: 0 },
       { listing_id: overrideListingId, user_id: testUserId, label: "Zaświadczenie", is_checked: false, position: 1 },
     ]);
-    if (docsOverrideError)
-      throw new Error(`Failed to insert docs for override listing: ${docsOverrideError.message}`);
+    if (docsOverrideError) throw new Error(`Failed to insert docs for override listing: ${docsOverrideError.message}`);
 
     // Mark all default documents for allCheckedListingId as checked — trigger seeded them unchecked
     const { error: checkError } = await supabase
@@ -89,8 +83,7 @@ describe("gate logic — POST close", () => {
       .update({ is_checked: true })
       .eq("listing_id", allCheckedListingId)
       .eq("is_checked", false);
-    if (checkError)
-      throw new Error(`Failed to check documents for all-checked listing: ${checkError.message}`);
+    if (checkError) throw new Error(`Failed to check documents for all-checked listing: ${checkError.message}`);
 
     const { count: docCount, error: countErr } = await supabase
       .from("listing_documents")
@@ -110,12 +103,8 @@ describe("gate logic — POST close", () => {
     expect(res.status).toBe(302);
     expect(res.headers.get("location")).toContain("brakujace-dokumenty");
 
-    const { data } = await supabase
-      .from("listings")
-      .select("status")
-      .eq("id", blockedListingId)
-      .single();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    const { data } = await supabase.from("listings").select("status").eq("id", blockedListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
     expect((data as any).status).toBe("active");
   });
 
@@ -124,12 +113,8 @@ describe("gate logic — POST close", () => {
     expect(res.status).toBe(302);
     expect(res.headers.get("location")).toContain("zamknieto");
 
-    const { data } = await supabase
-      .from("listings")
-      .select("status")
-      .eq("id", allCheckedListingId)
-      .single();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    const { data } = await supabase.from("listings").select("status").eq("id", allCheckedListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
     expect((data as any).status).toBe("done");
   });
 
@@ -138,12 +123,8 @@ describe("gate logic — POST close", () => {
     expect(res.status).toBe(302);
     expect(res.headers.get("location")).toContain("zamknieto");
 
-    const { data } = await supabase
-      .from("listings")
-      .select("status")
-      .eq("id", overrideListingId)
-      .single();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    const { data } = await supabase.from("listings").select("status").eq("id", overrideListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
     expect((data as any).status).toBe("done");
   });
 });
