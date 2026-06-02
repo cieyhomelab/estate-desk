@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 import type { Browser, BrowserContext, Page } from "@playwright/test";
+
+test.describe.configure({ mode: "serial" });
 import { createE2ESupabaseClient } from "./helpers/db";
 import { createTestUser, getSessionCookies, deleteTestUser } from "./helpers/auth";
 import type { TestUser } from "./helpers/auth";
@@ -42,8 +44,7 @@ test("create listing → reload edit page → all 5 fields persist", async () =>
   if (!match) throw new Error(`Could not extract listingId from href: ${href}`);
   listingId = match[1];
 
-  if (!href) throw new Error("Edit link href is null");
-  await page.goto(href);
+  await page.goto(href!);
 
   await expect(page.getByLabel("Typ ogłoszenia")).toHaveValue("occasional-rental");
   await expect(page.getByLabel("Adres nieruchomości")).toHaveValue(address);

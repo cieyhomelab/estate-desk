@@ -74,6 +74,7 @@ test("close detail page shows done-state with commission", async () => {
   await expect(page.getByText("Gdańsk")).toBeVisible();
   await expect(page.getByText("Zysk agenta").last()).toBeVisible();
   await expect(page.getByText("Brak danych prowizji")).not.toBeVisible();
+  await expect(page.getByText(/\d[\d\s]*zł/)).toBeVisible();
 });
 
 test("reopen → active state with data intact", async () => {

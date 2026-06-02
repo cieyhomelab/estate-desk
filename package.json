@@ -14,9 +14,10 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:integration:api": "vitest run --config vitest.integration.api.config.ts",
     "test:watch": "vitest",
-    "test:e2e": "playwright test --pass-with-no-tests",
+    "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:dev": "playwright test --pass-with-no-tests"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.2",

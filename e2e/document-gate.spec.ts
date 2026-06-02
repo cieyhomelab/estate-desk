@@ -30,6 +30,7 @@ test.beforeAll(async ({ browser }: { browser: Browser }) => {
 
 test.afterAll(async () => {
   await context.close();
+  // listings cascade-delete from auth user (users → listings → listing_documents)
   await deleteTestUser(supabase, testUser.userId);
 });
 

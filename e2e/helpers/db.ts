@@ -15,4 +15,11 @@ export async function checkAllListingDocs(listingId: string): Promise<void> {
   const supabase = createE2ESupabaseClient();
   const { error } = await supabase.from("listing_documents").update({ is_checked: true }).eq("listing_id", listingId);
   if (error) throw new Error(`checkAllListingDocs failed: ${error.message}`);
+  const { count, error: countError } = await supabase
+    .from("listing_documents")
+    .select("*", { count: "exact", head: true })
+    .eq("listing_id", listingId)
+    .eq("is_checked", true);
+  if (countError) throw new Error(`checkAllListingDocs count check failed: ${countError.message}`);
+  if (!count || count === 0) throw new Error(`checkAllListingDocs: no checked docs found for listing ${listingId}`);
 }
