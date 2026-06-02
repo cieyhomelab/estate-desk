@@ -492,9 +492,9 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [x] 2.1 `npm run test:integration` exits 0 with 2 tests passing in listing-persistence.test.ts
-- [x] 2.2 `npm run test` exits 0 with 4 unit tests (no interference)
-- [x] 2.3 `npm run lint` passes on src/integration/listing-persistence.test.ts
+- [x] 2.1 `npm run test:integration` exits 0 with 2 tests passing in listing-persistence.test.ts — ed3aa5a
+- [x] 2.2 `npm run test` exits 0 with 4 unit tests (no interference) — ed3aa5a
+- [x] 2.3 `npm run lint` passes on src/integration/listing-persistence.test.ts — ed3aa5a
 
 #### Manual
 
@@ -504,9 +504,9 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [ ] 3.1 `npm run test:integration` exits 0 with 4 tests passing (2 + 2)
-- [ ] 3.2 `npm run test` exits 0 with 4 unit tests
-- [ ] 3.3 `npm run lint` passes on src/integration/listing-close-reopen.test.ts
+- [x] 3.1 `npm run test:integration` exits 0 with 4 tests passing (2 + 2)
+- [x] 3.2 `npm run test` exits 0 with 4 unit tests
+- [x] 3.3 `npm run lint` passes on src/integration/listing-close-reopen.test.ts
 
 #### Manual
 
