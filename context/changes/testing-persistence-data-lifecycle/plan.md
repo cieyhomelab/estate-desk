@@ -479,10 +479,10 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [x] 1.1 `npm run test` exits 0 with 4 unit tests passing (integration directory excluded)
-- [x] 1.2 `npm run test:integration` exits 0 with 0 suites (empty suite, no error)
-- [x] 1.3 `npm run lint` passes on vitest.integration.config.ts and src/integration/helpers/supabase.ts
-- [x] 1.4 `npm run build` still passes
+- [x] 1.1 `npm run test` exits 0 with 4 unit tests passing (integration directory excluded) — 3a5f3dd
+- [x] 1.2 `npm run test:integration` exits 0 with 0 suites (empty suite, no error) — 3a5f3dd
+- [x] 1.3 `npm run lint` passes on vitest.integration.config.ts and src/integration/helpers/supabase.ts — 3a5f3dd
+- [x] 1.4 `npm run build` still passes — 3a5f3dd
 
 #### Manual
 
@@ -492,9 +492,9 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [ ] 2.1 `npm run test:integration` exits 0 with 2 tests passing in listing-persistence.test.ts
-- [ ] 2.2 `npm run test` exits 0 with 4 unit tests (no interference)
-- [ ] 2.3 `npm run lint` passes on src/integration/listing-persistence.test.ts
+- [x] 2.1 `npm run test:integration` exits 0 with 2 tests passing in listing-persistence.test.ts
+- [x] 2.2 `npm run test` exits 0 with 4 unit tests (no interference)
+- [x] 2.3 `npm run lint` passes on src/integration/listing-persistence.test.ts
 
 #### Manual
 
