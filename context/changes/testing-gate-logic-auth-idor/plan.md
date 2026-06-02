@@ -620,9 +620,9 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Automated
 
-- [x] 2.1 All three gate-logic tests pass (`npm run test:integration:api`)
-- [x] 2.2 Blocked test DB read-back confirms listing status is still `active`
-- [x] 2.3 Both success tests DB read-backs confirm listing status is `done`
+- [x] 2.1 All three gate-logic tests pass (`npm run test:integration:api`) — cb0ba4e
+- [x] 2.2 Blocked test DB read-back confirms listing status is still `active` — cb0ba4e
+- [x] 2.3 Both success tests DB read-backs confirm listing status is `done` — cb0ba4e
 
 #### Manual
 
@@ -633,8 +633,8 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Automated
 
-- [ ] 3.1 All four auth-boundary tests pass
-- [ ] 3.2 Location header is exactly `/auth/signin` for all four routes
+- [x] 3.1 All four auth-boundary tests pass
+- [x] 3.2 Location header is exactly `/auth/signin` for all four routes
 
 #### Manual
 
