@@ -528,7 +528,7 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [x] 5.1 `npm run lint` passes on context/foundation/test-plan.md
+- [x] 5.1 `npm run lint` passes on context/foundation/test-plan.md — 8c5b198
 
 #### Manual
 
