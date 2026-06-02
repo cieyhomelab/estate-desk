@@ -62,8 +62,10 @@ describe("IDOR — authenticated cross-account access is denied", () => {
   });
 
   afterAll(async () => {
-    if (userAId) await supabase.auth.admin.deleteUser(userAId);
-    if (userBId) await supabase.auth.admin.deleteUser(userBId);
+    await Promise.allSettled([
+      userAId ? supabase.auth.admin.deleteUser(userAId) : Promise.resolve(),
+      userBId ? supabase.auth.admin.deleteUser(userBId) : Promise.resolve(),
+    ]);
   });
 
   it("user B cannot close user A listing (explicit user_id filter)", async () => {
@@ -93,6 +95,7 @@ describe("IDOR — authenticated cross-account access is denied", () => {
   });
 
   it("user B cannot create contact on user A listing (RLS subquery)", async () => {
+    expect(userAListingId).toBeDefined();
     const res = await fetch(
       `${TEST_BASE_URL}/api/listings/${userAListingId}/contacts/create`,
       {

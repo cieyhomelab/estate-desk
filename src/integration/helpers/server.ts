@@ -11,7 +11,6 @@ export async function setup(): Promise<void> {
     ["run", "dev", "--", "--port", String(TEST_SERVER_PORT), "--no-open"],
     {
       stdio: "ignore",
-      shell: true,
     },
   );
 
@@ -24,6 +23,8 @@ export async function setup(): Promise<void> {
       await new Promise((r) => setTimeout(r, 500));
     }
   }
+  serverProcess?.kill("SIGTERM");
+  serverProcess = undefined;
   throw new Error(
     `Dev server did not respond on port ${TEST_SERVER_PORT} within 60 s`,
   );

@@ -67,7 +67,7 @@ describe("gate logic — POST close", () => {
       (l: any) => l.id as string,
     );
 
-    // Add 2 unchecked documents to blockedListingId
+    // Add 2 explicit unchecked docs to blockedListingId (trigger also seeds ~8 for type "sale"; only count > 0 matters for the gate)
     const { error: docsBlockedError } = await supabase.from("listing_documents").insert([
       { listing_id: blockedListingId, user_id: testUserId, label: "Akt notarialny", is_checked: false, position: 0 },
       { listing_id: blockedListingId, user_id: testUserId, label: "Zaświadczenie", is_checked: false, position: 1 },
@@ -75,7 +75,7 @@ describe("gate logic — POST close", () => {
     if (docsBlockedError)
       throw new Error(`Failed to insert docs for blocked listing: ${docsBlockedError.message}`);
 
-    // Add 2 unchecked documents to overrideListingId
+    // Same for overrideListingId — trigger + explicit, only count > 0 matters
     const { error: docsOverrideError } = await supabase.from("listing_documents").insert([
       { listing_id: overrideListingId, user_id: testUserId, label: "Akt notarialny", is_checked: false, position: 0 },
       { listing_id: overrideListingId, user_id: testUserId, label: "Zaświadczenie", is_checked: false, position: 1 },
@@ -91,6 +91,14 @@ describe("gate logic — POST close", () => {
       .eq("is_checked", false);
     if (checkError)
       throw new Error(`Failed to check documents for all-checked listing: ${checkError.message}`);
+
+    const { count: docCount, error: countErr } = await supabase
+      .from("listing_documents")
+      .select("id", { count: "exact", head: true })
+      .eq("listing_id", allCheckedListingId);
+    if (countErr) throw new Error(`Doc count check failed: ${countErr.message}`);
+    if (!docCount || docCount === 0)
+      throw new Error("Trigger did not seed docs for allCheckedListingId — check migrations");
   });
 
   afterAll(async () => {
