@@ -1,3 +1,23 @@
+# E2E Generation Prompt Template
+
+Use this when you want a single E2E test directly from a prompt, without
+driving the browser live. It rests on the same
+discipline as a unit-test generation prompt: concrete, risk-tied input plus a
+separately verified behavioral assertion. E2E adds two fields to that contract:
+which system boundaries must be **real**, and what to **mock** at the network
+layer.
+
+Do not repeat in the prompt what the seed test and the E2E rules already encode.
+The seed test shapes the generated test; the rules file constrains the agent
+automatically. The prompt supplies only what those two can't know: the specific
+risk, flow, and boundaries.
+
+**Usage:** leave this template file untouched. Ask the agent to create a *new*
+prompt file for the specific risk, filled from the fields below.
+
+## Template
+
+```text
 We are adding an E2E test for this risk from context/foundation/test-plan.md:
 [risk id/title + short description]
 
@@ -17,11 +37,11 @@ Write a Playwright test following seed.spec.ts patterns and the E2E rules
 in the project rules file.
 Assert the business outcome that would fail if this risk materialized.
 Explain in one sentence which regression this test catches.
+```
 
----
-Worked example (10xCards, test-plan.md Phase 6):
----
+## Worked example (10xCards, test-plan.md Phase 6)
 
+```text
 We are adding an E2E test for this risk from context/foundation/test-plan.md:
 Risk #1+#2: Generated flashcards are lost after page reload — atomic save
 writes cards to DB, but data doesn't survive a full SSR page reload.
@@ -47,3 +67,14 @@ Write a Playwright test following seed.spec.ts patterns and the E2E rules
 in the project rules file.
 Assert the business outcome that would fail if this risk materialized.
 Explain in one sentence which regression this test catches.
+```
+
+Compare with a unit-test generation prompt: there you point at a specific
+function and the risk it must protect. Here you give the whole user flow and
+explicitly separate real boundaries from mocked ones — for E2E, the system
+boundaries *are* the test. But "Business scenario" plays the same role in both:
+it forces an assertion tied to the risk, not to the implementation.
+
+Whether you use the prompt directly or the browser-driven path, the same
+contract holds: risk, research anchor, business scenario, boundaries, risk-tied
+assertion.
