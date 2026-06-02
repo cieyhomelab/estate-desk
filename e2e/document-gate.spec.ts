@@ -29,8 +29,8 @@ test.beforeAll(async ({ browser }: { browser: Browser }) => {
 });
 
 test.afterAll(async () => {
-  await context?.close();
-  if (supabase && testUser?.userId) await deleteTestUser(supabase, testUser.userId);
+  await context.close();
+  await deleteTestUser(supabase, testUser.userId);
 });
 
 test("blocked path — incomplete checklist disables submit", async () => {

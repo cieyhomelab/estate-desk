@@ -469,8 +469,8 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Manual
 
-- [ ] 1.4 `npm run test:e2e` (no specs) exits cleanly with dev server started
-- [ ] 1.5 `playwright.config.ts` lints without ESLint errors
+- [x] 1.4 `npm run test:e2e` (no specs) exits cleanly with dev server started
+- [x] 1.5 `playwright.config.ts` lints without ESLint errors
 
 ### Phase 2: Risk #1 — Listing Persistence Spec
 
@@ -481,8 +481,8 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Manual
 
-- [ ] 2.3 `--headed` run shows create form fill → dashboard redirect → edit page field assertions
-- [ ] 2.4 Deliberate regression (remove a field from create API) causes test failure
+- [x] 2.3 `--headed` run shows create form fill → dashboard redirect → edit page field assertions
+- [x] 2.4 Deliberate regression (remove a field from create API) causes test failure
 
 ### Phase 3: Risk #3 — Document Gate Spec
 
@@ -498,19 +498,19 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [x] 4.1 `npm run test:e2e -- close-reopen-lifecycle` passes (all 3 tests green)
+- [x] 4.1 `npm run test:e2e -- close-reopen-lifecycle` passes (all 3 tests green) — 6eab4f1
 
 #### Manual
 
-- [x] 4.2 `--headed` shows dashboard done-card assertions, close detail page, reopen to active state
+- [x] 4.2 `--headed` shows dashboard done-card assertions, close detail page, reopen to active state — 6eab4f1
 
 ### Phase 5: CI Gate
 
 #### Automated
 
-- [ ] 5.1 Updated `ci.yml` step order is correct (unit → integration → integration:api → playwright install → e2e → build)
+- [x] 5.1 Updated `ci.yml` step order is correct (unit → integration → integration:api → playwright install → e2e → build)
 
 #### Manual
 
-- [ ] 5.2 CI passes on a PR push with all 3 test Supabase secrets set
-- [ ] 5.3 Deliberate regression in a test PR causes E2E test failure in CI
+- [x] 5.2 CI passes on a PR push with all 3 test Supabase secrets set
+- [x] 5.3 Deliberate regression in a test PR causes E2E test failure in CI
