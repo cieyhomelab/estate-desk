@@ -10,9 +10,10 @@ export default defineConfig(() => {
     },
     test: {
       environment: "node",
-      include: ["src/integration/*.test.ts"],
+      globalSetup: ["src/integration/helpers/server.ts"],
+      include: ["src/integration/api/**/*.test.ts"],
       fileParallelism: false,
-      testTimeout: 10_000,
+      testTimeout: 30_000,
       env,
     },
   };

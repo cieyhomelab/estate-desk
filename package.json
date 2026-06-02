@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:integration:api": "vitest run --config vitest.integration.api.config.ts",
     "test:watch": "vitest"
   },
   "dependencies": {
