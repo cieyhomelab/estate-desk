@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+// .env has the correct keys; .dev.vars is read by the Cloudflare adapter at runtime
 config({ path: ".env" });
 
 import { defineConfig, devices } from "@playwright/test";
@@ -7,7 +8,7 @@ export default defineConfig({
   testDir: "./e2e",
   timeout: 30_000,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: process.env.CI ? "github" : "html",
   use: {
     baseURL: "http://localhost:4321",

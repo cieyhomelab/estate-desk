@@ -476,8 +476,8 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [x] 2.1 `npm run test:e2e -- listing-persistence` passes (both tests green)
-- [x] 2.2 `npx tsc --noEmit` passes
+- [x] 2.1 `npm run test:e2e -- listing-persistence` passes (both tests green) — f6d10ba
+- [x] 2.2 `npx tsc --noEmit` passes — f6d10ba
 
 #### Manual
 
@@ -488,11 +488,11 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [ ] 3.1 `npm run test:e2e -- document-gate` passes (all 3 tests green)
+- [x] 3.1 `npm run test:e2e -- document-gate` passes (all 3 tests green)
 
 #### Manual
 
-- [ ] 3.2 `--headed` shows blocked state, all-checked path succeeds, override path succeeds
+- [x] 3.2 `--headed` shows blocked state, all-checked path succeeds, override path succeeds
 
 ### Phase 4: Risk #4 — Done State Lifecycle Spec
 
