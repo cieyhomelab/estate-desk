@@ -30,3 +30,8 @@ pnpm-debug.log*
 # stryker temp files and reports
 .stryker-tmp
 reports/
+
+# playwright
+/playwright-report/
+/test-results/
+/playwright/.auth/
