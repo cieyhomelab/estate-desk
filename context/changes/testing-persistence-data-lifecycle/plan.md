@@ -504,9 +504,9 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [x] 3.1 `npm run test:integration` exits 0 with 4 tests passing (2 + 2)
-- [x] 3.2 `npm run test` exits 0 with 4 unit tests
-- [x] 3.3 `npm run lint` passes on src/integration/listing-close-reopen.test.ts
+- [x] 3.1 `npm run test:integration` exits 0 with 4 tests passing (2 + 2) — 87ee2b3
+- [x] 3.2 `npm run test` exits 0 with 4 unit tests — 87ee2b3
+- [x] 3.3 `npm run lint` passes on src/integration/listing-close-reopen.test.ts — 87ee2b3
 
 #### Manual
 
@@ -516,9 +516,9 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [ ] 4.1 `npm run test:integration` exits 0 with 5 tests passing (2 + 2 + 1)
-- [ ] 4.2 `npm run test` exits 0 with 4 unit tests
-- [ ] 4.3 `npm run lint` passes on src/integration/price-history-ordering.test.ts
+- [x] 4.1 `npm run test:integration` exits 0 with 5 tests passing (2 + 2 + 1)
+- [x] 4.2 `npm run test` exits 0 with 4 unit tests
+- [x] 4.3 `npm run lint` passes on src/integration/price-history-ordering.test.ts
 
 #### Manual
 
