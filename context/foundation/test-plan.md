@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-02 (Phase 3 complete)
+> Last updated: 2026-06-02 (Phase 4 complete — all phases shipped)
 
 ## 1. Strategy
 
@@ -70,7 +70,7 @@ orchestrator updates Status as artifacts appear on disk.
 | 1   | Bootstrap + commission arithmetic   | Install Vitest; unit-test commission formula — first signal at the cheapest layer                                                        | #2            | unit                            | complete    | context/changes/testing-bootstrap-commission/       |
 | 2   | Persistence + data lifecycle        | Integration tests: listing save/reload (R1), price history ordering (R5), completed listing close/reopen cycle (R4)                      | #1, #4, #5    | integration (real DB)           | complete    | context/changes/testing-persistence-data-lifecycle/ |
 | 3   | Gate logic + auth boundary + IDOR   | API integration: document gate blocks/passes correctly (R3), unauthenticated access returns 401 (R6), cross-account ownership check (R7) | #3, #6, #7    | integration (real DB + session) | complete      | context/changes/testing-gate-logic-auth-idor/       |
-| 4   | E2E full transaction flow + CI gate | End-to-end: auth → create listing → documents → close → dashboard done state; wire all tests into CI on push                             | #1, #3, #4    | e2e (Playwright), CI            | not started | —                                                   |
+| 4   | E2E full transaction flow + CI gate | End-to-end: auth → create listing → documents → close → dashboard done state; wire all tests into CI on push                             | #1, #3, #4    | e2e (Playwright), CI            | complete      | context/changes/testing-e2e-ci-gate/                |
 
 ## 4. Stack
 
@@ -128,7 +128,44 @@ Structure:
 
 ### 6.3 Adding an e2e test
 
-TBD — see §3 Phase 4. Target pattern: `getByRole`-based locators, isolated test state, no shared sessions between tests.
+Pattern: Playwright spec in `e2e/`. Each spec file owns its own Supabase auth user (created in `beforeAll`, deleted in `afterAll` — cascade removes all listing data). Tests use a single shared `BrowserContext` and `Page` within a file.
+
+**Auth wiring:**
+
+```ts
+import { createE2ESupabaseClient } from './helpers/db';
+import { createTestUser, getSessionCookies, deleteTestUser } from './helpers/auth';
+
+test.beforeAll(async ({ browser }) => {
+  supabase = createE2ESupabaseClient();
+  testUser = await createTestUser(supabase);              // unique e2e+<ts>@test.local user
+  context = await browser.newContext();
+  await context.addCookies(await getSessionCookies(testUser.email, testUser.password));
+  page = await context.newPage();
+});
+
+test.afterAll(async () => {
+  await context.close();
+  // listings cascade-delete from auth user (users → listings → listing_documents)
+  await deleteTestUser(supabase, testUser.userId);
+});
+```
+
+**Key rules:**
+
+- Locators: `getByRole` / `getByLabel` / `getByText` first; `getByTestId` only when accessibility attributes are ambiguous. Never CSS selectors or XPath.
+- Waiting: `waitForURL()`, `toBeVisible()`, `waitForResponse()` — never `page.waitForTimeout()`.
+- Serial test files: add `test.describe.configure({ mode: 'serial' })` at the top of any spec where test N depends on state set by test N-1.
+- Test data setup (DB inserts, doc checking) uses the service-role client from `createE2ESupabaseClient()`; the E2E spec itself exercises the UI write path only when the write path is what's under test.
+- `checkAllListingDocs(listingId)` — service-role UPDATE sets all `listing_documents.is_checked = true` for a listing; throws if 0 rows affected (guard against mis-seeded state).
+
+**Run commands:**
+
+- `npm run test:e2e` — CI gate (fails if no specs found).
+- `npm run test:e2e:headed -- <spec-name>` — headed run for visual observation.
+- `npm run test:e2e:dev` — allows empty test list (for pre-spec development phases only).
+
+**CI:** Three GitHub Actions secrets required — `SUPABASE_URL_TEST`, `SUPABASE_ANON_KEY_TEST`, `SUPABASE_SERVICE_ROLE_KEY_TEST` — pointing at the test Supabase project. Playwright runs with `workers: 1` in CI, parallel locally.
 
 ### 6.4 Adding a test for an API endpoint (session-parameterized)
 

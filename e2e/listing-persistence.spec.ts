@@ -40,11 +40,12 @@ test("create listing → reload edit page → all 5 fields persist", async () =>
   await page.waitForURL("/dashboard");
 
   const href = await page.getByRole("link", { name: "Edytuj" }).first().getAttribute("href");
-  const match = href?.match(/\/dashboard\/listings\/([^/]+)\/edit/);
+  if (!href) throw new Error("Edit link href is null");
+  const match = /\/dashboard\/listings\/([^/]+)\/edit/.exec(href);
   if (!match) throw new Error(`Could not extract listingId from href: ${href}`);
   listingId = match[1];
 
-  await page.goto(href!);
+  await page.goto(href);
 
   await expect(page.getByLabel("Typ ogłoszenia")).toHaveValue("occasional-rental");
   await expect(page.getByLabel("Adres nieruchomości")).toHaveValue(address);
