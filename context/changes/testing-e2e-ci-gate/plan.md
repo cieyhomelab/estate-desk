@@ -469,8 +469,8 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Manual
 
-- [x] 1.4 `npm run test:e2e` (no specs) exits cleanly with dev server started
-- [x] 1.5 `playwright.config.ts` lints without ESLint errors
+- [x] 1.4 `npm run test:e2e` (no specs) exits cleanly with dev server started — aba4eb6
+- [x] 1.5 `playwright.config.ts` lints without ESLint errors — aba4eb6
 
 ### Phase 2: Risk #1 — Listing Persistence Spec
 
@@ -481,8 +481,8 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Manual
 
-- [x] 2.3 `--headed` run shows create form fill → dashboard redirect → edit page field assertions
-- [x] 2.4 Deliberate regression (remove a field from create API) causes test failure
+- [x] 2.3 `--headed` run shows create form fill → dashboard redirect → edit page field assertions — aba4eb6
+- [x] 2.4 Deliberate regression (remove a field from create API) causes test failure — aba4eb6
 
 ### Phase 3: Risk #3 — Document Gate Spec
 
@@ -508,9 +508,9 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [x] 5.1 Updated `ci.yml` step order is correct (unit → integration → integration:api → playwright install → e2e → build)
+- [x] 5.1 Updated `ci.yml` step order is correct (unit → integration → integration:api → playwright install → e2e → build) — aba4eb6
 
 #### Manual
 
-- [x] 5.2 CI passes on a PR push with all 3 test Supabase secrets set
-- [x] 5.3 Deliberate regression in a test PR causes E2E test failure in CI
+- [x] 5.2 CI passes on a PR push with all 3 test Supabase secrets set — aba4eb6
+- [x] 5.3 Deliberate regression in a test PR causes E2E test failure in CI — aba4eb6
