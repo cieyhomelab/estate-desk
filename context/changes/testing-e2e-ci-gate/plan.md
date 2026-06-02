@@ -488,21 +488,21 @@ Each spec file: one fresh user in `beforeAll`, deleted in `afterAll`. Tests with
 
 #### Automated
 
-- [x] 3.1 `npm run test:e2e -- document-gate` passes (all 3 tests green)
+- [x] 3.1 `npm run test:e2e -- document-gate` passes (all 3 tests green) — 392d69a
 
 #### Manual
 
-- [x] 3.2 `--headed` shows blocked state, all-checked path succeeds, override path succeeds
+- [x] 3.2 `--headed` shows blocked state, all-checked path succeeds, override path succeeds — 392d69a
 
 ### Phase 4: Risk #4 — Done State Lifecycle Spec
 
 #### Automated
 
-- [ ] 4.1 `npm run test:e2e -- close-reopen-lifecycle` passes (all 3 tests green)
+- [x] 4.1 `npm run test:e2e -- close-reopen-lifecycle` passes (all 3 tests green)
 
 #### Manual
 
-- [ ] 4.2 `--headed` shows dashboard done-card assertions, close detail page, reopen to active state
+- [x] 4.2 `--headed` shows dashboard done-card assertions, close detail page, reopen to active state
 
 ### Phase 5: CI Gate
 
