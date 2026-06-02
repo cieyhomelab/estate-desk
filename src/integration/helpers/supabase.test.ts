@@ -18,6 +18,14 @@ describe("createServiceRoleClient", () => {
     }
   });
 
+  it("returns a client when both env vars are set", () => {
+    process.env.SUPABASE_URL = "http://localhost:54321";
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "some-service-key";
+    const client = createServiceRoleClient();
+    expect(client).toBeDefined();
+    expect(typeof client.from).toBe("function");
+  });
+
   it("throws when SUPABASE_URL is missing", () => {
     delete process.env.SUPABASE_URL;
     process.env.SUPABASE_SERVICE_ROLE_KEY = "some-key";
