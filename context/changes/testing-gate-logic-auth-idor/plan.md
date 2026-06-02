@@ -644,9 +644,9 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Automated
 
-- [x] 4.1 Both IDOR tests pass (`npm run test:integration:api`)
-- [x] 4.2 IDOR test 1 DB read-back confirms listing status still `active`
-- [x] 4.3 IDOR test 2 count query confirms `AttackerContact` not inserted
+- [x] 4.1 Both IDOR tests pass (`npm run test:integration:api`) — 89bd6ee
+- [x] 4.2 IDOR test 1 DB read-back confirms listing status still `active` — 89bd6ee
+- [x] 4.3 IDOR test 2 count query confirms `AttackerContact` not inserted — 89bd6ee
 
 #### Manual
 
