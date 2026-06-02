@@ -7,21 +7,15 @@ describe("listing persistence", () => {
   let testListingId: string;
 
   beforeAll(async () => {
-    const { data, error } = await supabase.auth.admin.createUser({
+    const { data: userData, error: userError } = await supabase.auth.admin.createUser({
       email: `test-${Date.now()}@test.local`,
       password: "integration-test",
       email_confirm: true,
     });
-    if (error) throw new Error(`Failed to create test user: ${error.message}`);
-    testUserId = data.user.id;
-  });
+    if (userError) throw new Error(`Failed to create test user: ${userError.message}`);
+    testUserId = userData.user.id;
 
-  afterAll(async () => {
-    if (testUserId) await supabase.auth.admin.deleteUser(testUserId);
-  });
-
-  it("creates a listing and all fields are retrievable from DB", async () => {
-    const { data, error } = await supabase
+    const { data: listingData, error: listingError } = await supabase
       .from("listings")
       .insert({
         user_id: testUserId,
@@ -33,10 +27,16 @@ describe("listing persistence", () => {
       })
       .select("id")
       .single();
-    if (error) throw new Error(`Failed to insert listing: ${error.message}`);
+    if (listingError) throw new Error(`Failed to insert listing: ${listingError.message}`);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- supabase-js returns any without DB type definitions
-    testListingId = data.id;
+    testListingId = listingData.id;
+  });
 
+  afterAll(async () => {
+    if (testUserId) await supabase.auth.admin.deleteUser(testUserId);
+  });
+
+  it("creates a listing and all fields are retrievable from DB", async () => {
     const { data: row, error: readError } = await supabase
       .from("listings")
       .select("type, address, owner_name, owner_phone, owner_email")

@@ -37,7 +37,8 @@ describe("listing close/reopen lifecycle", () => {
     if (testUserId) await supabase.auth.admin.deleteUser(testUserId);
   });
 
-  it("close transition persists all listing fields and creates a snapshot", async () => {
+  it("close then reopen: all listing fields survive both transitions", async () => {
+    // — Close —
     const { error: closeError } = await supabase
       .from("listings")
       .update({
@@ -58,32 +59,32 @@ describe("listing close/reopen lifecycle", () => {
     });
     if (snapshotError) throw new Error(`Failed to insert snapshot: ${snapshotError.message}`);
 
-    const { data: row, error: readError } = await supabase
+    const { data: closedRow, error: closeReadError } = await supabase
       .from("listings")
       .select("status, closed_at, type, address, owner_name, owner_phone, owner_email")
       .eq("id", testListingId)
       .single();
-    if (readError) throw new Error(`Failed to read listing: ${readError.message}`);
+    if (closeReadError) throw new Error(`Failed to read closed listing: ${closeReadError.message}`);
 
-    expect(row.status).toBe("done");
-    expect(row.closed_at).not.toBeNull();
-    expect(row.type).toBe(originalFields.type);
-    expect(row.address).toBe(originalFields.address);
-    expect(row.owner_name).toBe(originalFields.owner_name);
-    expect(row.owner_phone).toBe(originalFields.owner_phone);
-    expect(row.owner_email).toBe(originalFields.owner_email);
+    expect(closedRow.status).toBe("done");
+    expect(closedRow.closed_at).not.toBeNull();
+    expect(closedRow.type).toBe(originalFields.type);
+    expect(closedRow.address).toBe(originalFields.address);
+    expect(closedRow.owner_name).toBe(originalFields.owner_name);
+    expect(closedRow.owner_phone).toBe(originalFields.owner_phone);
+    expect(closedRow.owner_email).toBe(originalFields.owner_email);
 
     const { data: snapshot, error: snapReadError } = await supabase
       .from("transaction_snapshots")
-      .select("id")
+      .select("asking_price, commission_percent")
       .eq("listing_id", testListingId)
       .is("voided_at", null)
       .single();
     if (snapReadError) throw new Error(`Failed to read snapshot: ${snapReadError.message}`);
-    expect(snapshot.id).not.toBeNull();
-  });
+    expect(snapshot.asking_price).toBe(500000);
+    expect(snapshot.commission_percent).toBe(2);
 
-  it("reopen transition restores active status and preserves all listing fields", async () => {
+    // — Reopen —
     const { error: voidError } = await supabase
       .from("transaction_snapshots")
       .update({ voided_at: new Date().toISOString() })
@@ -97,19 +98,19 @@ describe("listing close/reopen lifecycle", () => {
       .eq("id", testListingId);
     if (reopenError) throw new Error(`Failed to reopen listing: ${reopenError.message}`);
 
-    const { data: row, error: readError } = await supabase
+    const { data: reopenedRow, error: reopenReadError } = await supabase
       .from("listings")
       .select("status, closed_at, type, address, owner_name, owner_phone, owner_email")
       .eq("id", testListingId)
       .single();
-    if (readError) throw new Error(`Failed to read listing: ${readError.message}`);
+    if (reopenReadError) throw new Error(`Failed to read reopened listing: ${reopenReadError.message}`);
 
-    expect(row.status).toBe("active");
-    expect(row.closed_at).toBeNull();
-    expect(row.type).toBe(originalFields.type);
-    expect(row.address).toBe(originalFields.address);
-    expect(row.owner_name).toBe(originalFields.owner_name);
-    expect(row.owner_phone).toBe(originalFields.owner_phone);
-    expect(row.owner_email).toBe(originalFields.owner_email);
+    expect(reopenedRow.status).toBe("active");
+    expect(reopenedRow.closed_at).toBeNull();
+    expect(reopenedRow.type).toBe(originalFields.type);
+    expect(reopenedRow.address).toBe(originalFields.address);
+    expect(reopenedRow.owner_name).toBe(originalFields.owner_name);
+    expect(reopenedRow.owner_phone).toBe(originalFields.owner_phone);
+    expect(reopenedRow.owner_email).toBe(originalFields.owner_email);
   });
 });
