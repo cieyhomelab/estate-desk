@@ -613,8 +613,8 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Manual
 
-- [ ] 1.4 `npm run test:integration:api` shows dev server starting in terminal output
-- [ ] 1.5 `npm run test:integration` does NOT attempt to start a dev server
+- [x] 1.4 `npm run test:integration:api` shows dev server starting in terminal output
+- [x] 1.5 `npm run test:integration` does NOT attempt to start a dev server
 
 ### Phase 2: Gate Logic Tests (Risk #3)
 
@@ -626,30 +626,30 @@ No schema migrations. The `listing_documents` rows inserted in test setup are cl
 
 #### Manual
 
-- [ ] 2.4 Terminal output names all three scenarios clearly
-- [ ] 2.5 afterAll cleanup confirmed: test user and cascaded listings deleted
+- [x] 2.4 Terminal output names all three scenarios clearly
+- [x] 2.5 afterAll cleanup confirmed: test user and cascaded listings deleted
 
 ### Phase 3: Auth Boundary Tests (Risk #6)
 
 #### Automated
 
-- [x] 3.1 All four auth-boundary tests pass
-- [x] 3.2 Location header is exactly `/auth/signin` for all four routes
+- [x] 3.1 All four auth-boundary tests pass — 0f41743
+- [x] 3.2 Location header is exactly `/auth/signin` for all four routes — 0f41743
 
 #### Manual
 
-- [ ] 3.3 No regression in Phase 2 gate tests when all files run together
+- [x] 3.3 No regression in Phase 2 gate tests when all files run together
 
 ### Phase 4: IDOR Tests + Test-Plan Update (Risk #7)
 
 #### Automated
 
-- [ ] 4.1 Both IDOR tests pass (`npm run test:integration:api`)
-- [ ] 4.2 IDOR test 1 DB read-back confirms listing status still `active`
-- [ ] 4.3 IDOR test 2 count query confirms `AttackerContact` not inserted
+- [x] 4.1 Both IDOR tests pass (`npm run test:integration:api`)
+- [x] 4.2 IDOR test 1 DB read-back confirms listing status still `active`
+- [x] 4.3 IDOR test 2 count query confirms `AttackerContact` not inserted
 
 #### Manual
 
-- [ ] 4.4 `test-plan.md` §3 Phase 3 status shows `complete`
-- [ ] 4.5 `test-plan.md` §6.4 contains the full API test cookbook pattern
-- [ ] 4.6 `change.md` status updated to `complete`
+- [x] 4.4 `test-plan.md` §3 Phase 3 status shows `complete`
+- [x] 4.5 `test-plan.md` §6.4 contains the full API test cookbook pattern
+- [x] 4.6 `change.md` status updated to `complete`

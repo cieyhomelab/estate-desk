@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-02 (Phase 2 complete)
+> Last updated: 2026-06-02 (Phase 3 complete)
 
 ## 1. Strategy
 
@@ -69,7 +69,7 @@ orchestrator updates Status as artifacts appear on disk.
 | --- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------- | ----------- | --------------------------------------------------- |
 | 1   | Bootstrap + commission arithmetic   | Install Vitest; unit-test commission formula — first signal at the cheapest layer                                                        | #2            | unit                            | complete    | context/changes/testing-bootstrap-commission/       |
 | 2   | Persistence + data lifecycle        | Integration tests: listing save/reload (R1), price history ordering (R5), completed listing close/reopen cycle (R4)                      | #1, #4, #5    | integration (real DB)           | complete    | context/changes/testing-persistence-data-lifecycle/ |
-| 3   | Gate logic + auth boundary + IDOR   | API integration: document gate blocks/passes correctly (R3), unauthenticated access returns 401 (R6), cross-account ownership check (R7) | #3, #6, #7    | integration (real DB + session) | not started | —                                                   |
+| 3   | Gate logic + auth boundary + IDOR   | API integration: document gate blocks/passes correctly (R3), unauthenticated access returns 401 (R6), cross-account ownership check (R7) | #3, #6, #7    | integration (real DB + session) | complete      | context/changes/testing-gate-logic-auth-idor/       |
 | 4   | E2E full transaction flow + CI gate | End-to-end: auth → create listing → documents → close → dashboard done state; wire all tests into CI on push                             | #1, #3, #4    | e2e (Playwright), CI            | not started | —                                                   |
 
 ## 4. Stack
@@ -130,9 +130,30 @@ Structure:
 
 TBD — see §3 Phase 4. Target pattern: `getByRole`-based locators, isolated test state, no shared sessions between tests.
 
-### 6.4 Adding a test for a new API endpoint
+### 6.4 Adding a test for an API endpoint (session-parameterized)
 
-TBD — see §3 Phase 3. Target pattern: session-parameterized integration test asserting authenticated, unauthenticated, and cross-account cases.
+Pattern: HTTP fetch to dev server started by `src/integration/helpers/server.ts` globalSetup.
+Use `vitest.integration.api.config.ts` and `npm run test:integration:api`.
+
+Structure:
+
+- Import `{ TEST_BASE_URL }` from `../helpers/server` for the base URL.
+- Import `{ getAuthCookieHeader }` from `../helpers/auth` to build a Cookie header.
+- `beforeAll`: `supabase.auth.admin.createUser(...)` + `getAuthCookieHeader(email, pass)` for
+  each session role needed (owner, attacker, unauthenticated = no cookie).
+- `afterAll`: `supabase.auth.admin.deleteUser(userId)` for each created user.
+- Fetch: `fetch(url, { redirect: "manual" })` to see the raw 302 + Location header.
+- All POST requests must include `Origin: TEST_BASE_URL` — Astro 5 `security.checkOrigin` is
+  enabled by default and returns 403 for POSTs without a matching Origin header.
+- Three assertion classes per endpoint:
+  - No Cookie header → `Location === '/auth/signin'` (auth boundary)
+  - Owner's Cookie → `Location` contains success slug (happy path)
+  - Attacker's Cookie → `Location` contains error slug, resource unchanged in DB (IDOR)
+- Verify DB state (service-role read-back) for any test where the resource should have been
+  modified or protected from modification.
+- Note: `sale` and `occasional-rental` listings get default documents seeded unchecked by
+  trigger `seed_listing_documents_on_insert`. Tests that need zero unchecked docs must
+  `UPDATE listing_documents SET is_checked = true` in `beforeAll` rather than assuming no docs.
 
 ### 6.5 Per-rollout-phase notes
 
