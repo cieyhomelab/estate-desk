@@ -516,9 +516,9 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [x] 4.1 `npm run test:integration` exits 0 with 5 tests passing (2 + 2 + 1)
-- [x] 4.2 `npm run test` exits 0 with 4 unit tests
-- [x] 4.3 `npm run lint` passes on src/integration/price-history-ordering.test.ts
+- [x] 4.1 `npm run test:integration` exits 0 with 5 tests passing (2 + 2 + 1) — 3522309
+- [x] 4.2 `npm run test` exits 0 with 4 unit tests — 3522309
+- [x] 4.3 `npm run lint` passes on src/integration/price-history-ordering.test.ts — 3522309
 
 #### Manual
 
@@ -528,7 +528,7 @@ Also update the `Last updated:` line in the file header to today's date.
 
 #### Automated
 
-- [ ] 5.1 `npm run lint` passes on context/foundation/test-plan.md
+- [x] 5.1 `npm run lint` passes on context/foundation/test-plan.md
 
 #### Manual
 
