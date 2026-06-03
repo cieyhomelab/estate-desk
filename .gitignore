@@ -27,6 +27,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# ai tools
+.claude/
+.agents/
+
 # stryker temp files and reports
 .stryker-tmp
 reports/
