@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-edit.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-typecheck.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

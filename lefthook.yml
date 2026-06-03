@@ -1,0 +1,13 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: lint
+      glob: "*.{ts,tsx,astro}"
+      run: npx eslint {staged_files} --fix
+      stage_fixed: true
+
+    - name: typecheck
+      run: npx astro check
+
+    - name: unit-tests
+      run: npm run test
