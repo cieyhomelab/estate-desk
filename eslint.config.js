@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-deprecated -- tseslint.config() is the only way to use extends; core defineConfig has incompatible API */
 import { includeIgnoreFile } from "@eslint/config-helpers";
 import eslint from "@eslint/js";
+import globals from "globals";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 import eslintPluginAstro from "eslint-plugin-astro";
 import pluginReact from "eslint-plugin-react";
@@ -103,6 +104,13 @@ const pricingAstroPrettierBypass = tseslint.config({
   },
 });
 
+const nodeConfigFiles = tseslint.config({
+  files: ["**/*.config.{js,mjs,ts,cjs}"],
+  languageOptions: {
+    globals: globals.node,
+  },
+});
+
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   baseConfig,
@@ -111,6 +119,7 @@ export default tseslint.config(
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
   astroConfig,
   astroRedirectFrontmatterConfig,
+  nodeConfigFiles,
   eslintPluginPrettier,
   pricingAstroPrettierBypass,
 );
