@@ -15,7 +15,6 @@ export default defineConfig({
     react(),
     sitemap(),
     sentry({
-      dsn: process.env.PUBLIC_SENTRY_DSN,
       sourceMapsUploadOptions: {
         project: "estate-desk",
         authToken: process.env.SENTRY_AUTH_TOKEN,
