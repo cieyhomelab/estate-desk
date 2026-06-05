@@ -20,7 +20,7 @@ audit_findings:
   low: 0
 test_runner_detected: true
 ci_provider: github-actions
-recommended_fixes: 1
+recommended_fixes: 0
 ---
 
 ## Dependency Health
@@ -129,22 +129,7 @@ No stack-assessment.md found. Run /10x-stack-assess for quality-gate analysis.
 
 ### Fix before agent work (Category A)
 
-#### 1. Evaluate TypeScript 5→6 migration
-
-**Impact**: TypeScript 6 may tighten inference in ways that produce new errors in existing code. Updating while the agent is actively adding features creates noise — it's better to migrate to a known-good state first. `eslint` and `lint-staged` major bumps are lower risk.
-**Severity**: low
-**Effort**: moderate (15–30 min)
-**Fix**:
-
-```bash
-npm install typescript@latest --save-dev
-npx astro check
-# Review any new diagnostics, fix or suppress as appropriate
-```
-
-If the migration surfaces too many changes, pin `typescript` to `^5.9.3` explicitly in `package.json` and revisit later.
-
----
+*(none — all Category A items resolved)*
 
 ### Addressed in upcoming lessons (Category B)
 
@@ -160,6 +145,7 @@ All Category B items are already in place for this project — CI/CD, `CLAUDE.md
 | Add `npx astro check` type-check step to CI | `90298f4` | ✓ resolved |
 | Clear 6 MODERATE audit findings via `npm overrides` | `ae4475e` | ✓ resolved |
 | Bump GitHub Actions to Node.js 24-compatible versions | `b67c7df` | ✓ resolved |
+| Upgrade TypeScript 5→6 (`@astrojs/check` bumped to 0.9.9) | `69d3f1e` | ✓ resolved |
 
 ---
 
@@ -167,6 +153,6 @@ All Category B items are already in place for this project — CI/CD, `CLAUDE.md
 
 **Health status: healthy**
 
-EstateDesk is agent-ready. The lockfile is committed, `npm audit` is clean (0 vulnerabilities), the TypeScript configuration uses strict mode, the CI pipeline enforces lint + type-check + unit + integration + E2E before deploying, and agent instruction files (`CLAUDE.md`, `AGENTS.md`) are present. The only remaining item is a low-priority TypeScript 5→6 migration evaluation — safe to defer until the current sprint is complete.
+EstateDesk is agent-ready. The lockfile is committed, `npm audit` is clean (0 vulnerabilities), TypeScript 6 is in place with strict mode, the CI pipeline enforces lint + type-check + unit + integration + E2E before deploying, all GitHub Actions are on Node.js 24-compatible versions, and agent instruction files (`CLAUDE.md`, `AGENTS.md`) are present. There are no outstanding Category A items.
 
 Next step: proceed to agent onboarding.
