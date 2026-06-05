@@ -137,7 +137,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Minimalny — prosty CRUD encji powiązanej z ogłoszeniem. Nie blokuje gwiazdy przewodniej (S-06); może być implementowany równolegle ze ścieżką do S-06.
-- **Status:** done (implemented 2026-05-30)
+- **Status:** done
 
 ### S-05: Zdjęcia, lista kontrolna dokumentów i pliki
 
@@ -208,3 +208,4 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 
 - **S-02: agent może dodawać, edytować i usuwać ogłoszenia, przeglądać dashboard, rejestrować dane właściciela** — Archived 2026-06-05 → `context/archive/2026-05-25-listing-crud/`. Lesson: —.
 - **S-03: agent może ustawiać cenę, przeglądać historię cen i widzieć podział prowizji według swoich stawek** — Archived 2026-06-05 → `context/archive/2026-05-29-pricing-and-commission/`. Lesson: —.
+- **S-04: agent może dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia** — Archived 2026-06-05 → `context/archive/2026-05-30-contact-management/`. Lesson: —.
