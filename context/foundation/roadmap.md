@@ -163,7 +163,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Centralny przepływ biznesowy PRD — bramka dokumentowa musi precyzyjnie implementować logikę z §Business Logic: „ready-to-close (all items checked or override active) or blocked". Błąd tutaj neguje główną wartość produktu.
-- **Status:** done (impl_reviewed 2026-05-30)
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -210,3 +210,4 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **S-03: agent może ustawiać cenę, przeglądać historię cen i widzieć podział prowizji według swoich stawek** — Archived 2026-06-05 → `context/archive/2026-05-29-pricing-and-commission/`. Lesson: —.
 - **S-04: agent może dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia** — Archived 2026-06-05 → `context/archive/2026-05-30-contact-management/`. Lesson: —.
 - **S-05: agent może uploadować zdjęcia, zaznaczać dokumenty na liście kontrolnej i uploadować pliki dokumentów** — Archived 2026-06-05 → `context/archive/2026-05-30-documents-and-files/`. Lesson: —.
+- **S-06: agent może zamknąć transakcję przez bramkę dokumentową, nagrać dane notariusza i datę, ponownie otworzyć ogłoszenie** — Archived 2026-06-05 → `context/archive/2026-05-30-transaction-close/`. Lesson: —.

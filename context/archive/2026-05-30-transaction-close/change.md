@@ -1,10 +1,10 @@
 ---
 change_id: transaction-close
 title: Transaction close
-status: impl_reviewed
+status: archived
 created: 2026-05-30
-updated: 2026-05-30
-archived_at: null
+updated: 2026-06-05
+archived_at: 2026-06-05T12:37:37Z
 ---
 
 ## Notes
