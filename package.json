@@ -72,7 +72,9 @@
     "wrangler": "^4.90.0"
   },
   "overrides": {
-    "vite": "^7.3.2"
+    "vite": "^7.3.2",
+    "qs": "^6.15.2",
+    "volar-service-yaml": "0.0.71"
   },
   "lint-staged": {
     "*.{ts,tsx,astro}": [
