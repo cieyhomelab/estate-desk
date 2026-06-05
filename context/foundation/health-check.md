@@ -1,7 +1,8 @@
 ---
 project: EstateDesk
 checked_at: 2026-06-05T00:00:00Z
-health_status: needs-attention
+resolved_at: 2026-06-05T20:10:00Z
+health_status: healthy
 context_type: brownfield
 language_family: js
 stack_assessment_available: false
@@ -15,11 +16,11 @@ checks_run:
 audit_findings:
   critical: 0
   high: 0
-  moderate: 6
+  moderate: 0
   low: 0
 test_runner_detected: true
 ci_provider: github-actions
-recommended_fixes: 4
+recommended_fixes: 1
 ---
 
 ## Dependency Health
@@ -36,20 +37,11 @@ Lockfile is committed and valid. Dependency versions are pinned and builds are r
 ### Security Audit
 
 ```
-Tool: npm audit --json
-Summary: 0 CRITICAL, 0 HIGH, 6 MODERATE, 0 LOW
-Direct vs transitive: all 6 findings are transitive
+Tool: npm audit
+Summary: 0 CRITICAL, 0 HIGH, 0 MODERATE, 0 LOW
 ```
 
-No direct dependency has a vulnerability. All findings cascade from toolchain packages (language server, YAML parser, REST client) — none of them ship in production bundles.
-
-**MODERATE findings** (all transitive, fix available via `npm audit fix`):
-
-- **qs** ≥6.11.1 ≤6.15.1 — GHSA-q8mj-m7cp-5q26: DoS via null/undefined entries in comma-format arrays (CVSS 5.3). Transitive via `typed-rest-client`.
-- **yaml** 2.0.0–2.8.2 — GHSA-48c2-rrv3-qjmp: Stack Overflow on deeply nested YAML (CVSS 4.3). Transitive via `yaml-language-server` → `volar-service-yaml` → `@astrojs/language-server`.
-- **@astrojs/language-server**, **volar-service-yaml**, **typed-rest-client**, **yaml-language-server** — cascade effects of the two above.
-
-All six carry `fixAvailable: true`. Run `npm audit fix` to resolve them in one step.
+Clean. All six MODERATE findings from the initial audit (transitive `qs` and `yaml` chains via `@stryker-mutator/core` and `@astrojs/language-server`) were resolved by adding `npm overrides` for `qs@^6.15.2` and `volar-service-yaml@0.0.71` in `package.json`. Neither parent package had released a fix at the time — the overrides are the correct long-term approach until upstream catches up.
 
 ### Outdated Dependencies
 
@@ -92,7 +84,7 @@ Test coverage depth is appropriate for the MVP stage — the commission calculat
 
 ```
 Provider: GitHub Actions
-Configuration: .github/workflows/ci.yml, .github/workflows/deploy.yaml
+Configuration: .github/workflows/ci.yml
 ```
 
 | Stage      | Status | Notes                                                     |
@@ -100,15 +92,10 @@ Configuration: .github/workflows/ci.yml, .github/workflows/deploy.yaml
 | Lint       | ✓      | `npm run lint` (ESLint via eslint.config.js)             |
 | Test       | ✓      | Unit + integration + E2E, all in `ci.yml`                |
 | Build      | ✓      | `astro build` (both ci and deploy jobs)                  |
-| Type check | ✗      | No `npx astro check` or `tsc --noEmit` step in CI       |
+| Type check | ✓      | `npx astro check` after `astro sync`                     |
 | Security   | ✗      | No `npm audit` step; audit runs must be triggered manually |
 
-**⚠ Duplicate deploy workflow detected.** Two workflows both trigger on push to `main`:
-
-- `ci.yml` — runs the full CI gate (lint → test → integration → E2E → build), then deploys via `cloudflare/wrangler-action` only after all tests pass.
-- `deploy.yaml` — runs `npm run build` and deploys via `npx wrangler deploy` *without* running any tests first.
-
-Every push to `main` currently triggers two concurrent deployments. The `deploy.yaml` workflow can deploy a build that would fail `ci.yml`'s test gate if both complete in different orders. The `deploy.yaml` should be removed — `ci.yml` already handles deployment correctly.
+The duplicate `deploy.yaml` workflow (which deployed on every push without running tests) was removed. `ci.yml` is now the sole workflow, gating deploy and migrate jobs behind the full CI suite. All GitHub Actions were bumped to Node.js 24-compatible versions (`actions/checkout@v6`, `actions/setup-node@v6`, `cloudflare/wrangler-action@v4`, `supabase/setup-cli@v2`) ahead of the June 16th forced migration deadline.
 
 ---
 
@@ -120,7 +107,7 @@ Every push to `main` currently triggers two concurrent deployments. The `deploy.
 
 ### Medium severity
 
-- **Type-check step missing from CI** — TypeScript errors are not caught in the pipeline. The agent can generate code with type errors that pass lint and tests but would fail a type check. Fix: add `- run: npx astro check` immediately after `npx astro sync` in `ci.yml`.
+*(none — type-check step added to CI)*
 
 ### Low severity
 
@@ -142,63 +129,14 @@ No stack-assessment.md found. Run /10x-stack-assess for quality-gate analysis.
 
 ### Fix before agent work (Category A)
 
-#### 1. Remove the duplicate `deploy.yaml` workflow
+#### 1. Evaluate TypeScript 5→6 migration
 
-**Impact**: Every push to `main` triggers two concurrent deployments. The orphaned `deploy.yaml` can deploy unverified code — bypassing lint, unit tests, integration tests, and E2E — if it wins the race against `ci.yml`'s deploy job. The agent makes frequent small commits; this gap means the agent's own changes can ship without test verification.
-**Severity**: medium
-**Effort**: quick (< 5 min)
-**Fix**:
-
-```bash
-git rm .github/workflows/deploy.yaml
-git commit -m "chore(ci): remove duplicate deploy workflow that bypasses test gate"
-```
-
-`ci.yml` already handles deployment after CI passes. No functionality is lost.
-
----
-
-#### 2. Add type-check step to CI
-
-**Impact**: Without `astro check` in CI, TypeScript errors introduced by the agent are invisible until the developer runs it locally. The agent generates a lot of TypeScript and treats the CI green signal as "correct" — a missing type-check step means type errors accumulate silently.
-**Severity**: medium
-**Effort**: quick (< 5 min)
-**Fix**:
-
-In `.github/workflows/ci.yml`, add after `npx astro sync`:
-
-```yaml
-- run: npx astro check
-```
-
-This runs the Astro language server's full TypeScript check against the project, including `.astro` component types.
-
----
-
-#### 3. Fix all MODERATE audit vulnerabilities
-
-**Impact**: All six findings are in transitive toolchain dependencies — none ship in the production bundle. However, a clean audit baseline means the agent can be instructed to keep `npm audit` green as part of quality gates, which keeps the signal actionable.
-**Severity**: low
-**Effort**: quick (< 5 min)
-**Fix**:
-
-```bash
-npm audit fix
-```
-
-All six findings carry `fixAvailable: true`, so this should resolve them non-destructively (no major version bumps).
-
----
-
-#### 4. Evaluate TypeScript 5→6 migration
-
-**Impact**: TypeScript 6 may tighten inference in ways that produce new errors in existing code. Updating while the agent is actively adding features creates noise — it's better to migrate to a known-good state first. `dotnet`, `eslint`, and `lint-staged` major bumps are lower risk.
+**Impact**: TypeScript 6 may tighten inference in ways that produce new errors in existing code. Updating while the agent is actively adding features creates noise — it's better to migrate to a known-good state first. `eslint` and `lint-staged` major bumps are lower risk.
 **Severity**: low
 **Effort**: moderate (15–30 min)
 **Fix**:
 
 ```bash
-# Check for breaking changes first:
 npm install typescript@latest --save-dev
 npx astro check
 # Review any new diagnostics, fix or suppress as appropriate
@@ -210,14 +148,25 @@ If the migration surfaces too many changes, pin `typescript` to `^5.9.3` explici
 
 ### Addressed in upcoming lessons (Category B)
 
-All Category B items are already in place for this project — CI/CD, `CLAUDE.md`, `AGENTS.md`, and deployment configuration are fully set up. There are no deferred items. The four Category A fixes above are the complete recommended list.
+All Category B items are already in place for this project — CI/CD, `CLAUDE.md`, `AGENTS.md`, and deployment configuration are fully set up. There are no deferred items.
+
+---
+
+## Resolved fixes (applied 2026-06-05)
+
+| Fix | Commit | Status |
+|-----|--------|--------|
+| Remove duplicate `deploy.yaml` workflow | `90298f4` | ✓ resolved |
+| Add `npx astro check` type-check step to CI | `90298f4` | ✓ resolved |
+| Clear 6 MODERATE audit findings via `npm overrides` | `ae4475e` | ✓ resolved |
+| Bump GitHub Actions to Node.js 24-compatible versions | `b67c7df` | ✓ resolved |
 
 ---
 
 ## Summary
 
-**Health status: needs-attention**
+**Health status: healthy**
 
-EstateDesk is in strong shape for agent-assisted development: the lockfile is committed, dependencies have no HIGH or CRITICAL vulnerabilities, the TypeScript configuration uses strict mode, the test suite runs cleanly (unit + integration + E2E all wired into CI), and agent instruction files (`CLAUDE.md`, `AGENTS.md`) are present. The two gaps that matter most for agent safety are the orphaned `deploy.yaml` workflow (which can ship untested code on every push) and the missing type-check step in CI (which leaves TypeScript errors invisible to the CI signal). Both are quick fixes.
+EstateDesk is agent-ready. The lockfile is committed, `npm audit` is clean (0 vulnerabilities), the TypeScript configuration uses strict mode, the CI pipeline enforces lint + type-check + unit + integration + E2E before deploying, and agent instruction files (`CLAUDE.md`, `AGENTS.md`) are present. The only remaining item is a low-priority TypeScript 5→6 migration evaluation — safe to defer until the current sprint is complete.
 
-Next step: remove `deploy.yaml`, add `npx astro check` to `ci.yml`, then run `npm audit fix` to clear the six moderate advisories. All four fixes together take under 30 minutes. Once done, the project is agent-ready.
+Next step: proceed to agent onboarding.
