@@ -216,11 +216,11 @@ None — no data, schema, or code changes.
 
 #### Automated
 
-- [x] 1.1 TypeScript type-check passes: `npx astro check`
-- [x] 1.2 No build errors: `npm run build`
+- [x] 1.1 TypeScript type-check passes: `npx astro check` — f8154bd
+- [x] 1.2 No build errors: `npm run build` — f8154bd
 
 #### Manual
 
-- [x] 1.3 `CLAUDE.md` opens with `## EstateDesk Coding Conventions` above the `<!-- BEGIN -->` marker
-- [x] 1.4 All five conventions are present and correctly formatted
-- [x] 1.5 Code fences render correctly (no broken backtick blocks)
+- [x] 1.3 `CLAUDE.md` opens with `## EstateDesk Coding Conventions` above the `<!-- BEGIN -->` marker — f8154bd
+- [x] 1.4 All five conventions are present and correctly formatted — f8154bd
+- [x] 1.5 Code fences render correctly (no broken backtick blocks) — f8154bd

@@ -1,7 +1,7 @@
 ---
 id: claude-md-conventions
 title: "Add EstateDesk Coding Conventions to CLAUDE.md"
-status: plan_reviewed
+status: implemented
 created: 2026-06-05
 updated: 2026-06-05
 roadmap_ref: F-01
