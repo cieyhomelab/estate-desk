@@ -151,7 +151,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
   - Jakie dokładnie pozycje wchodzą w skład domyślnej listy dokumentów dla sprzedaży i dla najmu okazjonalnego? — Owner: user (agent zna listę). Block: no (potrzebne przed implementacją UI listy, nie blokuje schematu).
   - Czy upload plików przez Supabase Storage działa poprawnie w środowisku Cloudflare Workers workerd przy rozmiarach do 10 MB? (Rejestr ryzyk `infrastructure.md` wymaga testu na wdrożonym Workers.) — Owner: TBD. Block: no (F-02 umożliwia test; workaround możliwy).
 - **Ryzyko:** S-06 (gwiazda przewodnia) zależy od listy kontrolnej z tego slice — bramka dokumentowa sprawdza stan listy przed zamknięciem transakcji. S-05 musi być ukończony przed S-06.
-- **Status:** done (implemented 2026-05-30)
+- **Status:** done
 
 ### S-06: Zamknięcie transakcji (gwiazda przewodnia)
 
@@ -209,3 +209,4 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **S-02: agent może dodawać, edytować i usuwać ogłoszenia, przeglądać dashboard, rejestrować dane właściciela** — Archived 2026-06-05 → `context/archive/2026-05-25-listing-crud/`. Lesson: —.
 - **S-03: agent może ustawiać cenę, przeglądać historię cen i widzieć podział prowizji według swoich stawek** — Archived 2026-06-05 → `context/archive/2026-05-29-pricing-and-commission/`. Lesson: —.
 - **S-04: agent może dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia** — Archived 2026-06-05 → `context/archive/2026-05-30-contact-management/`. Lesson: —.
+- **S-05: agent może uploadować zdjęcia, zaznaczać dokumenty na liście kontrolnej i uploadować pliki dokumentów** — Archived 2026-06-05 → `context/archive/2026-05-30-documents-and-files/`. Lesson: —.
