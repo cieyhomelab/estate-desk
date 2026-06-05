@@ -3,7 +3,7 @@ project: EstateDesk
 version: 1
 status: draft
 created: 2026-05-24
-updated: 2026-05-31
+updated: 2026-06-05
 prd_version: 2
 main_goal: speed
 top_blocker: time
@@ -112,7 +112,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Pierwsza funkcja zależna od schematu bazy — błędnie zaprojektowane tabele propagują się do wszystkich późniejszych slices; warto zweryfikować schemat pod kątem US-01 przed rozpoczęciem UI.
-- **Status:** done (impl_reviewed 2026-05-27)
+- **Status:** done
 
 ### S-03: Cennik i podział prowizji
 
@@ -203,3 +203,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 | S-04 | contact-management     | 2026-05-30 | implemented    |
 | S-05 | documents-and-files    | 2026-05-30 | implemented    |
 | S-06 | transaction-close      | 2026-05-30 | impl_reviewed  |
+
+## Done
+
+- **S-02: agent może dodawać, edytować i usuwać ogłoszenia, przeglądać dashboard, rejestrować dane właściciela** — Archived 2026-06-05 → `context/archive/2026-05-25-listing-crud/`. Lesson: —.
