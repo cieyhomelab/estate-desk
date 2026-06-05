@@ -18,7 +18,10 @@ export const POST: APIRoute = async (context) => {
   });
 
   if (error) {
-    return context.redirect(`/auth/signup?error=${encodeURIComponent(error.message)}`);
+    const message = error.message.toLowerCase().includes("database error")
+      ? "Registration is closed. This application is limited to 3 users."
+      : error.message;
+    return context.redirect(`/auth/signup?error=${encodeURIComponent(message)}`);
   }
 
   return context.redirect("/auth/confirm-email");
