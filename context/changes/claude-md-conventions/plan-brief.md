@@ -50,4 +50,4 @@ Single documentation edit: prepend the conventions block as plain markdown to `C
 
 - `CLAUDE.md` opens with `## EstateDesk Coding Conventions` above the `<!-- BEGIN @przeprogramowani/10x-cli -->` marker
 - All five conventions are present, correctly numbered, and have working code fences
-- `pnpm run check` and `pnpm run build` pass (regression guard)
+- `npx astro check` and `npm run build` pass (regression guard)

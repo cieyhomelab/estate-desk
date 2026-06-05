@@ -151,7 +151,7 @@ Every new environment variable used in the app **must** be declared in `astro.co
 
 ```typescript
 // astro.config.mjs — add to env.schema
-OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret" }),
+OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
 ```
 
 Then import it in server-side code:
@@ -169,8 +169,8 @@ For public client-side variables use `context: "client", access: "public"` and i
 
 #### Automated Verification:
 
-- TypeScript type-check passes: `pnpm run check`
-- No build errors: `pnpm run build`
+- TypeScript type-check passes: `npx astro check`
+- No build errors: `npm run build`
 
 #### Manual Verification:
 
@@ -189,7 +189,7 @@ For public client-side variables use `context: "client", access: "public"` and i
 1. Open `CLAUDE.md` and confirm `## EstateDesk Coding Conventions` is the first heading
 2. Confirm the 10xDevs toolkit lesson block (starting with `<!-- BEGIN -->`) follows immediately after
 3. Confirm all five conventions are present, correctly numbered, and have working code fences
-4. Run `pnpm run check` and `pnpm run build` — both must pass (this file change has no effect on compiled output, but serves as a regression guard)
+4. Run `npx astro check` and `npm run build` — both must pass (this file change has no effect on compiled output, but serves as a regression guard)
 
 ## Performance Considerations
 
@@ -216,11 +216,11 @@ None — no data, schema, or code changes.
 
 #### Automated
 
-- [ ] 1.1 TypeScript type-check passes: `pnpm run check`
-- [ ] 1.2 No build errors: `pnpm run build`
+- [x] 1.1 TypeScript type-check passes: `npx astro check`
+- [x] 1.2 No build errors: `npm run build`
 
 #### Manual
 
-- [ ] 1.3 `CLAUDE.md` opens with `## EstateDesk Coding Conventions` above the `<!-- BEGIN -->` marker
-- [ ] 1.4 All five conventions are present and correctly formatted
-- [ ] 1.5 Code fences render correctly (no broken backtick blocks)
+- [x] 1.3 `CLAUDE.md` opens with `## EstateDesk Coding Conventions` above the `<!-- BEGIN -->` marker
+- [x] 1.4 All five conventions are present and correctly formatted
+- [x] 1.5 Code fences render correctly (no broken backtick blocks)

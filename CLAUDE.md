@@ -1,3 +1,111 @@
+## EstateDesk Coding Conventions
+
+These conventions apply to all EstateDesk implementation work. Follow them exactly; they override generic framework defaults.
+
+### 1. React Island Hydration
+
+Use `client:load` for interactive React components that receive Astro props and benefit from SSR (e.g., forms with server-provided error messages). Use `client:only="react"` only when a component uses browser-only APIs (`localStorage`, `window`) and must not server-render. Do not use `client:visible` or `client:idle` — EstateDesk is SSR-first and these lazy strategies add complexity without benefit.
+
+```astro
+<!-- Preferred for most islands -->
+<MyForm serverError={error} client:load />
+
+<!-- Only when the component requires browser-only APIs -->
+<BrowserOnlyWidget client:only="react" />
+```
+
+### 2. API Route Shape
+
+All API routes live in `src/pages/api/`. Export a named HTTP-verb handler typed as `APIRoute`. Check Supabase auth at the top before any business logic. Return `context.redirect()` for form-style routes. Return `new Response(JSON.stringify(...))` only for fetch-style routes called by React islands.
+
+```typescript
+import type { APIRoute } from "astro";
+import { createClient } from "@/lib/supabase";
+
+export const POST: APIRoute = async (context) => {
+  const supabase = createClient(context.request.headers, context.cookies);
+  if (!supabase) return context.redirect(`/page?error=${encodeURIComponent("Config error")}`);
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return context.redirect("/auth/signin");
+
+  const form = await context.request.formData();
+  // ... business logic ...
+  return context.redirect("/destination");
+};
+```
+
+For fetch-style routes (called via `fetch()` from a React island):
+
+```typescript
+return new Response(JSON.stringify({ result }), {
+  headers: { "Content-Type": "application/json" },
+});
+```
+
+### 3. External LLM Calls Must Go Via a Server-Side API Route
+
+Never call OpenRouter (or any external LLM API) from a React component. The API key would end up in the browser bundle or network requests. Instead:
+
+1. Create an API route in `src/pages/api/` that calls the LLM server-side.
+2. Read the key via `import { OPENROUTER_API_KEY } from "astro:env/server"` inside the API route.
+3. Have the React component call the local API route via `fetch('/api/your-route', { method: 'POST', body: JSON.stringify({...}) })`.
+
+```typescript
+// src/pages/api/format-address.ts  ← server-side, key is safe here
+import { OPENROUTER_API_KEY } from "astro:env/server";
+
+export const POST: APIRoute = async (context) => {
+  const { raw } = await context.request.json();
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ /* prompt */ }),
+  });
+  // ...
+};
+```
+
+### 4. Tailwind CSS v4
+
+This project uses Tailwind CSS v4. v4 has no `tailwind.config.js` and does not use the PostCSS plugin.
+
+- **Do not create `tailwind.config.js`** — it will be ignored and may cause confusion.
+- Theme tokens live in `src/styles/global.css` under `@theme inline { ... }`.
+- Custom utilities use `@utility name { ... }` (e.g., `@utility bg-cosmic { ... }`).
+- The global CSS starts with `@import "tailwindcss"` — this replaces the v3 `@tailwind base/components/utilities` directives.
+- The Vite plugin is `tailwindcss()` from `@tailwindcss/vite` (already wired in `astro.config.mjs`).
+
+```css
+/* src/styles/global.css — add custom tokens here, not in a config file */
+@theme inline {
+  --color-brand: oklch(0.6 0.2 240);
+}
+
+@utility my-utility {
+  background: var(--color-brand);
+}
+```
+
+### 5. Astro Env Schema for New Secret Variables
+
+Every new environment variable used in the app **must** be declared in `astro.config.mjs` under `env.schema` before it can be imported. Without the declaration the variable is `undefined` at runtime in Cloudflare Workers even if the secret is set.
+
+```typescript
+// astro.config.mjs — add to env.schema
+OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+```
+
+Then import it in server-side code:
+
+```typescript
+import { OPENROUTER_API_KEY } from "astro:env/server";
+```
+
+For public client-side variables use `context: "client", access: "public"` and import from `"astro:env/client"`.
+
+---
+
 <!-- BEGIN @przeprogramowani/10x-cli -->
 
 ## 10xDevs AI Toolkit — Module 1, Lesson 2
