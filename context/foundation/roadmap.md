@@ -125,7 +125,7 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **Nieznane:**
   - Czy kolejność i podstawa wyliczeń podziału prowizji to: prowizja brutto → rezerwa podatkowa (% brutto) → część agencji (% brutto) → część agenta (brutto − podatek − agencja)? — Owner: user. Block: no (do potwierdzenia podczas planowania `/10x-plan pricing-and-commission`).
 - **Ryzyko:** PRD guardrail: "rounding difference surfaces as a validation error" — logika zaokrąglania musi być przetestowana przed S-06, gdzie prowizja jest blokowana przy zamknięciu transakcji.
-- **Status:** done (impl_reviewed 2026-05-29)
+- **Status:** done
 
 ### S-04: Kontakty zainteresowanych stron
 
@@ -207,3 +207,4 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 ## Done
 
 - **S-02: agent może dodawać, edytować i usuwać ogłoszenia, przeglądać dashboard, rejestrować dane właściciela** — Archived 2026-06-05 → `context/archive/2026-05-25-listing-crud/`. Lesson: —.
+- **S-03: agent może ustawiać cenę, przeglądać historię cen i widzieć podział prowizji według swoich stawek** — Archived 2026-06-05 → `context/archive/2026-05-29-pricing-and-commission/`. Lesson: —.
