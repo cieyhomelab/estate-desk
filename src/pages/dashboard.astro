@@ -50,6 +50,27 @@ const urlSuccess = Astro.url.searchParams.get("success");
 <Layout title="Dashboard — EstateDesk">
   <div class="bg-cosmic min-h-screen p-6">
     <div class="mx-auto max-w-4xl">
+      <div class="mb-8 flex items-center gap-2.5">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <rect width="32" height="32" rx="8" fill="url(#logo-grad-dash)"></rect>
+          <path d="M9 23V15.5L16 9.5L23 15.5V23H19.5V18.5H12.5V23H9Z" fill="white" fill-opacity="0.95"></path>
+          <defs>
+            <linearGradient id="logo-grad-dash" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6366f1"></stop>
+              <stop offset="100%" stop-color="#4a8cff"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="text-[1.0625rem] font-semibold tracking-[-0.01em] text-white">EstateDesk</span>
+      </div>
+
       <div class="mb-6 flex items-center justify-between">
         <h1 class="text-2xl font-bold text-white">Ogłoszenia</h1>
         <div class="flex items-center gap-3">
