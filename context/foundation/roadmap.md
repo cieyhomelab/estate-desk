@@ -30,7 +30,7 @@ EstateDesk to aplikacja do zarządzania transakcjami nieruchomości dla jednego 
 | F-01 | claude-md-conventions  | (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md                               | —             | §Non-Functional Req.  | done     |
 | S-01 | listing-tab-navigation | przechodzić między 5 podstronami ogłoszenia przez pasek zakładek i zawsze wrócić do dashboardu | F-01          | US-01, FR-001, FR-002 | done     |
 | S-02 | address-formatting-llm | sformatować adres do formy kanonicznej jednym klawiszem; widzieć błąd inline przy awarii LLM  | F-01, S-01    | US-02, FR-003, FR-004 | done     |
-| S-03 | home-page-redesign     | zobaczyć polskojęzyczną stronę główną z brandingiem EstateDesk                                 | —             | FR-005                | blocked  |
+| S-03 | home-page-redesign     | zobaczyć polskojęzyczną stronę główną z brandingiem EstateDesk                                 | —             | FR-005                | done     |
 
 ## Streams
 
@@ -106,7 +106,7 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 - **Unknowns:**
   - Wizualny design strony głównej (układ, treść, komponenty, identyfikacja wizualna EstateDesk) nie jest zdefiniowany. — Owner: użytkownik. Block: yes.
 - **Risk:** Implementacja bez ustalonego designu oznacza konieczność przeróbki. Po ustaleniu designu zmiana jest technicznie prosta — nie warto zaczynać bez jasnej specyfikacji.
-- **Status:** blocked
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -133,3 +133,4 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 - **S-01** (`listing-tab-navigation`) — Tab navigation bar added to all 5 listing sub-pages; Back link standardized to dashboard. Done 2026-06-06.
 - **F-01: (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md** — Archived 2026-06-06 → `context/archive/2026-06-05-claude-md-conventions/`. Lesson: —.
 - **S-02: sformatować adres do formy kanonicznej jednym klawiszem; widzieć błąd inline przy awarii LLM** — Archived 2026-06-06 → `context/archive/2026-06-06-address-formatting-llm/`. Lesson: —.
+- **S-03: Agent i odwiedzający widzą polskojęzyczną stronę główną z brandingiem EstateDesk w miejscu placeholdera Astro Starter; strona zawiera działające linki Zaloguj się / Zarejestruj się.** — Archived 2026-06-06 → `context/archive/2026-06-06-home-page-redesign/`. Lesson: —.
