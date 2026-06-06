@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
+import ListingTabs from "@/components/listings/ListingTabs.astro";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
@@ -106,21 +107,7 @@ const error = Astro.url.searchParams.get("error");
 <Layout title="Zamknij transakcję — EstateDesk">
   <div class="bg-cosmic min-h-screen p-6">
     <div class="mx-auto max-w-lg">
-      <div class="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-        <a href="/dashboard" class="text-blue-200/70 transition-colors hover:text-blue-200">← Powrót</a>
-        <span class="text-white/20">|</span>
-        <a
-          href={`/dashboard/listings/${listing.id}/edit`}
-          class="text-blue-200/70 transition-colors hover:text-blue-200">Edytuj</a
-        >
-        <span class="text-white/30">→</span>
-        <a
-          href={`/dashboard/listings/${listing.id}/pricing`}
-          class="text-blue-200/70 transition-colors hover:text-blue-200">Cena i prowizja</a
-        >
-        <span class="text-white/30">→</span>
-        <span class="font-medium text-white">Zamknij</span>
-      </div>
+      <ListingTabs listingId={listing.id} activeTab="close" />
 
       {success === "zamknieto" && <Banner variant="info">Transakcja została pomyślnie zamknięta.</Banner>}
       {error === "juz-zamknieta" && <Banner variant="error">Transakcja jest już zamknięta.</Banner>}

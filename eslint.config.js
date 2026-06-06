@@ -79,6 +79,7 @@ const astroConfig = tseslint.config({
 const astroRedirectFrontmatterConfig = tseslint.config({
   files: [
     "src/pages/dashboard/listings/[[]id[]]/close.astro",
+    "src/pages/dashboard/listings/[[]id[]]/contacts.astro",
     "src/pages/dashboard/listings/[[]id[]]/edit.astro",
     "src/pages/dashboard/listings/[[]id[]]/pricing.astro",
     "src/pages/dashboard/listings/[[]id[]]/documents.astro",

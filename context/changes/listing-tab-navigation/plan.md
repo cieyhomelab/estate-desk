@@ -189,8 +189,8 @@ Replace the ad-hoc navigation block in each listing detail page with `<ListingTa
 
 #### Automated
 
-- [x] 1.1 TypeScript compilation passes with no new errors: `npx tsc --noEmit`
-- [x] 1.2 No import errors when the component is referenced
+- [x] 1.1 TypeScript compilation passes with no new errors: `npx tsc --noEmit` — 08eeefa
+- [x] 1.2 No import errors when the component is referenced — 08eeefa
 
 #### Manual
 
@@ -202,8 +202,8 @@ Replace the ad-hoc navigation block in each listing detail page with `<ListingTa
 
 #### Automated
 
-- [ ] 2.1 TypeScript compilation passes: `npx tsc --noEmit`
-- [ ] 2.2 Dev server starts without errors: `npm run dev`
+- [x] 2.1 TypeScript compilation passes: `npx tsc --noEmit`
+- [x] 2.2 Dev server starts without errors: `npm run dev`
 
 #### Manual
 
