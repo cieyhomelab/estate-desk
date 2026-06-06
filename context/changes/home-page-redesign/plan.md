@@ -117,15 +117,15 @@ Rewrite `Welcome.astro` with the branded two-column layout and remove the embedd
 
 #### Automated
 
-- [x] 1.1 Lint passes: `npm run lint`
-- [x] 1.2 Type checking passes: `npx astro check`
+- [x] 1.1 Lint passes: `npm run lint` — ba99fdd
+- [x] 1.2 Type checking passes: `npx astro check` — ba99fdd
 
 #### Manual
 
-- [x] 1.3 Two-column layout renders with branding on left, auth blocks on right
-- [x] 1.4 EstateDesk logo appears above headline
-- [x] 1.5 Sign In navigates to /auth/signin; Sign Up to /auth/signup
-- [x] 1.6 Browser tab reads "EstateDesk"
-- [x] 1.7 Mobile layout stacks vertically
-- [x] 1.8 No Topbar visible on home page
-- [x] 1.9 No regression on /auth/signin, /auth/signup, /dashboard
+- [x] 1.3 Two-column layout renders with branding on left, auth blocks on right — ba99fdd
+- [x] 1.4 EstateDesk logo appears above headline — ba99fdd
+- [x] 1.5 Sign In navigates to /auth/signin; Sign Up to /auth/signup — ba99fdd
+- [x] 1.6 Browser tab reads "EstateDesk" — ba99fdd
+- [x] 1.7 Mobile layout stacks vertically — ba99fdd
+- [x] 1.8 No Topbar visible on home page — ba99fdd
+- [x] 1.9 No regression on /auth/signin, /auth/signup, /dashboard — ba99fdd

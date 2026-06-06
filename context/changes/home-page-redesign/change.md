@@ -1,7 +1,7 @@
 ---
 change_id: home-page-redesign
 title: "Replace Astro placeholder with EstateDesk home page"
-status: implementing
+status: implemented
 created: 2026-06-06
 updated: 2026-06-06
 roadmap_id: S-03
