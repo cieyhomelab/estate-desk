@@ -87,6 +87,6 @@ test("reopen → active state with data intact", async () => {
   await expect(page.getByText("Aktywne")).toBeVisible();
   await expect(page.getByText("ul. Lifecycle Test, Gdańsk")).toBeVisible();
   await expect(page.getByText("Zofia Testowa")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Zamknij transakcję" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Zakończ transakcję" })).toBeVisible();
   await expect(page.getByText(/Zysk agenta/)).not.toBeVisible();
 });
