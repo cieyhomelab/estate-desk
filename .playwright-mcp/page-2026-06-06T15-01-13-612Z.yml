@@ -1,0 +1,55 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - img [ref=e6]
+          - generic [ref=e9]: EstateDesk
+        - generic [ref=e10]:
+          - heading "Twój panel nieruchomości." [level=1] [ref=e11]:
+            - text: Twój panel
+            - text: nieruchomości.
+          - paragraph [ref=e12]: Kompletne narzędzia dla polskiego agenta — od onboardingu właściciela po zamknięcie transakcji.
+        - list [ref=e13]:
+          - listitem [ref=e14]: ✓ Zarządzanie ofertami i cyklem życia
+          - listitem [ref=e15]: ✓ Kolekcja dokumentów z checklistą
+          - listitem [ref=e16]: ✓ Kalkulator prowizji agenta
+      - generic [ref=e19]:
+        - heading "Utwórz konto" [level=1] [ref=e63]
+        - paragraph [ref=e21]: Dołącz do EstateDesk i zacznij działać
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]: Email
+            - textbox "Email" [ref=e26]:
+              - /placeholder: ty@example.com
+          - generic [ref=e27]:
+            - generic [ref=e28]: Hasło
+            - generic [ref=e29]:
+              - textbox "Hasło" [ref=e30]:
+                - /placeholder: Min. 6 znaków
+              - button "Pokaż hasło" [ref=e31] [cursor=pointer]:
+                - img [ref=e32]
+          - generic [ref=e64]:
+            - generic [ref=e65]: Potwierdź hasło
+            - generic [ref=e66]:
+              - textbox "Potwierdź hasło" [ref=e67]:
+                - /placeholder: Powtórz hasło
+              - button "Pokaż hasło" [ref=e68] [cursor=pointer]:
+                - img [ref=e69]
+          - button "Utwórz konto" [ref=e72] [cursor=pointer]
+        - paragraph [ref=e38]:
+          - text: Masz już konto?
+          - button "Zaloguj się" [active] [ref=e73] [cursor=pointer]
+  - generic [ref=e42]:
+    - button "Menu" [ref=e43]:
+      - img [ref=e45]
+      - generic: Menu
+    - button "Inspect" [ref=e49]:
+      - img [ref=e51]
+      - generic: Inspect
+    - button "Audit" [ref=e53]:
+      - img [ref=e55]
+      - generic: Audit
+    - button "Settings" [ref=e58]:
+      - img [ref=e60]
+      - generic: Settings
