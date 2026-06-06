@@ -1,10 +1,10 @@
 ---
 change_id: testing-gate-logic-auth-idor
 title: Phase 3 test rollout — gate logic, auth boundary, and IDOR
-status: impl_reviewed
+status: archived
 created: 2026-06-02
-updated: 2026-06-02
-archived_at: null
+updated: 2026-06-06
+archived_at: 2026-06-06T18:26:26Z
 ---
 
 ## Notes
