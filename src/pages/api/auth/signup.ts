@@ -8,7 +8,7 @@ export const POST: APIRoute = async (context) => {
 
   const supabase = createClient(context.request.headers, context.cookies);
   if (!supabase) {
-    return context.redirect(`/auth/signup?error=${encodeURIComponent("Supabase is not configured")}`);
+    return context.redirect(`/?error=${encodeURIComponent("Supabase is not configured")}&mode=signup`);
   }
   const origin = context.url.origin;
   const { error } = await supabase.auth.signUp({
@@ -21,7 +21,7 @@ export const POST: APIRoute = async (context) => {
     const message = error.message.toLowerCase().includes("database error")
       ? "Registration is closed. This application is limited to 3 users."
       : error.message;
-    return context.redirect(`/auth/signup?error=${encodeURIComponent(message)}`);
+    return context.redirect(`/?error=${encodeURIComponent(message)}&mode=signup`);
   }
 
   return context.redirect("/auth/confirm-email");

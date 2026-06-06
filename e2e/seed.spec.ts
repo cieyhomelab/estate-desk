@@ -30,7 +30,7 @@ test.describe("RISK: brak dostępu użytkownika do zasobu chronionego", () => {
     await page.goto("/dashboard");
 
     // ASSERT: czekanie na stan, nie na timeout
-    await expect(page).toHaveURL(/\/auth\/signin/);
+    await expect(page).toHaveURL("/");
   });
 
   test("zalogowany użytkownik ma dostęp do chronionej strony", async () => {
