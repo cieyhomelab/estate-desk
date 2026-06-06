@@ -1,11 +1,10 @@
 ---
 project: EstateDesk
-checked_at: 2026-06-05T00:00:00Z
-resolved_at: 2026-06-05T20:10:00Z
+checked_at: 2026-06-05T10:00:00Z
 health_status: healthy
 context_type: brownfield
 language_family: js
-stack_assessment_available: false
+stack_assessment_available: true
 checks_run:
   - lockfile
   - dependency_audit
@@ -19,8 +18,8 @@ audit_findings:
   moderate: 0
   low: 0
 test_runner_detected: true
-ci_provider: github-actions
-recommended_fixes: 0
+ci_provider: GitHub Actions
+recommended_fixes: 4
 ---
 
 ## Dependency Health
@@ -32,51 +31,45 @@ Status: present (package-lock.json)
 Package manager: npm
 ```
 
-Lockfile is committed and valid. Dependency versions are pinned and builds are reproducible.
-
 ### Security Audit
 
 ```
-Tool: npm audit
+Tool: npm audit --json
 Summary: 0 CRITICAL, 0 HIGH, 0 MODERATE, 0 LOW
+Direct vs transitive: no vulnerabilities found in either category
 ```
 
-Clean. All six MODERATE findings from the initial audit (transitive `qs` and `yaml` chains via `@stryker-mutator/core` and `@astrojs/language-server`) were resolved by adding `npm overrides` for `qs@^6.15.2` and `volar-service-yaml@0.0.71` in `package.json`. Neither parent package had released a fix at the time — the overrides are the correct long-term approach until upstream catches up.
+The full dependency tree (1,059 packages: 505 prod, 403 dev, 161 optional) audited clean. No advisories to act on.
 
 ### Outdated Dependencies
 
 ```
-Packages with major version gaps: 5
+Packages with major version gaps: 4
 ```
 
-Direct dependencies at least one major version behind:
+- **`eslint`**: 9.39.4 → 10.4.1 (1 major version behind)
+- **`@eslint/js`**: 9.39.4 → 10.0.1 (1 major version behind)
+- **`dotenv`**: 16.6.1 → 17.4.2 (1 major version behind)
+- **`lint-staged`**: 16.4.0 → 17.0.7 (1 major version behind)
 
-- **typescript**: 5.9.3 → 6.0.3 (1 major version behind)
-- **eslint**: 9.x → 10.x (1 major version behind)
-- **@eslint/js**: 9.x → 10.x (1 major version behind)
-- **dotenv**: 16.x → 17.x (1 major version behind)
-- **lint-staged**: 16.x → 17.x (1 major version behind)
-
-TypeScript 6 is the most impactful — it may introduce stricter inference and change some diagnostic behavior. The ESLint 9→10 jump is likely the most complex to migrate (flat config format was already adopted, so the delta may be smaller). The others are low-risk. All remaining packages have only minor/patch gaps — no action needed.
+All remaining outdated packages (`astro`, `@astrojs/*`, `react`, `tailwindcss`, `supabase`, etc.) are minor or patch bumps — update at your discretion but no urgency.
 
 ---
 
 ## Test Suite
 
 ```
-Test runner: Vitest (unit) + Playwright (E2E)
-Tests found: 4 unit tests, 7 integration test files, E2E suite
-Test execution: passing (unit tests)
+Test runner: Vitest
+Tests found: 4 tests across 2 suites
+Test execution: passing
 ```
 
 ```
-Configuration: vitest.config.ts (unit), vitest.integration.config.ts (integration), playwright.config.ts (E2E)
-Framework: Vitest ^4.1.8, Playwright ^1.53.0
+Configuration: vitest.config.ts (default), vitest.integration.config.ts, vitest.integration.api.config.ts
+Framework: Vitest (node environment for unit; separate integration configs)
 ```
 
-Unit tests run cleanly — 4/4 passing (`src/lib/commission.test.ts`). Integration tests (7 files under `src/integration/`) require a live Supabase instance and are not executable locally without credentials; they run in CI against the test project via secrets. E2E tests are configured but require `playwright install` and a running app instance.
-
-Test coverage depth is appropriate for the MVP stage — the commission calculation (the project's precision-critical logic) is fully unit-tested with edge cases.
+Additionally, Playwright is configured (`playwright.config.ts`) for E2E tests and runs in CI. Three-tier test coverage — unit, integration (two suites), and E2E — is a strong foundation for agent-assisted development.
 
 ---
 
@@ -87,41 +80,52 @@ Provider: GitHub Actions
 Configuration: .github/workflows/ci.yml
 ```
 
-| Stage      | Status | Notes                                                     |
-|------------|--------|-----------------------------------------------------------|
-| Lint       | ✓      | `npm run lint` (ESLint via eslint.config.js)             |
-| Test       | ✓      | Unit + integration + E2E, all in `ci.yml`                |
-| Build      | ✓      | `astro build` (both ci and deploy jobs)                  |
-| Type check | ✓      | `npx astro check` after `astro sync`                     |
-| Security   | ✗      | No `npm audit` step; audit runs must be triggered manually |
+| Stage      | Status | Notes                                          |
+|------------|--------|------------------------------------------------|
+| Lint       | ✓      | `npm run lint` (ESLint + typescript-eslint)    |
+| Test       | ✓      | Vitest unit + integration (2 suites) + Playwright E2E |
+| Build      | ✓      | `npm run build` (Astro/Vite, Cloudflare adapter) |
+| Type check | ✓      | `npx astro check` (wraps tsc strict)           |
+| Security   | ✗      | No dedicated security scan step                |
 
-The duplicate `deploy.yaml` workflow (which deployed on every push without running tests) was removed. `ci.yml` is now the sole workflow, gating deploy and migrate jobs behind the full CI suite. All GitHub Actions were bumped to Node.js 24-compatible versions (`actions/checkout@v6`, `actions/setup-node@v6`, `cloudflare/wrangler-action@v4`, `supabase/setup-cli@v2`) ahead of the June 16th forced migration deadline.
+Three-job pipeline: `ci` (full quality gate) → `deploy` (Cloudflare Workers, main-only) → `migrate` (Supabase DB push, after deploy). The security stage absence is advisory — audit is currently clean and the dependency is monitored locally.
 
 ---
 
 ## Configuration
 
-### High severity
-
-*(none)*
-
-### Medium severity
-
-*(none — type-check step added to CI)*
-
 ### Low severity
 
-- **.editorconfig** — not present. Without it, developers on different editors may produce inconsistent whitespace and line endings. Prettier covers formatting, but editorconfig enforces it at the editor level before Prettier runs. Fix: create `.editorconfig` with `indent_style = space`, `indent_size = 2`, `end_of_line = lf`, `charset = utf-8`.
+- **`.editorconfig`** — absent. Without it, editor whitespace and line-ending settings are not enforced consistently across contributors or AI-generated patches. Fix: create a minimal `.editorconfig` (see fix list below).
 
-All other expected configuration is present: `.prettierrc.json`, `eslint.config.js`, `tsconfig.json` (extends `astro/tsconfigs/strict` — strict mode confirmed), `.gitignore`, `.env.example`, `CLAUDE.md`, `AGENTS.md`. No gaps in the core configuration surface.
+### All other expected configuration: present
+
+- `.prettierrc.json` — formatting rules ✓
+- `eslint.config.js` — linting with `typescript-eslint` ✓
+- `tsconfig.json` — extends `astro/tsconfigs/strict` (strict TypeScript enforced) ✓
+- `.gitignore` — tracked file exclusions ✓
+- `.env.example` — environment variable documentation ✓
+- `CLAUDE.md` — agent instruction file present ✓
 
 ---
 
 ## Stack Assessment Cross-Reference
 
 ```
-No stack-assessment.md found. Run /10x-stack-assess for quality-gate analysis.
+Stack assessment: context/foundation/stack-assessment.md
+Agent readiness (from stack-assess): ready
 ```
+
+All four quality gates from the stack assessment passed. Health-check findings reinforce that verdict:
+
+| Quality Gate           | Stack-Assess Verdict | Health-Check Finding                                            | Status    |
+|------------------------|---------------------|-----------------------------------------------------------------|-----------|
+| Typed                  | ✓ pass              | `tsconfig.json` strict enforced; `astro check` in CI           | Confirmed |
+| Convention-based       | ✓ pass              | File-based routing intact; no deviations detected               | Confirmed |
+| Popular in training data | ✓ pass (with caveat) | Astro 6 + Tailwind v4 recency noted — CLAUDE.md conventions gap persists | See Category B |
+| Well-documented        | ✓ pass              | No documentation blockers found                                 | Confirmed |
+
+The stack assessment flagged one gap not yet addressed: **`CLAUDE.md` contains only the 10xDevs toolkit scaffold with no EstateDesk-specific coding conventions** (auth pattern, API route shape, React island pattern, Tailwind v4 notes). This is the primary remaining agent-readiness gap — covered in the agent onboarding lesson.
 
 ---
 
@@ -129,23 +133,76 @@ No stack-assessment.md found. Run /10x-stack-assess for quality-gate analysis.
 
 ### Fix before agent work (Category A)
 
-*(none — all Category A items resolved)*
+#### 1. Upgrade ESLint to v10
 
-### Addressed in upcoming lessons (Category B)
-
-All Category B items are already in place for this project — CI/CD, `CLAUDE.md`, `AGENTS.md`, and deployment configuration are fully set up. There are no deferred items.
+**Impact**: ESLint 9→10 is a major bump. Running agents on a codebase with a stale major ESLint version risks lint errors surfacing mid-task if plugins advance ahead of the runner.  
+**Severity**: medium  
+**Effort**: moderate (15–30 min — verify plugin compatibility after upgrade)  
+**Fix**:
+```bash
+npm install --save-dev eslint@latest @eslint/js@latest typescript-eslint@latest
+```
+Check for breaking changes: ESLint v10 removes some legacy config options — review `eslint.config.js` after upgrading. Run `npm run lint` to verify.
 
 ---
 
-## Resolved fixes (applied 2026-06-05)
+#### 2. Upgrade dotenv to v17
 
-| Fix | Commit | Status |
-|-----|--------|--------|
-| Remove duplicate `deploy.yaml` workflow | `90298f4` | ✓ resolved |
-| Add `npx astro check` type-check step to CI | `90298f4` | ✓ resolved |
-| Clear 6 MODERATE audit findings via `npm overrides` | `ae4475e` | ✓ resolved |
-| Bump GitHub Actions to Node.js 24-compatible versions | `b67c7df` | ✓ resolved |
-| Upgrade TypeScript 5→6 (`@astrojs/check` bumped to 0.9.9) | `69d3f1e` | ✓ resolved |
+**Impact**: `dotenv` 16→17 is a major bump. The package is used in dev scripts; a stale major version may diverge from expected `.env` parsing behavior over time.  
+**Severity**: low  
+**Effort**: quick (< 5 min)  
+**Fix**:
+```bash
+npm install dotenv@latest
+```
+Run `npm run dev` briefly to confirm no parsing regressions.
+
+---
+
+#### 3. Upgrade lint-staged to v17
+
+**Impact**: `lint-staged` drives pre-commit hooks (via `lefthook`). Running an old major version risks incompatibilities when lefthook or node versions advance.  
+**Severity**: low  
+**Effort**: quick (< 5 min)  
+**Fix**:
+```bash
+npm install --save-dev lint-staged@latest
+```
+Trigger a test commit to confirm hooks still run.
+
+---
+
+#### 4. Add `.editorconfig`
+
+**Impact**: Without it, AI-generated patches may use inconsistent indentation or line endings that trigger lint failures on commit.  
+**Severity**: low  
+**Effort**: quick (< 5 min)  
+**Fix**: Create `.editorconfig` in the project root:
+```ini
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+```
+
+---
+
+### Addressed in upcoming lessons (Category B)
+
+#### EstateDesk-specific coding conventions in CLAUDE.md
+
+**Lesson**: [Agent Onboarding: Agents.md, AI Rules i feedback loops (M1L4)](https://platforma.przeprogramowani.pl/external/10xdevs-3/m1-l4)  
+**What you'll do there**: The agent onboarding lesson walks you through building `CLAUDE.md` with the right EstateDesk-specific content — auth pattern for protected pages, API route shape, React island pattern with `client:load`, Tailwind v4 class conventions, and environment variable rules. Generating a stub now would be premature; the lesson produces the full, correctly structured version.
+
+#### No dedicated security scan in CI
+
+**Lesson**: [Sprint Zero z Agentem: infrastruktura, walking skeleton i pierwszy deploy (M1L5)](https://platforma.przeprogramowani.pl/external/10xdevs-3/m1-l5)  
+**What you'll do there**: The infrastructure lesson covers adding automated dependency scanning (Dependabot, `npm audit` as a CI step, or a third-party scanner) to the GitHub Actions pipeline. The current audit is clean, so there is no urgency — but CI-level scanning is the right long-term posture.
 
 ---
 
@@ -153,6 +210,8 @@ All Category B items are already in place for this project — CI/CD, `CLAUDE.md
 
 **Health status: healthy**
 
-EstateDesk is agent-ready. The lockfile is committed, `npm audit` is clean (0 vulnerabilities), TypeScript 6 is in place with strict mode, the CI pipeline enforces lint + type-check + unit + integration + E2E before deploying, all GitHub Actions are on Node.js 24-compatible versions, and agent instruction files (`CLAUDE.md`, `AGENTS.md`) are present. There are no outstanding Category A items.
+EstateDesk is in excellent shape for agent-assisted development. The dependency tree is fully clean (zero audit findings across 1,059 packages), the three-tier test suite (Vitest unit + two integration suites + Playwright E2E) runs and passes, and GitHub Actions enforces lint, type-check, build, and all test tiers on every push. The only Category A items are four gradual major-version bumps (`eslint`, `@eslint/js`, `dotenv`, `lint-staged`) and a missing `.editorconfig` — none of these block agent work today, but addressing them before the next agent sprint keeps the toolchain current.
 
-Next step: proceed to agent onboarding.
+The one substantive gap is the `CLAUDE.md` instruction file: it currently holds only the course scaffold, not EstateDesk-specific patterns (auth check convention, API route shape, React island usage, Tailwind v4 notes). That gap is the primary item to resolve before expecting an agent to produce high-quality first-pass code for new features — and it is exactly what the agent onboarding lesson covers next.
+
+**Next step**: address the four quick Category A fixes (< 1 hour total), then proceed to agent onboarding to build out `CLAUDE.md` with EstateDesk-specific conventions.
