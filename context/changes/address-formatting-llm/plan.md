@@ -257,27 +257,27 @@ OpenRouter Gemini 2.5 Flash typically responds in 1–3s. The 5s AbortController
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 9f0e12d
 
 #### Manual
 
-- [ ] 2.2 Formatting triggers on "Formatuj" button click and updates field value
-- [ ] 2.3 Error state shown on network failure; raw text preserved
-- [ ] 2.4 Error clears and formatting retries on re-trigger after error
-- [ ] 2.5 Enter key triggers formatting without submitting the parent form
-- [ ] 2.6 Button visually disabled during loading state
+- [x] 2.2 Formatting triggers on "Formatuj" button click and updates field value
+- [x] 2.3 Error state shown on network failure; raw text preserved
+- [x] 2.4 Error clears and formatting retries on re-trigger after error
+- [x] 2.5 Enter key triggers formatting without submitting the parent form
+- [x] 2.6 Button visually disabled during loading state
 
 ### Phase 3: Page Integration — Embed Island in Both Forms
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Build succeeds: `npm run build`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 3.3 Edit form: initial address value displayed, formatting works, save persists formatted address
-- [ ] 3.4 New listing form: formatting works before first submit, address saves correctly
-- [ ] 3.5 Enter key does not submit either form
-- [ ] 3.6 All other form fields unaffected (no regression)
-- [ ] 3.7 ListingTabs navigation unaffected on edit page
+- [x] 3.3 Edit form: initial address value displayed, formatting works, save persists formatted address
+- [x] 3.4 New listing form: formatting works before first submit, address saves correctly
+- [x] 3.5 Enter key does not submit either form
+- [x] 3.6 All other form fields unaffected (no regression)
+- [x] 3.7 ListingTabs navigation unaffected on edit page
