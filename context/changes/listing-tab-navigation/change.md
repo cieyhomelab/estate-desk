@@ -1,7 +1,7 @@
 ---
 id: listing-tab-navigation
 title: Listing Tab Navigation
-status: implementing
+status: implemented
 created: 2026-06-06
 updated: 2026-06-06
 ---

@@ -194,22 +194,22 @@ Replace the ad-hoc navigation block in each listing detail page with `<ListingTa
 
 #### Manual
 
-- [ ] 1.3 Component file exists at `src/components/listings/ListingTabs.astro`
-- [ ] 1.4 Props interface matches the union literal type exactly
-- [ ] 1.5 Zamknij tab renders with red tone classes, other tabs with blue tone classes
+- [x] 1.3 Component file exists at `src/components/listings/ListingTabs.astro` — 74af929
+- [x] 1.4 Props interface matches the union literal type exactly — 74af929
+- [x] 1.5 Zamknij tab renders with red tone classes, other tabs with blue tone classes — 74af929
 
 ### Phase 2: Wire into All 5 Pages
 
 #### Automated
 
-- [x] 2.1 TypeScript compilation passes: `npx tsc --noEmit`
-- [x] 2.2 Dev server starts without errors: `npm run dev`
+- [x] 2.1 TypeScript compilation passes: `npx tsc --noEmit` — 74af929
+- [x] 2.2 Dev server starts without errors: `npm run dev` — 74af929
 
 #### Manual
 
-- [ ] 2.3 All 5 pages show the same tab bar with correct active tab highlighted
-- [ ] 2.4 Back link navigates to `/dashboard` on all pages
-- [ ] 2.5 Each tab navigates to the correct page
-- [ ] 2.6 Zamknij tab renders in red tones on all pages
-- [ ] 2.7 No old navigation artifacts remain
-- [ ] 2.8 Mobile viewport: tab bar wraps gracefully
+- [x] 2.3 All 5 pages show the same tab bar with correct active tab highlighted — 74af929
+- [x] 2.4 Back link navigates to `/dashboard` on all pages — 74af929
+- [x] 2.5 Each tab navigates to the correct page — 74af929
+- [x] 2.6 Zamknij tab renders in red tones on all pages — 74af929
+- [x] 2.7 No old navigation artifacts remain — 74af929
+- [x] 2.8 Mobile viewport: tab bar wraps gracefully — 74af929
