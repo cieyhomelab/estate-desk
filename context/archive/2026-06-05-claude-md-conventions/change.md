@@ -1,9 +1,10 @@
 ---
 id: claude-md-conventions
 title: "Add EstateDesk Coding Conventions to CLAUDE.md"
-status: implemented
+status: archived
 created: 2026-06-05
-updated: 2026-06-05
+updated: 2026-06-06
+archived_at: 2026-06-06T12:00:26Z
 roadmap_ref: F-01
 prd_refs: "§Non-Functional Requirements"
 prerequisites: []

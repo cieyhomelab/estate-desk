@@ -3,7 +3,7 @@ project: "EstateDesk — Menu, Navigation & Address Formatting"
 version: 1
 status: draft
 created: 2026-06-05
-updated: 2026-06-05
+updated: 2026-06-06
 prd_version: 1
 main_goal: low-complexity
 top_blocker: decisions
@@ -27,7 +27,7 @@ EstateDesk to aplikacja do zarządzania transakcjami nieruchomości dla jednego 
 
 | ID   | Change ID              | Outcome (agent może …)                                                                         | Prerequisites | PRD refs              | Status   |
 |------|------------------------|-----------------------------------------------------------------------------------------------|---------------|-----------------------|----------|
-| F-01 | claude-md-conventions  | (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md                               | —             | §Non-Functional Req.  | ready    |
+| F-01 | claude-md-conventions  | (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md                               | —             | §Non-Functional Req.  | done     |
 | S-01 | listing-tab-navigation | przechodzić między 5 podstronami ogłoszenia przez pasek zakładek i zawsze wrócić do dashboardu | F-01          | US-01, FR-001, FR-002 | done     |
 | S-02 | address-formatting-llm | sformatować adres do formy kanonicznej jednym klawiszem; widzieć błąd inline przy awarii LLM  | F-01, S-01    | US-02, FR-003, FR-004 | proposed |
 | S-03 | home-page-redesign     | zobaczyć polskojęzyczną stronę główną z brandingiem EstateDesk                                 | —             | FR-005                | blocked  |
@@ -66,7 +66,7 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Bez udokumentowanych wzorców agent może wygenerować kod v3-era Tailwind lub wywołać OpenRouter bezpośrednio z kodu klienckiego — oba błędy wykraczają poza cel niskiej złożoności i drugi może ujawnić klucz API w przeglądarce.
-- **Status:** ready
+- **Status:** done
 
 ## Slices
 
@@ -131,3 +131,4 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 ## Done
 
 - **S-01** (`listing-tab-navigation`) — Tab navigation bar added to all 5 listing sub-pages; Back link standardized to dashboard. Done 2026-06-06.
+- **F-01: (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md** — Archived 2026-06-06 → `context/archive/2026-06-05-claude-md-conventions/`. Lesson: —.
