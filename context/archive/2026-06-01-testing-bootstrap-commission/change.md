@@ -1,10 +1,10 @@
 ---
 change_id: testing-bootstrap-commission
 title: Testing bootstrap commission
-status: impl_reviewed
+status: archived
 created: 2026-06-01
-updated: 2026-06-01
-archived_at: null
+updated: 2026-06-06
+archived_at: 2026-06-06T16:23:34Z
 ---
 
 ## Notes
