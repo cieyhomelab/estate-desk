@@ -1,20 +1,29 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface Props {
   initialValue?: string;
   placeholder?: string;
   id?: string;
+  name?: string;
 }
 
 type Status = "idle" | "loading" | "error";
 
-export default function AddressField({ initialValue = "", placeholder, id }: Props) {
+export default function AddressField({ initialValue = "", placeholder, id, name = "address" }: Props) {
   const [value, setValue] = useState(initialValue);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const abortRef = useRef<AbortController | null>(null);
 
+  useEffect(
+    () => () => {
+      abortRef.current?.abort();
+    },
+    [],
+  );
+
   async function triggerFormat() {
+    if (status === "loading") return;
     if (!value.trim()) return;
 
     if (abortRef.current) {
@@ -76,8 +85,9 @@ export default function AddressField({ initialValue = "", placeholder, id }: Pro
         <input
           type="text"
           id={id}
-          name="address"
+          name={name}
           required
+          maxLength={500}
           value={value}
           placeholder={placeholder}
           onChange={(e) => {
@@ -85,13 +95,13 @@ export default function AddressField({ initialValue = "", placeholder, id }: Pro
           }}
           onKeyDown={handleKeyDown}
           disabled={isLoading}
-          className={`w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+          className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
         <button
           type="button"
           onClick={triggerFormat}
           disabled={isLoading}
-          className={`shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+          className="shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? "Formatuje…" : "Formatuj"}
         </button>

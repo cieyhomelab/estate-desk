@@ -1,7 +1,7 @@
 ---
 id: address-formatting-llm
 title: LLM-Powered Polish Address Formatting
-status: implemented
+status: impl_reviewed
 created: 2026-06-06
 updated: 2026-06-06
 ---
