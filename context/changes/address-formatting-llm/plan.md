@@ -244,20 +244,20 @@ OpenRouter Gemini 2.5 Flash typically responds in 1–3s. The 5s AbortController
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npm run typecheck` — 8873f17
+- [x] 1.2 Build succeeds: `npm run build` — 8873f17
 
 #### Manual
 
-- [x] 1.3 API route returns canonical formatted address for a test raw address with valid session
-- [x] 1.4 API route returns 400 for empty `raw` field
-- [x] 1.5 API route returns auth error when called without session
+- [x] 1.3 API route returns canonical formatted address for a test raw address with valid session — 8873f17
+- [x] 1.4 API route returns 400 for empty `raw` field — 8873f17
+- [x] 1.5 API route returns auth error when called without session — 8873f17
 
 ### Phase 2: React Island — AddressField Component
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.1 Type checking passes: `npm run typecheck`
 
 #### Manual
 
