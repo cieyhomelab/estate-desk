@@ -1,0 +1,10 @@
+[    2069ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4321/node_modules/.vite/deps/toolbar-HZ36FFHS.js?v=371ea8d5:0
+[    2079ms] Failed to fetch dynamically imported module: http://localhost:4321/node_modules/.vite/deps/toolbar-HZ36FFHS.js?v=371ea8d5
+[    2149ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://o4511508107755520.ingest.de.sentry.io/api/4511508132331600/envelope/?sentry_version=7&sentry_key=e7d48789153d6cbfcc0697cdb26e01f7&sentry_client=sentry.javascript.astro%2F10.56.0:0
+[    5544ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:4321/auth/signin:0
+[    5636ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:4321/node_modules/.vite/deps/@sentry_astro.js?v=fba83865:7856
+[    6977ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://o4511508107755520.ingest.de.sentry.io/api/4511508132331600/envelope/?sentry_version=7&sentry_key=e7d48789153d6cbfcc0697cdb26e01f7&sentry_client=sentry.javascript.astro%2F10.56.0:0
+[   22054ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://o4511508107755520.ingest.de.sentry.io/api/4511508132331600/envelope/?sentry_version=7&sentry_key=e7d48789153d6cbfcc0697cdb26e01f7&sentry_client=sentry.javascript.astro%2F10.56.0:0
+[   57447ms] [ERROR] Failed to load resource: the server responded with a status of 400 (Bad Request) @ http://localhost:4321/api/format-address:0
+[   69080ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://o4511508107755520.ingest.de.sentry.io/api/4511508132331600/envelope/?sentry_version=7&sentry_key=e7d48789153d6cbfcc0697cdb26e01f7&sentry_client=sentry.javascript.astro%2F10.56.0:0
+[  132962ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:4321/node_modules/.vite/deps/@sentry_astro.js?v=fba83865:7856
