@@ -1,0 +1,137 @@
+---
+import "../styles/global.css";
+import Banner from "@/components/Banner.astro";
+import { missingConfigs } from "@/lib/config-status";
+
+interface Props {
+  title?: string;
+}
+const { title = "EstateDesk" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title} — EstateDesk</title>
+  </head>
+  <body class="bg-cosmic">
+    {
+      missingConfigs.map((cfg) => (
+        <Banner variant="error">
+          <strong>Uwaga:</strong> {cfg.message}
+          {cfg.docsUrl && (
+            <>
+              {" "}
+              <a href={cfg.docsUrl} target="_blank" rel="noopener noreferrer">
+                {cfg.docsLabel ?? "Dokumentacja"}
+              </a>
+              .
+            </>
+          )}
+        </Banner>
+      ))
+    }
+
+    <div class="flex min-h-screen">
+      <!-- Left: brand panel (hidden on small screens) -->
+      <aside
+        class="relative hidden w-[42%] shrink-0 flex-col justify-between overflow-hidden border-r border-white/[0.045] bg-[#0d1635] px-9 py-10 md:flex"
+      >
+        <!-- Decorative glows -->
+        <div
+          class="pointer-events-none absolute -bottom-14 -left-14 h-60 w-60 rounded-full bg-indigo-500/20 blur-3xl"
+        ></div>
+        <div
+          class="pointer-events-none absolute -right-10 -top-6 h-44 w-44 rounded-full bg-blue-500/10 blur-3xl"
+        ></div>
+
+        <!-- Logo + heading -->
+        <div class="relative">
+          <div class="mb-9 flex items-center gap-2.5">
+            <div
+              class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-gradient-to-br from-blue-600 to-indigo-600 shadow-[0_4px_14px_rgba(37,99,235,0.32)]"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <span class="text-[15px] font-bold tracking-tight text-white">EstateDesk</span>
+          </div>
+
+          <h2 class="mb-3 text-[23px] font-bold leading-[1.28] tracking-[-0.025em] text-white">
+            Twój panel<br />nieruchomości.
+          </h2>
+          <p class="text-[13px] font-light leading-relaxed text-slate-400/60">
+            Kompletne narzędzie dla polskiego agenta — od onboardingu właściciela po zamknięcie
+            transakcji.
+          </p>
+        </div>
+
+        <!-- Feature list -->
+        <div class="relative flex flex-col gap-2.5">
+          {
+            [
+              "Zarządzanie ofertami i cyklem życia",
+              "Kolekcja dokumentów z checklistą",
+              "Kalkulator prowizji agenta",
+            ].map((f) => (
+              <div class="flex items-center gap-2.5">
+                <div class="flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] border border-blue-400/25 bg-blue-600/20">
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="rgba(96,165,250,0.8)"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <span class="text-[12px] text-slate-400/55">{f}</span>
+              </div>
+            ))
+          }
+        </div>
+      </aside>
+
+      <!-- Right: form area -->
+      <div class="flex flex-1 items-center justify-center px-6 py-12 sm:px-10">
+        <div class="w-full max-w-sm">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+</style>
