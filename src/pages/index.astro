@@ -1,8 +1,204 @@
 ---
-import Welcome from "@/components/Welcome.astro";
 import Layout from "@/layouts/Layout.astro";
+import AuthForm from "@/components/AuthForm";
+
+const error = Astro.url.searchParams.get("error") ?? undefined;
+const rawMode = Astro.url.searchParams.get("mode");
+const defaultMode = rawMode === "signup" ? "signup" : "signin";
 ---
 
 <Layout title="EstateDesk">
-  <Welcome />
+  <div class="homepage">
+    <div class="left">
+      <div class="logo">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <rect width="32" height="32" rx="8" fill="url(#logo-grad)"></rect>
+          <path d="M9 23V15.5L16 9.5L23 15.5V23H19.5V18.5H12.5V23H9Z" fill="white" fill-opacity="0.95"></path>
+          <defs>
+            <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6366f1"></stop>
+              <stop offset="100%" stop-color="#4a8cff"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>EstateDesk</span>
+      </div>
+
+      <div class="hero">
+        <h1>Twój panel<br />nieruchomości.</h1>
+        <p>Kompletne narzędzia dla polskiego agenta — od onboardingu właściciela po zamknięcie transakcji.</p>
+      </div>
+
+      <ul class="features">
+        <li>Zarządzanie ofertami i cyklem życia</li>
+        <li>Kolekcja dokumentów z checklistą</li>
+        <li>Kalkulator prowizji agenta</li>
+      </ul>
+    </div>
+
+    <div class="right">
+      <AuthForm client:load serverError={error} defaultMode={defaultMode} />
+    </div>
+  </div>
 </Layout>
+
+<style>
+  :global(body) {
+    background: #0d1b2a;
+  }
+
+  :global(main) {
+    padding: 0;
+    margin: 0;
+  }
+
+  .homepage {
+    min-height: 100vh;
+    display: flex;
+    background: #0d1b2a;
+    color: white;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  .left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .left::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(74, 140, 255, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo span {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.01em;
+  }
+
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.12;
+    margin: 0 0 1.125rem;
+    color: white;
+    letter-spacing: -0.02em;
+  }
+
+  .hero p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    max-width: 34ch;
+    margin: 0;
+  }
+
+  .features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .features li {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .features li::before {
+    content: "✓";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
+    background: rgba(74, 140, 255, 0.18);
+    color: #4a8cff;
+    border-radius: 50%;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .right {
+    width: 44%;
+    max-width: 500px;
+    min-width: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 2.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .homepage {
+      flex-direction: column;
+    }
+
+    .left {
+      padding: 2rem 1.5rem;
+      min-height: 0;
+    }
+
+    .hero {
+      flex: 0;
+      padding: 2rem 0 1.5rem;
+    }
+
+    .right {
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      border-left: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 2.5rem 1.5rem;
+    }
+  }
+</style>
