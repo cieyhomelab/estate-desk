@@ -28,7 +28,7 @@ EstateDesk to aplikacja do zarządzania transakcjami nieruchomości dla jednego 
 | ID   | Change ID              | Outcome (agent może …)                                                                         | Prerequisites | PRD refs              | Status   |
 |------|------------------------|-----------------------------------------------------------------------------------------------|---------------|-----------------------|----------|
 | F-01 | claude-md-conventions  | (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md                               | —             | §Non-Functional Req.  | ready    |
-| S-01 | listing-tab-navigation | przechodzić między 5 podstronami ogłoszenia przez pasek zakładek i zawsze wrócić do dashboardu | F-01          | US-01, FR-001, FR-002 | proposed |
+| S-01 | listing-tab-navigation | przechodzić między 5 podstronami ogłoszenia przez pasek zakładek i zawsze wrócić do dashboardu | F-01          | US-01, FR-001, FR-002 | done     |
 | S-02 | address-formatting-llm | sformatować adres do formy kanonicznej jednym klawiszem; widzieć błąd inline przy awarii LLM  | F-01, S-01    | US-02, FR-003, FR-004 | proposed |
 | S-03 | home-page-redesign     | zobaczyć polskojęzyczną stronę główną z brandingiem EstateDesk                                 | —             | FR-005                | blocked  |
 
@@ -80,7 +80,7 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Pięć podstron modyfikowanych jednocześnie; regresja na istniejących ad-hoc linkach inline jest możliwa, jeśli stare linki nie zostaną w pełni usunięte. Weryfikacja: test E2E przechodzący przez wszystkie 5 zakładek i link Powrót.
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: Formatowanie adresu przez LLM
 
@@ -113,7 +113,7 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 | Roadmap ID | Change ID              | Suggested issue title                                  | Ready for `/10x-plan` | Notes                                                  |
 |------------|------------------------|--------------------------------------------------------|-----------------------|--------------------------------------------------------|
 | F-01       | claude-md-conventions  | Add EstateDesk coding conventions to CLAUDE.md         | yes                   | Run `/10x-plan claude-md-conventions`                   |
-| S-01       | listing-tab-navigation | Add tab navigation bar to all listing sub-pages        | no                    | Requires F-01 first                                     |
+| S-01       | listing-tab-navigation | Add tab navigation bar to all listing sub-pages        | done                  | Completed                                               |
 | S-02       | address-formatting-llm | Add LLM-powered Polish address formatting to edit form | no                    | Requires F-01 + S-01; add OPENROUTER_API_KEY to env    |
 | S-03       | home-page-redesign     | Replace Astro placeholder with EstateDesk home page    | no                    | Blocked: visual design decision pending (Open Q 1)      |
 
@@ -130,4 +130,4 @@ Foundations poniżej zakładają, że wymienione warstwy są obecne i ich NIE sc
 
 ## Done
 
-(Puste przy pierwszej generacji. `/10x-archive` dopisuje tu wpis — i zmienia Status danej pozycji na `done` — gdy zmiana o pasującym Change ID zostanie zarchiwizowana.)
+- **S-01** (`listing-tab-navigation`) — Tab navigation bar added to all 5 listing sub-pages; Back link standardized to dashboard. Done 2026-06-06.
