@@ -44,7 +44,7 @@ const defaultMode = rawMode === "signup" ? "signup" : "signin";
     </div>
 
     <div class="right">
-      <AuthForm client:load serverError={error} defaultMode={defaultMode} />
+      <AuthForm client:only="react" serverError={error} defaultMode={defaultMode} />
     </div>
   </div>
 </Layout>

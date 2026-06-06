@@ -53,12 +53,12 @@ test.afterAll(async () => {
 // Uses Playwright's default `page` fixture — no cookies, fresh unauthenticated context per test
 test("unauthenticated access to dashboard redirects to sign-in", async ({ page }) => {
   await page.goto("/dashboard");
-  await expect(page).toHaveURL(/\/auth\/signin/);
+  await expect(page).toHaveURL("/");
 });
 
 test("unauthenticated access to listing edit page redirects to sign-in", async ({ page }) => {
   await page.goto(`/dashboard/listings/${listingId}/edit`);
-  await expect(page).toHaveURL(/\/auth\/signin/);
+  await expect(page).toHaveURL("/");
 });
 
 test("authenticated user sees their listing data on the dashboard", async () => {
