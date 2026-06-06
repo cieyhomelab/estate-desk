@@ -1,10 +1,10 @@
 ---
 change_id: testing-e2e-ci-gate
 title: E2E tests for full transaction flow and CI gate
-status: impl_reviewed
+status: archived
 created: 2026-06-02
-updated: 2026-06-02
-archived_at: null
+updated: 2026-06-06
+archived_at: 2026-06-06T16:25:58Z
 ---
 
 ## Notes
