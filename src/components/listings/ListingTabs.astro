@@ -1,0 +1,46 @@
+---
+export interface Props {
+  listingId: string;
+  activeTab: "edit" | "pricing" | "documents" | "contacts" | "close";
+}
+
+const { listingId, activeTab } = Astro.props;
+
+const tabs = [
+  { key: "edit", label: "Edytuj", href: `/dashboard/listings/${listingId}/edit` },
+  { key: "pricing", label: "Cena i prowizja", href: `/dashboard/listings/${listingId}/pricing` },
+  { key: "documents", label: "Dokumenty", href: `/dashboard/listings/${listingId}/documents` },
+  { key: "contacts", label: "Kontakty", href: `/dashboard/listings/${listingId}/contacts` },
+  { key: "close", label: "Zamknij", href: `/dashboard/listings/${listingId}/close` },
+] as const;
+---
+
+<div class="mb-6">
+  <a href="/dashboard" class="mb-4 block text-sm text-blue-200/70 transition-colors hover:text-blue-200">
+    ← Powrót do panelu
+  </a>
+  <div class="flex flex-wrap gap-4 gap-y-2 border-b border-white/10 pb-4">
+    {
+      tabs.map((tab) => {
+        const isActive = tab.key === activeTab;
+        const isClose = tab.key === "close";
+
+        if (isActive) {
+          return <span class:list={["text-sm font-medium", isClose ? "text-red-300" : "text-white"]}>{tab.label}</span>;
+        }
+
+        return (
+          <a
+            href={tab.href}
+            class:list={[
+              "text-sm transition-colors",
+              isClose ? "text-red-300/70 hover:text-red-300" : "text-blue-200/70 hover:text-blue-200",
+            ]}
+          >
+            {tab.label}
+          </a>
+        );
+      })
+    }
+  </div>
+</div>
