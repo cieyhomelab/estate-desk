@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
+import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingTabs from "@/components/listings/ListingTabs.astro";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
@@ -105,8 +106,10 @@ const error = Astro.url.searchParams.get("error");
 ---
 
 <Layout title="Zamknij transakcję — EstateDesk">
-  <div class="bg-cosmic min-h-screen p-6">
-    <div class="mx-auto max-w-lg">
+  <div class="bg-cosmic min-h-screen">
+    <DashboardHeader />
+
+    <div class="mx-auto max-w-lg px-6 py-8">
       <ListingTabs listingId={listing.id} activeTab="close" />
 
       {success === "zamknieto" && <Banner variant="info">Transakcja została pomyślnie zamknięta.</Banner>}
@@ -125,19 +128,19 @@ const error = Astro.url.searchParams.get("error");
 
       {
         listing.status === "active" ? (
-          <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
-            <h1 class="mb-2 text-2xl font-bold text-white">Zamknij transakcję</h1>
-            <p class="mb-6 text-sm text-blue-100/70">{listing.address}</p>
+          <div class="rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
+            <h1 class="mb-1 text-2xl font-bold text-white">Zamknij transakcję</h1>
+            <p class="mb-5 text-sm text-white/50">{listing.address}</p>
 
             {gatePass ? (
-              <p class="mb-6 text-green-300">✅ Dokumenty gotowe — transakcja może zostać zamknięta.</p>
+              <p class="mb-5 text-sm text-green-300">✅ Dokumenty gotowe — transakcja może zostać zamknięta.</p>
             ) : (
-              <div class="mb-6 space-y-3 rounded-lg border border-yellow-400/20 bg-yellow-400/5 p-4">
-                <p class="text-yellow-300">
+              <div class="mb-5 space-y-3 rounded-lg border border-yellow-400/20 bg-yellow-400/[0.05] p-4">
+                <p class="text-sm text-yellow-300">
                   ⚠️ Brakuje {uncheckedCount} {uncheckedCount === 1 ? "dokumentu" : "dokumentów"}.
                 </p>
                 {uncheckedLabels.length > 0 && (
-                  <ul class="list-inside list-disc space-y-1 text-sm text-blue-100/70">
+                  <ul class="list-inside list-disc space-y-1 text-sm text-white/55">
                     {uncheckedLabels.map((label) => (
                       <li>{label}</li>
                     ))}
@@ -147,24 +150,24 @@ const error = Astro.url.searchParams.get("error");
             )}
 
             {commissionPreview ? (
-              <div class="mb-6 space-y-2">
-                <h2 class="text-sm font-medium text-blue-100/80">Podgląd prowizji</h2>
+              <div class="mb-5 space-y-2">
+                <h2 class="text-sm font-medium text-white/55">Podgląd prowizji</h2>
                 <table class="w-full text-sm">
                   <tbody>
-                    <tr class="border-b border-white/10">
-                      <td class="py-1.5 text-blue-100/70">Prowizja ogółem</td>
+                    <tr class="border-b border-white/[0.08]">
+                      <td class="py-1.5 text-white/55">Prowizja ogółem</td>
                       <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.brutto)}</td>
                     </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-1.5 text-blue-100/70">Część agencji</td>
+                    <tr class="border-b border-white/[0.05]">
+                      <td class="py-1.5 text-white/55">Część agencji</td>
                       <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.agencyAmount)}</td>
                     </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-1.5 text-blue-100/70">Dochód brutto</td>
+                    <tr class="border-b border-white/[0.05]">
+                      <td class="py-1.5 text-white/55">Dochód brutto</td>
                       <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.grossIncome)}</td>
                     </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-1.5 text-blue-100/70">Rezerwa podatkowa</td>
+                    <tr class="border-b border-white/[0.05]">
+                      <td class="py-1.5 text-white/55">Rezerwa podatkowa</td>
                       <td class="py-1.5 text-right text-white">{formatPLN(commissionPreview.taxAmount)}</td>
                     </tr>
                     <tr>
@@ -175,12 +178,12 @@ const error = Astro.url.searchParams.get("error");
                 </table>
               </div>
             ) : (
-              <p class="mb-6 text-sm text-blue-100/50">Brak danych prowizji — snapshot będzie pusty.</p>
+              <p class="mb-5 text-sm text-white/40">Brak danych prowizji — snapshot będzie pusty.</p>
             )}
 
             <form method="POST" action={`/api/listings/${id}/close`} class="space-y-4">
               {!gatePass && (
-                <label class="flex cursor-pointer items-center gap-2 text-sm text-blue-100/80">
+                <label class="flex cursor-pointer items-center gap-2 text-sm text-white/60">
                   <input
                     type="checkbox"
                     id="override-checkbox"
@@ -192,7 +195,7 @@ const error = Astro.url.searchParams.get("error");
                 </label>
               )}
               <div>
-                <label for="notary_name" class="mb-1 block text-sm font-medium text-blue-100/80">
+                <label for="notary_name" class="mb-1 block text-sm font-medium text-white/60">
                   Imię i nazwisko notariusza
                 </label>
                 <input
@@ -200,11 +203,11 @@ const error = Astro.url.searchParams.get("error");
                   type="text"
                   name="notary_name"
                   value={listing.notary_name ?? ""}
-                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label for="notary_city" class="mb-1 block text-sm font-medium text-blue-100/80">
+                <label for="notary_city" class="mb-1 block text-sm font-medium text-white/60">
                   Miasto kancelarii notarialnej
                 </label>
                 <input
@@ -212,11 +215,11 @@ const error = Astro.url.searchParams.get("error");
                   type="text"
                   name="notary_city"
                   value={listing.notary_city ?? ""}
-                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label for="transaction_date" class="mb-1 block text-sm font-medium text-blue-100/80">
+                <label for="transaction_date" class="mb-1 block text-sm font-medium text-white/60">
                   Data transakcji
                 </label>
                 <input
@@ -224,18 +227,18 @@ const error = Astro.url.searchParams.get("error");
                   type="date"
                   name="transaction_date"
                   value={listing.transaction_date ?? ""}
-                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
                 />
               </div>
               <div>
-                <label for="transaction_notes" class="mb-1 block text-sm font-medium text-blue-100/80">
+                <label for="transaction_notes" class="mb-1 block text-sm font-medium text-white/60">
                   Notatki
                 </label>
                 <textarea
                   id="transaction_notes"
                   name="transaction_notes"
                   rows={3}
-                  class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
                 >
                   {listing.transaction_notes ?? ""}
                 </textarea>
@@ -245,74 +248,76 @@ const error = Astro.url.searchParams.get("error");
                 id="submit-btn"
                 type="submit"
                 disabled={!gatePass}
-                class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+                class="w-full rounded-lg bg-blue-600 py-2.5 font-semibold text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Zamknij transakcję
               </button>
               {!gatePass && (
-                <p class="text-center text-sm text-blue-100/50">
+                <p class="text-center text-sm text-white/35">
                   Zaznacz "Pomiń weryfikację dokumentów", aby odblokować przycisk.
                 </p>
               )}
             </form>
           </div>
         ) : (
-          <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+          <div class="rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
             <h1 class="mb-1 text-2xl font-bold text-white">Transakcja zamknięta</h1>
-            {listing.closed_at && <p class="mb-6 text-sm text-blue-100/70">{formatTimestamp(listing.closed_at)}</p>}
+            {listing.closed_at && <p class="mb-6 text-sm text-white/45">{formatTimestamp(listing.closed_at)}</p>}
 
             <div class="mb-6 space-y-4">
               {listing.notary_name && (
                 <div>
-                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Notariusz</span>
-                  <p class="text-white">{listing.notary_name}</p>
+                  <span class="text-[0.6875rem] font-medium tracking-wider text-white/35 uppercase">Notariusz</span>
+                  <p class="mt-0.5 text-white">{listing.notary_name}</p>
                 </div>
               )}
               {listing.notary_city && (
                 <div>
-                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Miasto</span>
-                  <p class="text-white">{listing.notary_city}</p>
+                  <span class="text-[0.6875rem] font-medium tracking-wider text-white/35 uppercase">Miasto</span>
+                  <p class="mt-0.5 text-white">{listing.notary_city}</p>
                 </div>
               )}
               {listing.transaction_date && (
                 <div>
-                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Data transakcji</span>
-                  <p class="text-white">{formatDate(listing.transaction_date)}</p>
+                  <span class="text-[0.6875rem] font-medium tracking-wider text-white/35 uppercase">
+                    Data transakcji
+                  </span>
+                  <p class="mt-0.5 text-white">{formatDate(listing.transaction_date)}</p>
                 </div>
               )}
               {listing.transaction_notes && (
                 <div>
-                  <span class="text-xs tracking-wide text-blue-100/50 uppercase">Notatki</span>
-                  <p class="whitespace-pre-wrap text-white">{listing.transaction_notes}</p>
+                  <span class="text-[0.6875rem] font-medium tracking-wider text-white/35 uppercase">Notatki</span>
+                  <p class="mt-0.5 whitespace-pre-wrap text-white">{listing.transaction_notes}</p>
                 </div>
               )}
             </div>
 
             {activeSnapshot?.agent_net !== null && activeSnapshot?.agent_net !== undefined ? (
               <div class="mb-6 space-y-2">
-                <h2 class="text-sm font-medium text-blue-100/80">Prowizja (zablokowana)</h2>
+                <h2 class="text-sm font-medium text-white/55">Prowizja (zablokowana)</h2>
                 <table class="w-full text-sm">
                   <tbody>
-                    <tr class="border-b border-white/10">
-                      <td class="py-1.5 text-blue-100/70">Prowizja ogółem</td>
+                    <tr class="border-b border-white/[0.08]">
+                      <td class="py-1.5 text-white/55">Prowizja ogółem</td>
                       <td class="py-1.5 text-right text-white">
                         {activeSnapshot.brutto !== null ? formatPLN(activeSnapshot.brutto) : "—"}
                       </td>
                     </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-1.5 text-blue-100/70">Część agencji</td>
+                    <tr class="border-b border-white/[0.05]">
+                      <td class="py-1.5 text-white/55">Część agencji</td>
                       <td class="py-1.5 text-right text-white">
                         {activeSnapshot.agency_amount !== null ? formatPLN(activeSnapshot.agency_amount) : "—"}
                       </td>
                     </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-1.5 text-blue-100/70">Dochód brutto</td>
+                    <tr class="border-b border-white/[0.05]">
+                      <td class="py-1.5 text-white/55">Dochód brutto</td>
                       <td class="py-1.5 text-right text-white">
                         {activeSnapshot.gross_income !== null ? formatPLN(activeSnapshot.gross_income) : "—"}
                       </td>
                     </tr>
-                    <tr class="border-b border-white/5">
-                      <td class="py-1.5 text-blue-100/70">Rezerwa podatkowa</td>
+                    <tr class="border-b border-white/[0.05]">
+                      <td class="py-1.5 text-white/55">Rezerwa podatkowa</td>
                       <td class="py-1.5 text-right text-white">
                         {activeSnapshot.tax_amount !== null ? formatPLN(activeSnapshot.tax_amount) : "—"}
                       </td>
@@ -325,14 +330,14 @@ const error = Astro.url.searchParams.get("error");
                 </table>
               </div>
             ) : (
-              <p class="mb-6 text-sm text-blue-100/50">Brak danych prowizji.</p>
+              <p class="mb-6 text-sm text-white/40">Brak danych prowizji.</p>
             )}
 
             {/* Intentionally no confirmation dialog — reopen is reversible per plan transaction-close Phase 3 */}
             <form method="POST" action={`/api/listings/${id}/reopen`}>
               <button
                 type="submit"
-                class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 font-medium text-white transition-colors hover:bg-white/20"
+                class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2.5 font-medium text-white transition-colors hover:bg-white/[0.12]"
               >
                 Wznów transakcję
               </button>
@@ -343,6 +348,12 @@ const error = Astro.url.searchParams.get("error");
     </div>
   </div>
 </Layout>
+
+<style>
+  :global(body) {
+    background: #0d1b2a;
+  }
+</style>
 
 <script>
   const checkbox = document.getElementById("override-checkbox") as HTMLInputElement | null;

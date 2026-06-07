@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
+import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingTabs from "@/components/listings/ListingTabs.astro";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
@@ -83,8 +84,10 @@ const success = Astro.url.searchParams.get("success");
 ---
 
 <Layout title="Cena i prowizja — EstateDesk">
-  <div class="bg-cosmic min-h-screen p-6">
-    <div class="mx-auto max-w-lg">
+  <div class="bg-cosmic min-h-screen">
+    <DashboardHeader />
+
+    <div class="mx-auto max-w-lg px-6 py-8">
       <ListingTabs listingId={listing.id} activeTab="pricing" />
 
       {
@@ -107,49 +110,49 @@ const success = Astro.url.searchParams.get("success");
         )
       }
 
-      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
-        <h2 class="mb-4 text-xl font-bold text-white">Cena wywoławcza</h2>
-        <p class="mb-4 text-lg text-blue-100/70">
+      <div class="mb-4 rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
+        <h2 class="mb-3 text-lg font-bold text-white">Cena wywoławcza</h2>
+        <p class="mb-4 text-lg text-white/60">
           {listing.asking_price ? formatPLN(listing.asking_price) : "Nie ustalono"}
         </p>
         <form method="POST" action={`/api/listings/${id}/price/set`} class="space-y-4">
           <div>
-            <label for="price" class="mb-1 block text-sm font-medium text-blue-100/80">Nowa cena (PLN)</label>
+            <label for="price" class="mb-1 block text-sm font-medium text-white/60">Nowa cena (PLN)</label>
             <input
               id="price"
               type="number"
               name="price"
               step="0.01"
               min="0.01"
-              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             />
           </div>
           <button
             type="submit"
-            class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+            class="w-full rounded-lg bg-blue-600 py-2.5 font-semibold text-white transition-colors hover:bg-blue-500"
           >
             Ustaw cenę
           </button>
         </form>
       </div>
 
-      <div class="mb-6 rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
-        <h2 class="mb-4 text-xl font-bold text-white">Historia cen</h2>
+      <div class="mb-4 rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
+        <h2 class="mb-3 text-lg font-bold text-white">Historia cen</h2>
         {
           priceHistory.length === 0 ? (
-            <p class="text-blue-100/70">Brak historii cen.</p>
+            <p class="text-sm text-white/45">Brak historii cen.</p>
           ) : (
             <table class="w-full text-sm">
               <thead>
-                <tr class="border-b border-white/10">
-                  <th class="pb-2 text-left font-medium text-blue-100/50">Data</th>
-                  <th class="pb-2 text-right font-medium text-blue-100/50">Cena</th>
+                <tr class="border-b border-white/[0.08]">
+                  <th class="pb-2 text-left font-medium text-white/40">Data</th>
+                  <th class="pb-2 text-right font-medium text-white/40">Cena</th>
                 </tr>
               </thead>
               <tbody>
                 {priceHistory.map((entry) => (
-                  <tr class="border-b border-white/5 last:border-0">
-                    <td class="py-2 text-blue-100/70">{formatDate(entry.set_at)}</td>
+                  <tr class="border-b border-white/[0.05] last:border-0">
+                    <td class="py-2 text-white/60">{formatDate(entry.set_at)}</td>
                     <td class="py-2 text-right text-white">{formatPLN(entry.price)}</td>
                   </tr>
                 ))}
@@ -159,18 +162,18 @@ const success = Astro.url.searchParams.get("success");
         }
       </div>
 
-      <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
-        <h2 class="mb-4 text-xl font-bold text-white">Prowizja agenta</h2>
+      <div class="rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
+        <h2 class="mb-3 text-lg font-bold text-white">Prowizja agenta</h2>
         {
           listing.commission_percent && (
-            <p class="mb-4 text-lg text-blue-100/70">
+            <p class="mb-4 text-white/60">
               Aktualna prowizja: <span class="font-semibold text-white">{listing.commission_percent}%</span>
             </p>
           )
         }
         <form method="POST" action={`/api/listings/${id}/commission/set`} class="mb-6 space-y-4">
           <div>
-            <label for="commission_percent" class="mb-1 block text-sm font-medium text-blue-100/80">
+            <label for="commission_percent" class="mb-1 block text-sm font-medium text-white/60">
               Prowizja agenta (%)
             </label>
             <input
@@ -181,13 +184,13 @@ const success = Astro.url.searchParams.get("success");
               min="0.01"
               max="100"
               value={listing.commission_percent ?? ""}
-              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               placeholder="np. 3"
             />
           </div>
           <button
             type="submit"
-            class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+            class="w-full rounded-lg bg-blue-600 py-2.5 font-semibold text-white transition-colors hover:bg-blue-500"
           >
             Zapisz prowizję
           </button>
@@ -195,7 +198,7 @@ const success = Astro.url.searchParams.get("success");
 
         {
           !commissionSettings ? (
-            <p class="text-blue-100/70">
+            <p class="text-sm text-white/45">
               Aby zobaczyć podział prowizji, skonfiguruj stawki w{" "}
               <a href="/dashboard/settings/commission" class="text-blue-400 underline hover:text-blue-300">
                 ustawieniach konta
@@ -204,23 +207,23 @@ const success = Astro.url.searchParams.get("success");
             </p>
           ) : commissionSplit ? (
             <div>
-              <h3 class="mb-3 text-sm font-medium text-blue-100/80">Podział prowizji</h3>
+              <h3 class="mb-3 text-sm font-medium text-white/60">Podział prowizji</h3>
               <table class="w-full text-sm">
                 <tbody>
-                  <tr class="border-b border-white/10">
-                    <td class="py-2 text-blue-100/70">Prowizja ogółem</td>
+                  <tr class="border-b border-white/[0.08]">
+                    <td class="py-2 text-white/60">Prowizja ogółem</td>
                     <td class="py-2 text-right text-white">{formatPLN(commissionSplit.brutto)}</td>
                   </tr>
-                  <tr class="border-b border-white/5">
-                    <td class="py-2 text-blue-100/70">Część agencji</td>
+                  <tr class="border-b border-white/[0.05]">
+                    <td class="py-2 text-white/60">Część agencji</td>
                     <td class="py-2 text-right text-white">{formatPLN(commissionSplit.agencyAmount)}</td>
                   </tr>
-                  <tr class="border-b border-white/5">
-                    <td class="py-2 text-blue-100/70">Dochód brutto</td>
+                  <tr class="border-b border-white/[0.05]">
+                    <td class="py-2 text-white/60">Dochód brutto</td>
                     <td class="py-2 text-right text-white">{formatPLN(commissionSplit.grossIncome)}</td>
                   </tr>
-                  <tr class="border-b border-white/5">
-                    <td class="py-2 text-blue-100/70">Rezerwa podatkowa</td>
+                  <tr class="border-b border-white/[0.05]">
+                    <td class="py-2 text-white/60">Rezerwa podatkowa</td>
                     <td class="py-2 text-right text-white">{formatPLN(commissionSplit.taxAmount)}</td>
                   </tr>
                   <tr>
@@ -231,7 +234,7 @@ const success = Astro.url.searchParams.get("success");
               </table>
             </div>
           ) : (
-            <p class="text-blue-100/50 text-sm">
+            <p class="text-sm text-white/40">
               {!listing.asking_price
                 ? "Ustaw cenę wywoławczą, aby zobaczyć podział prowizji."
                 : "Wprowadź prowizję i zapisz, aby zobaczyć podział."}
@@ -242,3 +245,9 @@ const success = Astro.url.searchParams.get("success");
     </div>
   </div>
 </Layout>
+
+<style>
+  :global(body) {
+    background: #0d1b2a;
+  }
+</style>

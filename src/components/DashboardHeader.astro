@@ -1,0 +1,45 @@
+---
+interface Props {
+  activePage?: "settings";
+}
+const { activePage } = Astro.props;
+---
+
+<header
+  class="sticky top-0 z-20 border-b border-white/[0.06] backdrop-blur-md"
+  style="background: rgba(10, 14, 26, 0.88);"
+>
+  <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
+    <a href="/dashboard" class="flex items-center gap-2">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="url(#hdr-grad)"></rect>
+        <path d="M9 23V15.5L16 9.5L23 15.5V23H19.5V18.5H12.5V23H9Z" fill="white" fill-opacity="0.95"></path>
+        <defs>
+          <linearGradient id="hdr-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#6366f1"></stop>
+            <stop offset="100%" stop-color="#4a8cff"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="text-[1.0625rem] font-semibold tracking-[-0.01em] text-white">EstateDesk</span>
+    </a>
+
+    <nav class="flex items-center gap-2">
+      <span class="px-3 py-1.5 text-sm text-white/30 select-none">Pomoc</span>
+      <a
+        href="/dashboard/settings/commission"
+        class:list={[
+          "rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors",
+          activePage === "settings"
+            ? "border-white/25 bg-white/15 text-white"
+            : "border-white/[0.15] bg-white/[0.07] text-white/70 hover:bg-white/[0.12] hover:text-white",
+        ]}>Ustawienia</a
+      >
+      <a
+        href="/dashboard/listings/new"
+        class="rounded-lg bg-blue-600 px-3.5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+        >+ Nowe ogłoszenie</a
+      >
+    </nav>
+  </div>
+</header>

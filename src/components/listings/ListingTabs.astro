@@ -16,25 +16,39 @@ const tabs = [
 ---
 
 <div class="mb-6">
-  <a href="/dashboard" class="mb-4 block text-sm text-blue-200/70 transition-colors hover:text-blue-200">
-    ← Powrót do panelu
+  <a
+    href="/dashboard"
+    class="mb-3 inline-flex items-center gap-1 text-sm text-white/40 transition-colors hover:text-white/70"
+  >
+    <span aria-hidden="true">←</span> Powrót do panelu
   </a>
-  <div class="flex flex-wrap gap-4 gap-y-2 border-b border-white/10 pb-4">
+  <div class="flex flex-wrap gap-1 rounded-xl border border-white/[0.08] bg-white/[0.04] p-1">
     {
       tabs.map((tab) => {
         const isActive = tab.key === activeTab;
         const isClose = tab.key === "close";
 
         if (isActive) {
-          return <span class:list={["text-sm font-medium", isClose ? "text-red-300" : "text-white"]}>{tab.label}</span>;
+          return (
+            <span
+              class:list={[
+                "rounded-lg px-3 py-1.5 text-sm font-medium",
+                isClose ? "bg-red-500/20 text-red-300" : "bg-white/[0.14] text-white",
+              ]}
+            >
+              {tab.label}
+            </span>
+          );
         }
 
         return (
           <a
             href={tab.href}
             class:list={[
-              "text-sm transition-colors",
-              isClose ? "text-red-300/70 hover:text-red-300" : "text-blue-200/70 hover:text-blue-200",
+              "rounded-lg px-3 py-1.5 text-sm transition-colors",
+              isClose
+                ? "text-red-400/50 hover:bg-red-500/10 hover:text-red-300"
+                : "text-white/45 hover:bg-white/[0.07] hover:text-white/80",
             ]}
           >
             {tab.label}
