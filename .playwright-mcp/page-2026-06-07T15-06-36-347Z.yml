@@ -1,0 +1,107 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - link "EstateDesk" [ref=e6] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - generic [ref=e10]: EstateDesk
+        - navigation [ref=e11]:
+          - generic [ref=e12]: Pomoc
+          - link "Ustawienia" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard/settings/commission
+          - link "+ Nowe ogłoszenie" [ref=e14] [cursor=pointer]:
+            - /url: /dashboard/listings/new
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - link "Powrót do panelu" [ref=e17] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e18]: ←
+            - text: Powrót do panelu
+          - generic [ref=e19]:
+            - link "Edytuj" [ref=e20] [cursor=pointer]:
+              - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/edit
+            - link "Cena i prowizja" [ref=e21] [cursor=pointer]:
+              - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/pricing
+            - generic [ref=e22]: Dokumenty
+            - link "Kontakty" [ref=e23] [cursor=pointer]:
+              - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/contacts
+            - link "Zakończ transakcję" [ref=e24] [cursor=pointer]:
+              - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/close
+        - generic [ref=e25]:
+          - heading "Lista dokumentów" [level=2] [ref=e26]
+          - list [ref=e27]:
+            - listitem [ref=e28]:
+              - generic [ref=e29]:
+                - button "Zaznacz" [ref=e30]
+                - generic [ref=e31]: Akt własności / umowa nabycia
+              - button "Usuń" [ref=e33]
+            - listitem [ref=e34]:
+              - generic [ref=e35]:
+                - button "Zaznacz" [ref=e36]
+                - generic [ref=e37]: Odpis z Księgi Wieczystej
+              - button "Usuń" [ref=e39]
+            - listitem [ref=e40]:
+              - generic [ref=e41]:
+                - button "Zaznacz" [ref=e42]
+                - generic [ref=e43]: Zaświadczenie o niezaleganiu z opłatami
+              - button "Usuń" [ref=e45]
+            - listitem [ref=e46]:
+              - generic [ref=e47]:
+                - button "Zaznacz" [ref=e48]
+                - generic [ref=e49]: Wypis z rejestru gruntów / kartoteki lokali
+              - button "Usuń" [ref=e51]
+            - listitem [ref=e52]:
+              - generic [ref=e53]:
+                - button "Zaznacz" [ref=e54]
+                - generic [ref=e55]: Wyrys z mapy ewidencyjnej
+              - button "Usuń" [ref=e57]
+            - listitem [ref=e58]:
+              - generic [ref=e59]:
+                - button "Zaznacz" [ref=e60]
+                - generic [ref=e61]: Zaświadczenie o liczbie zameldowanych osób
+              - button "Usuń" [ref=e63]
+            - listitem [ref=e64]:
+              - generic [ref=e65]:
+                - button "Zaznacz" [ref=e66]
+                - generic [ref=e67]: Zaświadczenie spółdzielni (jeśli dotyczy)
+              - button "Usuń" [ref=e69]
+            - listitem [ref=e70]:
+              - generic [ref=e71]:
+                - button "Zaznacz" [ref=e72]
+                - generic [ref=e73]: Rzut / plan lokalu
+              - button "Usuń" [ref=e75]
+          - generic [ref=e76]:
+            - textbox "Dodaj dokument..." [ref=e77]
+            - button "Dodaj" [ref=e78]
+        - generic [ref=e79]:
+          - heading "Pominięcie weryfikacji" [level=2] [ref=e80]
+          - paragraph [ref=e81]: "Uwaga: włączenie tej opcji pozwoli zamknąć transakcję bez kompletnej listy dokumentów."
+          - generic [ref=e82]:
+            - switch [ref=e83]
+            - generic [ref=e85]: Pominięcie nieaktywne
+        - generic [ref=e86]:
+          - heading "Zdjęcia" [level=2] [ref=e87]
+          - paragraph [ref=e88]: Brak zdjęć. Dodaj pierwsze zdjęcie.
+          - generic [ref=e89]:
+            - button "Choose File" [ref=e90]
+            - button "Prześlij" [ref=e91]
+        - generic [ref=e92]:
+          - heading "Pliki dokumentów" [level=2] [ref=e93]
+          - paragraph [ref=e94]: Brak plików. Dodaj pierwszy plik.
+          - generic [ref=e95]:
+            - button "Choose File" [ref=e96]
+            - button "Prześlij" [ref=e97]
+  - generic [ref=e100]:
+    - button "Menu" [ref=e101]:
+      - img [ref=e103]
+      - generic: Menu
+    - button "Inspect" [ref=e107]:
+      - img [ref=e109]
+      - generic: Inspect
+    - button "Audit" [ref=e111]:
+      - img [ref=e113]
+      - generic: Audit
+    - button "Settings" [ref=e116]:
+      - img [ref=e118]
+      - generic: Settings

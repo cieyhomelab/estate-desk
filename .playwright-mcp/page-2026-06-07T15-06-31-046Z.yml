@@ -1,0 +1,61 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - link "EstateDesk" [ref=e6] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - generic [ref=e10]: EstateDesk
+        - navigation [ref=e11]:
+          - generic [ref=e12]: Pomoc
+          - link "Ustawienia" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard/settings/commission
+          - link "+ Nowe ogłoszenie" [ref=e14] [cursor=pointer]:
+            - /url: /dashboard/listings/new
+      - generic [ref=e15]:
+        - link "Powrót" [ref=e16] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e17]: ←
+          - text: Powrót
+        - generic [ref=e18]:
+          - heading "Nowe ogłoszenie" [level=1] [ref=e19]
+          - generic [ref=e20]:
+            - generic [ref=e21]:
+              - generic [ref=e22]: Typ ogłoszenia *
+              - combobox "Typ ogłoszenia *" [ref=e23]:
+                - option "Sprzedaż" [selected]
+                - option "Najem okazjonalny"
+            - generic [ref=e24]:
+              - generic [ref=e25]: Adres nieruchomości *
+              - generic [ref=e27]:
+                - generic [ref=e28]:
+                  - textbox "Adres nieruchomości *" [ref=e29]:
+                    - /placeholder: ul. Przykładowa 1, Warszawa
+                  - button "Formatuj" [ref=e30]
+                - paragraph [ref=e31]: Naciśnij Enter lub kliknij Formatuj, aby sformatować adres do formy kanonicznej.
+            - generic [ref=e32]:
+              - generic [ref=e33]: Imię i nazwisko właściciela
+              - textbox "Imię i nazwisko właściciela" [ref=e34]:
+                - /placeholder: Jan Kowalski
+            - generic [ref=e35]:
+              - generic [ref=e36]: Telefon właściciela
+              - textbox "Telefon właściciela" [ref=e37]:
+                - /placeholder: +48 123 456 789
+            - generic [ref=e38]:
+              - generic [ref=e39]: E-mail właściciela
+              - textbox "E-mail właściciela" [ref=e40]:
+                - /placeholder: jan@kowalski.pl
+            - button "Dodaj ogłoszenie" [ref=e41]
+  - generic [ref=e44]:
+    - button "Menu" [ref=e45]:
+      - img [ref=e47]
+      - generic: Menu
+    - button "Inspect" [ref=e51]:
+      - img [ref=e53]
+      - generic: Inspect
+    - button "Audit" [ref=e55]:
+      - img [ref=e57]
+      - generic: Audit
+    - button "Settings" [ref=e60]:
+      - img [ref=e62]
+      - generic: Settings
