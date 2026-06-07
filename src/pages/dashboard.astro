@@ -1,8 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
+import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingCard from "@/components/listings/ListingCard.astro";
 import { createClient } from "@/lib/supabase";
+import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
@@ -45,47 +47,66 @@ if (!supabase) {
 
 const urlError = Astro.url.searchParams.get("error");
 const urlSuccess = Astro.url.searchParams.get("success");
+
+const activeListings = listings.filter((l) => l.status === "active");
+const doneListings = listings.filter((l) => l.status === "done");
+const totalActiveValue = activeListings.reduce((sum, l) => sum + (l.asking_price ?? 0), 0);
+
+function formatStatMoney(value: number): string {
+  if (value === 0) return "—";
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(2).replace(".", ",")} mln zł`;
+  }
+  return formatPLN(value);
+}
 ---
 
 <Layout title="Dashboard — EstateDesk">
-  <div class="bg-cosmic min-h-screen p-6">
-    <div class="mx-auto max-w-4xl">
-      <div class="mb-8 flex items-center gap-2.5">
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <rect width="32" height="32" rx="8" fill="url(#logo-grad-dash)"></rect>
-          <path d="M9 23V15.5L16 9.5L23 15.5V23H19.5V18.5H12.5V23H9Z" fill="white" fill-opacity="0.95"></path>
-          <defs>
-            <linearGradient id="logo-grad-dash" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#6366f1"></stop>
-              <stop offset="100%" stop-color="#4a8cff"></stop>
-            </linearGradient>
-          </defs>
-        </svg>
-        <span class="text-[1.0625rem] font-semibold tracking-[-0.01em] text-white">EstateDesk</span>
+  <div class="bg-cosmic min-h-screen">
+    <DashboardHeader />
+
+    <div class="mx-auto max-w-4xl px-6 py-8">
+      <div class="mb-7">
+        <h1 class="text-3xl font-bold tracking-tight text-white">Ogłoszenia</h1>
+        <p class="mt-1.5 text-sm text-white/45">
+          Zarządzaj ofertami, dokumentami, kontaktami i prowizją w jednym, przejrzystym panelu nieruchomości.
+        </p>
       </div>
 
-      <div class="mb-6 flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-white">Ogłoszenia</h1>
-        <div class="flex items-center gap-3">
-          <a
-            href="/dashboard/settings/commission"
-            class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+      <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div class="rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3.5">
+          <p class="mb-0.5 text-[0.6875rem] font-medium tracking-wider text-white/40 uppercase">Aktywne oferty</p>
+          <p class="text-2xl font-bold text-white">{activeListings.length}</p>
+        </div>
+        <div class="rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3.5">
+          <p class="mb-0.5 text-[0.6875rem] font-medium tracking-wider text-white/40 uppercase">Łączna wartość</p>
+          <p class="text-xl font-bold text-white">{formatStatMoney(totalActiveValue)}</p>
+        </div>
+        <div class="rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3.5">
+          <p class="mb-0.5 text-[0.6875rem] font-medium tracking-wider text-white/40 uppercase">W transakcji</p>
+          <p class="text-2xl font-bold text-white">{doneListings.length}</p>
+        </div>
+        <div class="rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3.5">
+          <p class="mb-0.5 text-[0.6875rem] font-medium tracking-wider text-white/40 uppercase">Wszystkich</p>
+          <p class="text-2xl font-bold text-white">{listings.length}</p>
+        </div>
+      </div>
+
+      <div class="mb-4 flex items-center justify-between">
+        <span class="text-sm text-white/35">Twoje oferty ({listings.length})</span>
+        <div class="flex gap-1.5">
+          <button
+            type="button"
+            class="rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
-            Ustawienia
-          </a>
-          <a
-            href="/dashboard/listings/new"
-            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            Filtry
+          </button>
+          <button
+            type="button"
+            class="rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
-            + Nowe ogłoszenie
-          </a>
+            Eksport
+          </button>
         </div>
       </div>
 
@@ -97,9 +118,9 @@ const urlSuccess = Astro.url.searchParams.get("success");
         listings.length === 0 && !fetchError ? (
           <a
             href="/dashboard/listings/new"
-            class="block rounded-xl border border-white/10 bg-white/10 p-12 text-center backdrop-blur-xl transition-colors hover:bg-white/15"
+            class="block rounded-xl border border-white/[0.08] bg-white/[0.04] p-12 text-center transition-colors hover:bg-white/[0.07]"
           >
-            <p class="text-blue-100/70">Brak ogłoszeń. Dodaj pierwsze ogłoszenie.</p>
+            <p class="text-white/45">Brak ogłoszeń. Dodaj pierwsze ogłoszenie.</p>
           </a>
         ) : (
           <div class="grid gap-4 sm:grid-cols-2">
@@ -110,10 +131,10 @@ const urlSuccess = Astro.url.searchParams.get("success");
         )
       }
 
-      <form method="POST" action="/api/auth/signout" class="mt-8">
+      <form method="POST" action="/api/auth/signout" class="mt-10 border-t border-white/[0.06] pt-6">
         <button
           type="submit"
-          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white transition-colors hover:bg-white/20"
+          class="rounded-lg border border-white/[0.12] bg-white/[0.05] px-4 py-2 text-sm text-white/50 transition-colors hover:bg-white/[0.09] hover:text-white/70"
         >
           Wyloguj
         </button>
@@ -121,3 +142,9 @@ const urlSuccess = Astro.url.searchParams.get("success");
     </div>
   </div>
 </Layout>
+
+<style>
+  :global(body) {
+    background: #0d1b2a;
+  }
+</style>

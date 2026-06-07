@@ -1,33 +1,39 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
+import DashboardHeader from "@/components/DashboardHeader.astro";
 import AddressField from "@/components/listings/AddressField";
 
 const error = Astro.url.searchParams.get("error");
 ---
 
 <Layout title="Nowe ogłoszenie — EstateDesk">
-  <div class="bg-cosmic min-h-screen p-6">
-    <div class="mx-auto max-w-lg">
-      <a href="/dashboard" class="mb-6 inline-block text-sm text-blue-200/70 transition-colors hover:text-blue-200">
-        ← Powrót
+  <div class="bg-cosmic min-h-screen">
+    <DashboardHeader />
+
+    <div class="mx-auto max-w-lg px-6 py-8">
+      <a
+        href="/dashboard"
+        class="mb-5 inline-flex items-center gap-1 text-sm text-white/40 transition-colors hover:text-white/70"
+      >
+        <span aria-hidden="true">←</span> Powrót
       </a>
 
-      <div class="rounded-xl border border-white/10 bg-white/10 p-8 backdrop-blur-xl">
+      <div class="rounded-xl border border-white/[0.08] bg-white/[0.06] p-8 backdrop-blur-sm">
         <h1 class="mb-6 text-2xl font-bold text-white">Nowe ogłoszenie</h1>
 
         {error && <Banner variant="error">{error}</Banner>}
 
         <form method="POST" action="/api/listings/create" class="space-y-5">
           <div>
-            <label for="type" class="mb-1 block text-sm font-medium text-blue-100/80"
+            <label for="type" class="mb-1 block text-sm font-medium text-white/60"
               >Typ ogłoszenia <span class="text-red-400">*</span></label
             >
             <select
               id="type"
               name="type"
               required
-              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
             >
               <option value="sale" class="bg-gray-900">Sprzedaż</option>
               <option value="occasional-rental" class="bg-gray-900">Najem okazjonalny</option>
@@ -35,14 +41,14 @@ const error = Astro.url.searchParams.get("error");
           </div>
 
           <div>
-            <label for="address" class="mb-1 block text-sm font-medium text-blue-100/80"
+            <label for="address" class="mb-1 block text-sm font-medium text-white/60"
               >Adres nieruchomości <span class="text-red-400">*</span></label
             >
             <AddressField placeholder="ul. Przykładowa 1, Warszawa" id="address" client:load />
           </div>
 
           <div>
-            <label for="owner_name" class="mb-1 block text-sm font-medium text-blue-100/80"
+            <label for="owner_name" class="mb-1 block text-sm font-medium text-white/60"
               >Imię i nazwisko właściciela</label
             >
             <input
@@ -50,35 +56,35 @@ const error = Astro.url.searchParams.get("error");
               type="text"
               name="owner_name"
               placeholder="Jan Kowalski"
-              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
             />
           </div>
 
           <div>
-            <label for="owner_phone" class="mb-1 block text-sm font-medium text-blue-100/80">Telefon właściciela</label>
+            <label for="owner_phone" class="mb-1 block text-sm font-medium text-white/60">Telefon właściciela</label>
             <input
               id="owner_phone"
               type="tel"
               name="owner_phone"
               placeholder="+48 123 456 789"
-              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
             />
           </div>
 
           <div>
-            <label for="owner_email" class="mb-1 block text-sm font-medium text-blue-100/80">E-mail właściciela</label>
+            <label for="owner_email" class="mb-1 block text-sm font-medium text-white/60">E-mail właściciela</label>
             <input
               id="owner_email"
               type="email"
               name="owner_email"
               placeholder="jan@kowalski.pl"
-              class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-white placeholder-white/30 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              class="w-full rounded-lg border border-white/[0.15] bg-white/[0.07] px-3 py-2 text-white placeholder-white/25 focus:ring-2 focus:ring-blue-500/50 focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
-            class="w-full rounded-lg bg-blue-600 py-2 font-medium text-white transition-colors hover:bg-blue-700"
+            class="w-full rounded-lg bg-blue-600 py-2.5 font-semibold text-white transition-colors hover:bg-blue-500"
           >
             Dodaj ogłoszenie
           </button>
@@ -87,3 +93,9 @@ const error = Astro.url.searchParams.get("error");
     </div>
   </div>
 </Layout>
+
+<style>
+  :global(body) {
+    background: #0d1b2a;
+  }
+</style>
