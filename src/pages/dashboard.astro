@@ -36,7 +36,7 @@ if (!supabase) {
         .select("listing_id, agent_net")
         .in("listing_id", doneIds)
         .is("voided_at", null)
-        .limit(100)
+        .limit(doneIds.length)
         .overrideTypes<{ listing_id: string; agent_net: number | null }[], { merge: false }>();
       if (snapshots) {
         snapshotMap = new Map(snapshots.map((s) => [s.listing_id, s.agent_net]));

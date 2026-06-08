@@ -30,9 +30,15 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
 
   const filteredListings = listings.filter((listing) => {
     if (filters.status !== "all" && listing.status !== filters.status) return false;
-    if (filters.priceMin !== "" && (listing.asking_price ?? 0) < parseInt(filters.priceMin)) return false;
-    if (filters.priceMax !== "" && (listing.asking_price ?? 0) > parseInt(filters.priceMax)) return false;
-    if (filters.city !== "" && !listing.address.toLowerCase().includes(filters.city.toLowerCase())) return false;
+    const min = filters.priceMin !== "" ? Number(filters.priceMin) : null;
+    const max = filters.priceMax !== "" ? Number(filters.priceMax) : null;
+    if (min !== null || max !== null) {
+      if (listing.asking_price === null) return false;
+      if (min !== null && !isNaN(min) && listing.asking_price < min) return false;
+      if (max !== null && !isNaN(max) && listing.asking_price > max) return false;
+    }
+    if (filters.city !== "" && !(listing.address ?? "").toLowerCase().includes(filters.city.toLowerCase()))
+      return false;
     return true;
   });
 
