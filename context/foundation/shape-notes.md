@@ -172,3 +172,135 @@ Status: **accepted** — all five greenfield checks passed:
 ## Forward: tech-stack
 
 *(no technology preferences stated by user — stack selection runs via /10x-tech-stack-selector)*
+
+---
+
+# EstateDesk — Menu, Navigation & Address Formatting
+
+```
+context_type: brownfield
+created: 2026-06-05
+updated: 2026-06-05
+checkpoint:
+  current_phase: 8
+  phases_completed: [1, 2, 3, 4, 5, 6, 7]
+  gray_areas_resolved:
+    - menu shape: horizontal tabs/pill bar — Edit | Pricing | Contacts | Documents | Close
+    - LLM fallback: inline error, raw text stays editable; agent can retry or proceed
+    - home page: EstateDesk branded landing page in Polish; design specified separately
+    - auth change: no change — email + password, single user, flat model preserved
+    - LLM scope: address formatting runs on both new and edit listing forms
+    - tab items and order: Edit | Pricing | Contacts | Documents | Close
+    - home page design readiness: design TBD — FR-005 is a placeholder; actual visual specified separately
+    - domain rule: LLM normalises Polish address strings — light new rule; nav/home changes are infrastructure-only
+    - non-goals: no address validation, no offline formatting, no tabs on new form, no home page analytics
+  frs_drafted: 5
+  quality_check_status: accepted
+```
+
+## Current System
+
+**EstateDesk** — an in-development real estate agent management app for a single Polish agent. Built on Astro 5, React, TypeScript, Tailwind CSS, Supabase (auth + database). Deployed to Cloudflare Workers.
+
+The listing lifecycle is split across five sub-pages under `/dashboard/listings/[id]/`:
+- `edit` — listing details, address, owner contact
+- `pricing` — asking price history, commission split
+- `contacts` — buyers/tenants interested in the listing
+- `documents` — document checklist and file uploads
+- `close` — transaction completion gate
+
+Navigation between sub-pages is currently ad-hoc: each page has a few manual inline links (e.g. edit has "← Powrót" to dashboard and "Cena i prowizja →" to pricing). There is no consistent menu or tab structure. The home page (`/`) still renders the Astro starter placeholder (`Welcome.astro`) with English text and generic content.
+
+**Must preserve:** existing sub-page routes, form save and data persistence behaviour, Supabase auth session handling.
+
+## Vision & Problem Statement (Brownfield)
+
+Four targeted UX and feature gaps in the existing system drive this change:
+
+1. **No per-listing navigation** — agents navigating between listing sub-pages have no visual orientation; the current ad-hoc links are inconsistent across pages.
+2. **Inconsistent back link** — "Powrót" exists on some pages but not all, and its target varies.
+3. **Manual address formatting** — the address field accepts free text; converting "Sarmacka 5/6 Warszawa" to "ul. Sarmacka 5/6, 02-972 Warszawa (Wilanów)" is done by hand.
+4. **Placeholder home page** — the index route still shows Astro Starter content; EstateDesk branding has not replaced it.
+
+## Success Criteria (Brownfield)
+
+### Primary
+- Agent navigates between all five listing sub-pages (Edit, Pricing, Contacts, Documents, Close) via a horizontal tab/pill bar without losing context or needing to return to the dashboard first.
+- Agent types a partial Polish address (e.g. "Sarmacka 5/6 Warszawa"), presses Enter, and the field is replaced with the LLM-formatted canonical form (e.g. "ul. Sarmacka 5/6, 02-972 Warszawa (Wilanów)").
+
+### Secondary
+- The home page displays EstateDesk branding in Polish with working Sign In / Sign Up links.
+
+### Guardrails
+- No regression on existing form save behaviour — data written via existing forms must continue saving correctly.
+- All existing sub-page routes remain functional — no URL changes.
+
+## User Stories (Brownfield)
+
+### US-01: Agent navigates listing sections without returning to dashboard
+
+- **Given** a logged-in agent on any listing sub-page
+- **When** they view the tab/pill bar above the content
+- **Then** they see the other four sections as clickable tabs and can switch to any of them directly
+
+### US-02: Agent formats a Polish address with one keypress
+
+- **Given** a logged-in agent on the edit or new listing form
+- **When** they type a partial address into the address field and press Enter
+- **Then** the field is replaced with the LLM-normalised Polish format (ul. prefix, postal code, district); if the LLM call fails, an inline error appears and the raw text remains editable
+
+## Functional Requirements (Brownfield)
+
+### Navigation
+
+- FR-001: Agent can navigate between listing sub-pages (Edit, Pricing, Contacts, Documents, Close) via a horizontal tab/pill bar displayed above the current section's content, with the active tab visually highlighted. Priority: must-have. Change: new
+
+- FR-002: Agent can always navigate back to the dashboard from any listing sub-page via a consistent "Powrót" link present on every sub-page. Priority: must-have. Change: modified (currently exists only on edit page; needs to be consistent across all sub-pages)
+
+### Address Formatting
+
+- FR-003: Agent can trigger LLM-powered Polish address formatting on the address field by pressing Enter; raw input (e.g. "Sarmacka 5/6 Warszawa") is replaced with a formatted address (e.g. "ul. Sarmacka 5/6, 02-972 Warszawa (Wilanów)"). Applies to both the new listing form and the edit listing form. Uses OpenRouter LLM API. Priority: must-have. Change: new
+
+- FR-004: If the OpenRouter LLM call fails or returns an error, the address field retains the agent's raw input and displays an inline error message; the agent can retry the formatting or proceed with raw text. Priority: must-have. Change: new
+
+### Home Page
+
+- FR-005: The home page (index route, `/`) displays EstateDesk-branded content in Polish, replacing the Astro starter placeholder. The exact visual design is specified separately. Priority: must-have. Change: modified
+
+## Business Logic (Brownfield)
+
+**For navigation (FR-001, FR-002) and home page (FR-005):** infrastructure-only changes — no domain logic is added or modified.
+
+**For address formatting (FR-003, FR-004):** The app normalises Polish address strings via LLM before they are committed to the form. The rule: a raw address string entered by the agent is passed to the OpenRouter LLM with an instruction to return the canonical Polish format (ul. prefix, comma-separated postal code in format NN-NNN, and district name in parentheses). The LLM's output replaces the raw input in the form field. The agent sees the formatted result and can edit it before saving. The app does not validate the LLM output against a postal database — the LLM response is treated as the canonical input; accuracy depends on LLM knowledge.
+
+## Constraints & Preserved Behavior
+
+- All five existing listing sub-page routes (`/dashboard/listings/[id]/edit`, `/pricing`, `/contacts`, `/documents`, `/close`) must remain functional with their current URL structure.
+- Existing form submit handlers and Supabase writes must continue to work unchanged.
+- Supabase auth session handling is not touched.
+- The `/listings/new` page is a single-step entry form, not a sub-page navigation target — tab navigation does not apply to it.
+- OpenRouter API key must be stored in environment variables, not hardcoded.
+
+## Non-Functional Requirements (Brownfield)
+
+- Address LLM formatting completes within 3 seconds; the agent perceives the field update as fast.
+- The home page is entirely in Polish — no English strings in the shipped product.
+- No regression on existing form save behaviour — existing data persistence is preserved by this change.
+- Tab navigation renders correctly on narrow screens (Polish mobile widths); tab labels must not overflow or break layout.
+
+## Non-Goals (Brownfield)
+
+- **No address validation** — the LLM output is accepted as-is; the app does not verify the address against a Polish postal code database.
+- **No offline address formatting** — formatting requires an active OpenRouter API connection.
+- **No tab navigation on the new listing form** — `/listings/new` is a single-step creation form; tabs apply only to existing listing sub-pages.
+- **No home page analytics or A/B testing** — the redesigned home page is purely presentational.
+
+## Quality cross-check (Brownfield)
+
+Status: **accepted** — all six brownfield checks passed:
+- Access Control: present (no change — current model preserved)
+- Business Logic: present (LLM normalises Polish address strings; nav/home are infrastructure-only)
+- Project artifacts: present
+- Timeline-cost acknowledgment: present (1–2 weeks ≤ 3-week threshold)
+- Non-Goals: present (4 explicit non-goals)
+- Preserved behavior: present (existing routes, form saves, auth session preserved)

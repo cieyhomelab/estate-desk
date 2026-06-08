@@ -211,3 +211,134 @@ Foundations poniżej zakładają, że poniższe warstwy są obecne i NIE są pon
 - **S-04: agent może dodawać i przeglądać kontakty zainteresowanych stron do ogłoszenia** — Archived 2026-06-05 → `context/archive/2026-05-30-contact-management/`. Lesson: —.
 - **S-05: agent może uploadować zdjęcia, zaznaczać dokumenty na liście kontrolnej i uploadować pliki dokumentów** — Archived 2026-06-05 → `context/archive/2026-05-30-documents-and-files/`. Lesson: —.
 - **S-06: agent może zamknąć transakcję przez bramkę dokumentową, nagrać dane notariusza i datę, ponownie otworzyć ogłoszenie** — Archived 2026-06-05 → `context/archive/2026-05-30-transaction-close/`. Lesson: —.
+
+---
+
+# Roadmap: EstateDesk — Menu, Navigation & Address Formatting
+
+> Derived from `context/foundation/prd.md` (v1) + auto-researched codebase baseline.
+> Edit-in-place; archive when superseded.
+> Slices below are listed in dependency order. The "At a glance" table is the index.
+
+```
+version: 1
+status: draft
+created: 2026-06-05
+updated: 2026-06-06
+prd_version: 1
+main_goal: low-complexity
+top_blocker: decisions
+```
+
+## Vision recap (Brownfield)
+
+EstateDesk to aplikacja do zarządzania transakcjami nieruchomości dla jednego polskiego agenta, zbudowana na Astro 6, React 19, TypeScript i Tailwind CSS v4, z backendem Supabase i deploymentem na Cloudflare Workers. Cztery luki UX generują dzienne tarcie: brak spójnej nawigacji zakładkowej między podstronami ogłoszeń, niespójna wsteczna nawigacja „Powrót", ręczne formatowanie polskich adresów oraz placeholder strony głównej. Zmiana usuwa te luki bez dotykania istniejących tras URL, zapisów formularzy ani modelu autoryzacji.
+
+## North star (Brownfield)
+
+**S-01: Nawigacja zakładkowa** — gwiazda przewodnia (najmniejszy przepływ end-to-end, który, jeśli działa, potwierdza sens całej zmiany) to S-01, ponieważ likwiduje najczęściej odczuwane tarcie w codziennej pracy agenta i nie wymaga żadnych zewnętrznych zależności — może zostać zwalidowany natychmiast po ukończeniu F-01.
+
+## Na pierwszy rzut oka (Brownfield)
+
+| ID   | Change ID              | Rezultat (agent może…)                                                                         | Zależności    | Odniesienia PRD       | Status |
+|------|------------------------|-----------------------------------------------------------------------------------------------|---------------|-----------------------|--------|
+| F-01 | claude-md-conventions  | (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md                               | —             | §Non-Functional Req.  | done   |
+| S-01 | listing-tab-navigation | przechodzić między 5 podstronami ogłoszenia przez pasek zakładek i zawsze wrócić do dashboardu | F-01          | US-01, FR-001, FR-002 | done   |
+| S-02 | address-formatting-llm | sformatować adres do formy kanonicznej jednym klawiszem; widzieć błąd inline przy awarii LLM  | F-01, S-01    | US-02, FR-003, FR-004 | done   |
+| S-03 | home-page-redesign     | zobaczyć polskojęzyczną stronę główną z brandingiem EstateDesk                                 | —             | FR-005                | done   |
+
+## Strumienie (Brownfield)
+
+| Strumień | Temat                    | Łańcuch                   | Uwaga                                                                           |
+|----------|--------------------------|---------------------------|---------------------------------------------------------------------------------|
+| A        | Nawigacja & formatowanie | `F-01` → `S-01` → `S-02` | Główna ścieżka; cel low-complexity — north star S-01 najwcześniej jak możliwe  |
+| B        | Strona główna            | `S-03`                    | Samodzielny; zablokowany do czasu podjęcia decyzji o designie                   |
+
+## Baseline (Brownfield)
+
+Stan bazy kodu na dzień `2026-06-05` (zbadany automatycznie + potwierdzony przez użytkownika).
+
+- **Frontend:** present — Astro 6.3.1 + React 19.2.6 + Tailwind CSS v4; layout w `src/layouts/Layout.astro`; wszystkie 5 podstron ogłoszeń istnieje (`src/pages/dashboard/listings/[id]/{edit,pricing,contacts,documents,close}.astro`); `src/pages/index.astro` renderuje placeholder Welcome
+- **Backend / API:** present — 20+ tras API w `src/pages/api/`; auth, listings, contacts, documents, photos, files; ad-hoc linki nawigacyjne potwierdzone w `edit.astro:45-50`; brak trasy `format-address`
+- **Data:** present — klient Supabase w `src/lib/supabase.ts`; migracje w `supabase/migrations/`; typy TypeScript w `src/types/`
+- **Auth:** present — Supabase via `@supabase/ssr`; middleware w `src/middleware.ts:18-22`; strony logowania/rejestracji w `src/pages/auth/`
+- **Deploy / infra:** present — GitHub Actions CI (`ci` → `deploy` → `migrate`); Cloudflare Workers via `wrangler.jsonc`; env schema w `astro.config.mjs:28-34` (brak `OPENROUTER_API_KEY`)
+- **Observability:** partial — Sentry (error tracking) w `sentry.server.config.ts` i `sentry.client.config.ts`; brak logowania żądań; brak metryk
+
+## Foundations (Brownfield)
+
+### F-01: Konwencje kodowania EstateDesk w CLAUDE.md
+
+- **Rezultat:** (foundation) Blok `## EstateDesk Coding Conventions` dodany do `CLAUDE.md`; dokumentuje: wzorzec React island (`client:load` vs `client:only`), kształt trasy API, wywołanie zewnętrznego LLM przez trasę serwerową (nigdy bezpośrednio z komponentu klienckiego), różnice Tailwind CSS v4 — gotowy do użycia przez agenta przy implementacji S-01, S-02 i S-03.
+- **Change ID:** claude-md-conventions
+- **Odniesienia PRD:** §Non-Functional Requirements (tab nav na ekranach mobilnych, brak regresji na zapisach formularzy)
+- **Odblokowuje:** S-01 (wzorzec Tailwind v4 i React island dla tab bara), S-02 (wzorzec LLM-via-API-route i React island dla pola adresu), S-03 (wzorzec Tailwind v4 dla strony głównej)
+- **Zależności:** —
+- **Równolegle z:** —
+- **Blokery:** —
+- **Nieznane:** —
+- **Ryzyko:** Bez udokumentowanych wzorców agent może wygenerować kod v3-era Tailwind lub wywołać OpenRouter bezpośrednio z kodu klienckiego — oba błędy wykraczają poza cel niskiej złożoności i drugi może ujawnić klucz API w przeglądarce.
+- **Status:** done
+
+## Slices (Brownfield)
+
+### S-01: Nawigacja zakładkowa
+
+- **Rezultat:** Agent może przechodzić między wszystkimi 5 podstronami ogłoszenia (Edit, Pricing, Contacts, Documents, Close) przez poziomy pasek zakładek nad treścią sekcji; aktywna zakładka jest wizualnie wyróżniona; na każdej podstronie obecny jest spójny link „Powrót" kierujący do dashboardu.
+- **Change ID:** listing-tab-navigation
+- **Odniesienia PRD:** US-01, FR-001, FR-002
+- **Zależności:** F-01
+- **Równolegle z:** —
+- **Blokery:** —
+- **Nieznane:** —
+- **Ryzyko:** Pięć podstron modyfikowanych jednocześnie; regresja na istniejących ad-hoc linkach inline jest możliwa, jeśli stare linki nie zostaną w pełni usunięte. Weryfikacja: test E2E przechodzący przez wszystkie 5 zakładek i link Powrót.
+- **Status:** done
+
+### S-02: Formatowanie adresu przez LLM
+
+- **Rezultat:** Agent może wpisać niepełny adres (np. „Sarmacka 5/6 Warszawa") w pole adresu na formularzu edycji lub nowego ogłoszenia, nacisnąć Enter i zobaczyć kanoniczny polski format (ul. prefix, kod pocztowy NN-NNN, dzielnica w nawiasie) zamiast surowego tekstu; przy awarii wywołania OpenRouter pole zachowuje surowy tekst i wyświetla błąd inline z możliwością ponowienia bez odświeżania strony.
+- **Change ID:** address-formatting-llm
+- **Odniesienia PRD:** US-02, FR-003, FR-004
+- **Zależności:** F-01, S-01
+- **Równolegle z:** —
+- **Blokery:** —
+- **Nieznane:**
+  - `OPENROUTER_API_KEY` musi być dodany do env schema w `astro.config.mjs` i udostępniony w środowisku Cloudflare Workers (GitHub Secrets + Wrangler env). — Owner: użytkownik. Block: no.
+- **Ryzyko:** `edit.astro` jest modyfikowany też przez S-01 (pasek zakładek); implementacja po S-01 daje czystszą bazę. Czas odpowiedzi LLM podlega NFR ≤3 s — trzeba obsłużyć timeout i stan ładowania.
+- **Status:** done
+
+### S-03: Strona główna EstateDesk
+
+- **Rezultat:** Agent i odwiedzający widzą polskojęzyczną stronę główną z brandingiem EstateDesk w miejscu placeholdera Astro Starter; strona zawiera działające linki Zaloguj się / Zarejestruj się.
+- **Change ID:** home-page-redesign
+- **Odniesienia PRD:** FR-005
+- **Zależności:** —
+- **Równolegle z:** —
+- **Blokery:** —
+- **Nieznane:**
+  - Wizualny design strony głównej (układ, treść, komponenty, identyfikacja wizualna EstateDesk) nie jest zdefiniowany. — Owner: użytkownik. Block: yes.
+- **Ryzyko:** Implementacja bez ustalonego designu oznacza konieczność przeróbki. Po ustaleniu designu zmiana jest technicznie prosta — nie warto zaczynać bez jasnej specyfikacji.
+- **Status:** done
+
+## Backlog Handoff (Brownfield)
+
+| Roadmap ID | Change ID              | Sugerowany tytuł zadania                               | Gotowy na `/10x-plan` | Uwagi                                                  |
+|------------|------------------------|--------------------------------------------------------|-----------------------|--------------------------------------------------------|
+| F-01       | claude-md-conventions  | Dodaj konwencje kodowania EstateDesk do CLAUDE.md      | yes                   | Uruchom `/10x-plan claude-md-conventions`              |
+| S-01       | listing-tab-navigation | Dodaj pasek nawigacji zakładkowej do wszystkich podstron ogłoszenia | done       | Ukończone                                              |
+| S-02       | address-formatting-llm | Dodaj formatowanie adresu przez LLM do formularza edycji | done                | Ukończone                                              |
+| S-03       | home-page-redesign     | Zastąp placeholder Astro stroną główną EstateDesk      | done                  | Ukończone                                              |
+
+## Odłożone (Brownfield)
+
+- **Walidacja adresu** — Dlaczego odłożone: PRD §Non-Goals — wyjście LLM akceptowane bez weryfikacji z polską bazą kodów pocztowych.
+- **Formatowanie adresu offline** — Dlaczego odłożone: PRD §Non-Goals — formatowanie wymaga połączenia z OpenRouter; brak obsługi trybu offline.
+- **Zakładki nawigacyjne na formularzu nowego ogłoszenia** — Dlaczego odłożone: PRD §Non-Goals — `/listings/new` to formularz jednoetapowy, nie cel nawigacji zakładkowej.
+- **Analityka i testy A/B strony głównej** — Dlaczego odłożone: PRD §Non-Goals — strona główna jest czysto prezentacyjna; brak narzędzi śledzenia.
+
+## Done (Brownfield)
+
+- **S-01** (`listing-tab-navigation`) — Pasek nawigacji zakładkowej dodany do wszystkich 5 podstron ogłoszenia; link Powrót ustandaryzowany do dashboardu. Ukończone 2026-06-06.
+- **F-01: (foundation) konwencje kodowania EstateDesk dodane do CLAUDE.md** — Archived 2026-06-06 → `context/archive/2026-06-05-claude-md-conventions/`. Lesson: —.
+- **S-02: sformatować adres do formy kanonicznej jednym klawiszem; widzieć błąd inline przy awarii LLM** — Archived 2026-06-06 → `context/archive/2026-06-06-address-formatting-llm/`. Lesson: —.
+- **S-03: Agent i odwiedzający widzą polskojęzyczną stronę główną z brandingiem EstateDesk w miejscu placeholdera Astro Starter; strona zawiera działające linki Zaloguj się / Zarejestruj się.** — Archived 2026-06-06 → `context/archive/2026-06-06-home-page-redesign/`. Lesson: —.
