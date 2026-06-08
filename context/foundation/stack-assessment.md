@@ -1,12 +1,13 @@
 ---
 project: EstateDesk
-assessed_at: 2026-06-05
+assessed_at: 2026-06-08T00:00:00Z
 agent_readiness: ready
 context_type: brownfield
 stack_components:
-  language: TypeScript 6
-  framework: Astro 6 + React 19
-  build_tool: Vite (via Astro)
+  language: TypeScript 6.0.3
+  framework: Astro 6.x + React 19 islands
+  css: Tailwind CSS v4 (Vite plugin)
+  build_tool: Vite (embedded in Astro)
   test_runner: Vitest (unit + integration), Playwright (E2E)
   package_manager: npm
   ci_provider: GitHub Actions
@@ -17,144 +18,87 @@ gates_failed: 0
 
 ## Stack Components
 
-**Language — TypeScript 6** (`"typescript": "^6.0.3"`). Configured via `tsconfig.json` which extends `astro/tsconfigs/strict` — the strictest preset Astro ships, enabling `strict: true`, `noImplicitAny`, `strictNullChecks`, and related checks. ESLint is wired with `typescript-eslint` for type-aware lint rules. Pre-commit hooks (`lefthook` + `lint-staged`) run ESLint on every `.ts`, `.tsx`, and `.astro` file before commit.
+**Language — TypeScript 6.0.3.** `tsconfig.json` extends `astro/tsconfigs/strict`, enabling `strict: true`, `strictNullChecks`, `noImplicitAny`, and the full strict suite. All source files are `.ts`, `.tsx`, or `.astro` — no plain `.js` source files in `src/`. `typescript-eslint` provides type-aware lint rules. `lefthook` + `lint-staged` run ESLint on every `.ts`, `.tsx`, and `.astro` file before commit.
 
-**Framework — Astro 6 with React 19** (`"astro": "^6.3.1"`, `"react": "^19.2.6"`). Server-side rendering (`output: "server"`) with the Cloudflare Workers adapter. React islands are used for interactive components (e.g., client-rendered components get a `client:*` directive). File-based routing in `src/pages/`; API routes in `src/pages/api/`; layouts in `src/layouts/`; components in `src/components/`. Sentry integration for error tracking.
+**Framework — Astro 6.x with React 19 islands.** SSR output (`output: "server"`) via `@astrojs/cloudflare`. File-based routing in `src/pages/`; API routes in `src/pages/api/`; layouts in `src/layouts/`; components in `src/components/`. React islands use `client:load` or `client:only="react"` directives per `CLAUDE.md §4`. Sentry is wired for error tracking (`sentry.client.config.ts`, `sentry.server.config.ts`).
 
-**Build tool — Vite** (embedded in Astro, `@tailwindcss/vite` for Tailwind CSS v4 processing). Tailwind CSS v4 — a significant API change from v3; config is CSS-based rather than `tailwind.config.js`.
+**CSS — Tailwind CSS v4.** Loaded via `@tailwindcss/vite` — no `tailwind.config.js`. Theme tokens and custom utilities live in `src/styles/global.css` under `@theme inline {}`. Convention is documented in `CLAUDE.md §5`.
 
-**Test runners — Vitest + Playwright**. Vitest handles unit tests (`src/**/*.test.ts`, node environment) and two integration test suites (`vitest.integration.config.ts`, `vitest.integration.api.config.ts`). Playwright handles E2E tests (`playwright.config.ts`). All three suites run in CI before deployment.
+**Build tool — Vite** (embedded in Astro). CSS processing via `@tailwindcss/vite`; no standalone `vite.config.ts` — configuration flows through `astro.config.mjs`.
 
-**Package manager — npm** (`package-lock.json`). Node.js 22 in CI.
+**Test runners — Vitest + Playwright.** Vitest handles unit tests (`src/**/*.test.ts`, node environment) and two integration suites (`vitest.integration.config.ts`, `vitest.integration.api.config.ts`). Playwright handles E2E specs in `e2e/` against Chromium. All three suites run in CI before deployment.
 
-**CI/CD — GitHub Actions** (`.github/workflows/ci.yml`). Three jobs: `ci` (lint + type-check + unit + integration + E2E + build), `deploy` (build + wrangler deploy to Cloudflare Workers, only on `main` push), `migrate` (Supabase DB push, runs after deploy).
+**Package manager — npm** (`package-lock.json`, Node.js 22 in CI).
 
-**Deployment — Cloudflare Workers** via `@astrojs/cloudflare` adapter and `cloudflare/wrangler-action@v4` in CI. Environment variables for Supabase credentials are stored as GitHub secrets.
+**CI/CD — GitHub Actions** (`.github/workflows/ci.yml`). Three jobs in sequence: `ci` (audit → astro sync → astro check → lint → unit tests → integration tests → E2E → build), `deploy` (build + `wrangler-action` to Cloudflare Workers, `main` push only), `migrate` (Supabase `db push`, runs after deploy).
+
+**Deployment — Cloudflare Workers.** `wrangler.jsonc` + `@astrojs/cloudflare` adapter + `cloudflare/wrangler-action@v4` in CI. Secrets are managed via `npx wrangler secret put` and must be declared in `env.schema` in `astro.config.mjs` or they are silently `undefined` at the Cloudflare edge (documented in `CLAUDE.md §6`).
+
+**Instruction files — `CLAUDE.md` and `AGENTS.md`.** Both present and substantive. `CLAUDE.md` covers env schema, API route shape, LLM call routing, React hydration modes, Tailwind v4 conventions, and known failure modes. `AGENTS.md` covers hard rules, project structure, build/test commands, coding style, and commit guidelines.
 
 ## Quality Gate Assessment
 
-| Component | Typed | Convention | Training Data | Documented | Verdict |
-|---|---|---|---|---|---|
-| Language (TypeScript 6) | ✓ | — | — | — | pass |
-| Framework (Astro 6 + React 19) | — | ✓ | ✓ | ✓ | pass |
-| Build tool (Vite/Astro) | — | ✓ | ✓ | ✓ | pass |
-| Test runners (Vitest + Playwright) | — | — | ✓ | ✓ | pass |
+| Component                          | Typed | Convention | Training Data | Documented | Verdict |
+|------------------------------------|-------|------------|---------------|------------|---------|
+| Language (TypeScript 6.0.3)        | ✓     | —          | —             | —          | pass    |
+| Framework (Astro 6 + React 19)     | —     | ✓          | ✓             | ✓          | pass    |
+| Build tool (Vite via Astro)        | —     | ✓          | ✓             | ✓          | pass    |
+| Test runners (Vitest + Playwright) | —     | —          | ✓             | ✓          | pass    |
 
-**Legend**: ✓ = pass, — = not applicable to this gate
+*Legend: ✓ = pass, — = not applicable to this gate*
 
 ### Gate Details
 
-**Typed — PASS**
-Evidence: `tsconfig.json` extends `astro/tsconfigs/strict`; TypeScript 6.0.3 is in devDependencies; `typescript-eslint` is configured for type-aware linting; lint-staged runs ESLint on all `.ts`, `.tsx`, `.astro` files before every commit. The entire source is TypeScript — no plain `.js` source files in `src/`.
+**Typed — pass**
+Evidence: `tsconfig.json` extends `astro/tsconfigs/strict`. `typescript-eslint` in `eslint.config.js` enables type-aware linting. `lint-staged` enforces ESLint on all `.ts/.tsx/.astro` files pre-commit. No `.js` source files exist in `src/`. TypeScript 6.0.3 is in devDependencies.
 
-**Convention-based — PASS**
-Evidence: Astro 6 uses file-based routing (`src/pages/**/*.astro` → route). The project follows Astro's standard layout: pages in `src/pages/`, reusable components in `src/components/`, layouts in `src/layouts/`, library/utility code in `src/lib/`, types in `src/types/`, API routes in `src/pages/api/`. The `[id]` dynamic segment pattern is used correctly for listing sub-pages. Routing, rendering model, and component placement are all predictable from Astro's conventions.
+**Convention-based — pass**
+Evidence: Astro enforces file-based routing (`src/pages/**/*.astro` → URL path), a layout abstraction (`src/layouts/`), and first-class API route placement (`src/pages/api/`). The project extends these with documented conventions in `AGENTS.md §Project Structure` (folder roles) and `CLAUDE.md §2–§4` (API route shape, React hydration). Convention coverage is strong at both the framework and project layer.
 
-⚠️ **Note** (not a gate failure): The `CLAUDE.md` file is present but contains only the 10xDevs toolkit lesson scaffold — there are no EstateDesk-specific coding conventions documented. An agent working on this codebase has Astro's framework conventions to lean on, but no project-level guidance on patterns specific to EstateDesk (API route shape, Supabase auth check pattern, how to add a React island for client-side interactivity). See "Recommended Instruction File Additions" below.
+**Popular in training data — pass**
+Evidence (within JS/TS ecosystem): Astro is well-established (2021 launch, strong public adoption). React + TypeScript is one of the most heavily represented framework combinations in LLM training data. Vitest is the standard test runner for Vite-based projects. Playwright is a first-class E2E tool with broad documentation and examples in training corpora. Caveat: Astro 6 and Tailwind CSS v4 are recent releases; agents may occasionally default to v4/v3-era patterns for these specific versions — `CLAUDE.md §5` directly addresses the Tailwind v4 distinction.
 
-**Popular in training data (within JS/TS ecosystem) — PASS**
-Evidence: Astro is well-established in the JS/TS ecosystem (2021, strong adoption). React + TypeScript is one of the most heavily represented combinations in LLM training corpora. The API route pattern (`export const POST = async ({request}) => ...`) and Astro island pattern (`client:load`) are standard and widely documented. 
-
-⚠️ **Caveat**: Astro 6 and Tailwind CSS v4 are very recent releases. Some of their latest-version APIs (e.g., Tailwind v4's CSS-variable-based configuration, Astro 6's env schema, React 19 Server Components patterns with Astro) may have limited training data coverage compared to their v3/v4 predecessors. Agents may occasionally default to v3-era patterns — the instruction file additions below help guard against this.
-
-**Well-documented — PASS**
-Evidence: Astro maintains versioned documentation at docs.astro.build with migration guides. React 19, TypeScript 6, Tailwind CSS v4, Cloudflare Workers, and Supabase all have current official documentation. The `@astrojs/cloudflare` adapter is documented at docs.astro.build/en/guides/deploy/cloudflare/.
+**Well-documented — pass**
+Evidence: Astro maintains versioned docs at docs.astro.build with dedicated guides for the Cloudflare adapter. React 19, TypeScript, Vitest, Playwright, Tailwind CSS v4, Supabase, and Cloudflare Workers all have current, actively maintained official documentation. No dependency in the stack relies on community wikis or out-of-sync third-party sources.
 
 ## Gaps & Compensation
 
-All four quality gates pass. No mandatory compensation is required. However, three practical gaps exist that will cause the agent to produce lower-quality first-pass code without guidance:
+All four quality gates pass. No mandatory compensation is required.
 
-### Gap 1: CLAUDE.md has no EstateDesk-specific conventions
+### Maintenance Note — `AGENTS.md` has two stale statements
 
-**Why it matters for agents**: The existing CLAUDE.md contains only the 10xDevs toolkit lesson scaffold — no coding conventions, no pattern guidance, no project-specific rules. An agent asked to add a new feature in this codebase will rely solely on Astro's general conventions, which are correct for structure but say nothing about EstateDesk-specific patterns (how auth is checked in pages, how API routes are shaped, which Supabase client to use and when).
+`AGENTS.md` contains outdated content that would mislead an agent reading it cold:
 
-**Impact on current PRD changes**: Three of the four changes in scope (tab navigation, LLM address formatting, home page) require patterns not yet documented anywhere — the React island pattern for client-side interactivity, the API route shape for a new endpoint, and the Tailwind v4 class approach.
+1. **`## Testing Guidelines`** states *"No test framework configured. CI gate is lint + build only. Add Vitest before writing unit tests."* — Vitest and Playwright are both configured, the scripts exist in `package.json`, and all three test suites run in CI. This entry predates the test setup.
 
-### Gap 2: No documented pattern for client-side React islands
+2. **Header paragraph** refers to *"Cloudflare Pages"* — the actual deployment target is Cloudflare Workers (`wrangler.jsonc`, `@astrojs/cloudflare` adapter, `wrangler-action` in CI).
 
-**Why it matters**: The address formatting feature (LLM call on Enter) requires a React component with `client:load` or `client:only` directive. The current codebase has no interactive React components that demonstrate this pattern. An agent will likely produce a correct component, but may get the hydration directive wrong or not know where to put the component.
-
-### Gap 3: Tailwind CSS v4 API differences
-
-**Why it matters**: Tailwind v4 replaced `tailwind.config.js` with CSS-based configuration and changed some utility names and patterns. Training data is predominantly v3-era. An agent may generate v3-style config entries or reference non-existent v4 class names.
-
-### Recommended Instruction File Additions
-
-The following sections should be added to `CLAUDE.md` (below the existing toolkit content, in a new `## EstateDesk Coding Conventions` block):
-
----
+**Recommended fix — replace `## Testing Guidelines` in `AGENTS.md` with:**
 
 ```markdown
-## EstateDesk Coding Conventions
+## Testing Guidelines
 
-### Language & types
-- All source files are TypeScript. Never write `.js` files in `src/`. All function parameters and return types must be annotated.
-- Type definitions for domain entities live in `src/types/`. Import from there rather than defining inline types in pages.
-
-### Astro page pattern
-Every protected page follows this shape:
-1. Import `createClient` from `@/lib/supabase`
-2. Call `supabase.auth.getUser()` — redirect to `/auth/signin` if no user
-3. Fetch data needed for the page
-4. Redirect to `/dashboard` on fetch errors
-
-Example from `src/pages/dashboard/listings/[id]/edit.astro`:
-```astro
-const supabase = createClient(Astro.request.headers, Astro.cookies);
-const { data: { user } } = await supabase.auth.getUser();
-if (!user) return Astro.redirect("/auth/signin");
+Unit tests: Vitest (`npm run test`) — `src/**/*.test.ts`, node environment, excludes integration.
+Integration tests: Vitest with real Supabase (`npm run test:integration`, `npm run test:integration:api`).
+E2E tests: Playwright (`npm run test:e2e`) — specs in `e2e/`, Chromium, runs against local dev server (port 4321).
+All three suites run in CI on every push/PR to `main`. Supabase secrets are required for integration and
+E2E runs and are provided via GitHub Actions secrets (see `.github/workflows/ci.yml`).
 ```
 
-### API route pattern
-API routes live in `src/pages/api/`. They export named handlers (`GET`, `POST`, `PUT`, `DELETE`). Each handler:
-- Calls `createClient` and `getUser()` — returns `401` if no session
-- Parses the request body or params
-- Performs the Supabase operation
-- Returns a `Response` with appropriate status code and JSON body
-
-### React island pattern (client-side interactivity)
-Interactive React components live in `src/components/`. To add client-side interactivity to an Astro page, import the React component and add a `client:load` directive:
-```astro
-import MyComponent from "@/components/MyComponent";
-<MyComponent client:load prop={value} />
-```
-Use `client:load` for components that must hydrate immediately (e.g., form inputs with interactive behavior). Use `client:only="react"` for components that should NOT render server-side.
-
-### LLM / external API calls from client components
-API calls to external services (e.g., LLM address formatting) must go through a server-side Astro API route in `src/pages/api/`, never directly from a client-side React component. The React component calls the internal API route; the API route holds the secret key and calls the external service.
-
-Pattern:
-- `src/pages/api/format-address.ts` — server-side handler, reads `OPENROUTER_API_KEY` from env
-- Client-side React component calls `fetch("/api/format-address", { method: "POST", body: ... })`
-
-### Environment variables
-- Server-side secrets are accessed via `import.meta.env.VARIABLE_NAME`
-- All env variables used by the app are declared in `astro.config.mjs` under `env.schema`
-- Never access env vars directly in client-rendered React components (they'd be exposed to the browser)
-
-### Tailwind CSS v4
-This project uses Tailwind CSS v4. Key differences from v3:
-- No `tailwind.config.js` — configuration lives in CSS (see `src/styles/global.css` or similar)
-- Use `@theme` directive for custom tokens, not `theme.extend` in a config file
-- The `bg-cosmic` class is a custom class defined in the project's CSS
-- When adding new components, use existing classes from other pages as reference before inventing new ones
-```
-
----
+Also update the header paragraph: replace `Cloudflare Pages` → `Cloudflare Workers`.
 
 ## Summary
 
-**Overall agent-readiness: ready.** All four quality gates pass for every stack component. TypeScript strict mode, Astro's file-based conventions, React + TypeScript training-data depth, and comprehensive docs for every dependency give an agent a strong foundation.
+**Overall agent-readiness: ready.** All four quality gates pass for every stack component. Strict TypeScript, Astro's file-based conventions, React + TypeScript training-data depth, and comprehensive official documentation for every dependency give an agent a strong, self-consistent foundation.
 
 **Key strengths:**
 - Strict TypeScript throughout — agents can reason about types without running the code
 - Astro's file-based routing makes page and API route placement predictable
 - Three-tier test suite (unit, integration, E2E) in CI provides a fast feedback loop
-- CI/CD pipeline is complete end-to-end: lint → type-check → tests → build → deploy → migrate
+- `CLAUDE.md` and `AGENTS.md` are both substantive and in sync with the actual codebase
+- Full CI/CD pipeline: lint → type-check → tests → build → deploy → migrate
 
-**Practical enhancements before implementing the PRD changes:**
-1. Add the `## EstateDesk Coding Conventions` block to `CLAUDE.md` (see above) — especially the React island pattern and the LLM-call-via-API-route pattern, which are new in the current scope.
-2. Note Tailwind v4 differences in CLAUDE.md to prevent v3-era pattern drift.
+**One action before implementation work:**
+Update the two stale statements in `AGENTS.md` (testing guidelines and deployment platform label) so any agent reading it gets an accurate picture of the test setup.
 
-**Scope of current PRD:**
-The four changes in scope (tab navigation, consistent back link, LLM address formatting, home page redesign) are all within Astro's normal feature surface. The tab/back link work is pure Astro template and routing — straightforward. The address formatting feature is the only novel pattern: it requires a new API route and a React island component calling it. The CLAUDE.md additions above directly address this.
+**Recommended next step:** `/10x-health-check`
