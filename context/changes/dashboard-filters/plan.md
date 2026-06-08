@@ -274,44 +274,44 @@ Filtering is a client-side `.filter()` pass over an in-memory array. At the expe
 
 #### Automated
 
-- [x] 1.1 TypeScript compiles without errors: `npx astro check`
-- [x] 1.2 No lint errors: `npm run lint` (if configured)
+- [x] 1.1 TypeScript compiles without errors: `npx astro check` — 9e9936d
+- [x] 1.2 No lint errors: `npm run lint` (if configured) — 9e9936d
 
 #### Manual
 
-- [x] 1.3 `ListingCard.tsx` renders visually identical to the Astro card for active and done listings
-- [x] 1.4 Delete button shows native browser confirm dialog; cancelling does not submit
-- [x] 1.5 Reopen form submits correctly for done listings
+- [x] 1.3 `ListingCard.tsx` renders visually identical to the Astro card for active and done listings — 9e9936d
+- [x] 1.4 Delete button shows native browser confirm dialog; cancelling does not submit — 9e9936d
+- [x] 1.5 Reopen form submits correctly for done listings — 9e9936d
 
 ### Phase 2: DashboardListings React Island
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles without errors: `npx astro check`
+- [x] 2.1 TypeScript compiles without errors: `npx astro check` — 9e9936d
 
 #### Manual
 
-- [x] 2.2 Filtry button toggles filter bar open/closed
-- [x] 2.3 Closing the bar resets all inputs to blank / "Wszystkie"
-- [x] 2.4 Status filter correctly shows only active or done listings
-- [x] 2.5 Price range inputs narrow the list correctly
-- [x] 2.6 City text input narrows list case-insensitively against address field
-- [x] 2.7 Badge count on Filtry button is correct
-- [x] 2.8 "Twoje oferty" count updates correctly when filters reduce result set
-- [x] 2.9 Zero-results-from-filter message appears when no listings match
-- [x] 2.10 Eksport button is visible, styled correctly, and does nothing when clicked
+- [x] 2.2 Filtry button toggles filter bar open/closed — 9e9936d
+- [x] 2.3 Closing the bar resets all inputs to blank / "Wszystkie" — 9e9936d
+- [x] 2.4 Status filter correctly shows only active or done listings — 9e9936d
+- [x] 2.5 Price range inputs narrow the list correctly — 9e9936d
+- [x] 2.6 City text input narrows list case-insensitively against address field — 9e9936d
+- [x] 2.7 Badge count on Filtry button is correct — 9e9936d
+- [x] 2.8 "Twoje oferty" count updates correctly when filters reduce result set — 9e9936d
+- [x] 2.9 Zero-results-from-filter message appears when no listings match — 9e9936d
+- [x] 2.10 Eksport button is visible, styled correctly, and does nothing when clicked — 9e9936d
 
 ### Phase 3: Dashboard Astro Wiring
 
 #### Automated
 
-- [x] 3.1 TypeScript compiles without errors: `npx astro check`
-- [x] 3.2 Dev server starts without errors: `npm run dev`
+- [x] 3.1 TypeScript compiles without errors: `npx astro check` — 9e9936d
+- [x] 3.2 Dev server starts without errors: `npm run dev` — 9e9936d
 
 #### Manual
 
-- [x] 3.3 Dashboard loads with no visible change when no filters are active
-- [x] 3.4 Stats grid shows correct server-computed totals, unaffected by filters
-- [x] 3.5 Banner messages still render correctly above the listing section
-- [x] 3.6 All listing sub-page links still work
-- [x] 3.7 Delete and reopen actions still function correctly
+- [x] 3.3 Dashboard loads with no visible change when no filters are active — 9e9936d
+- [x] 3.4 Stats grid shows correct server-computed totals, unaffected by filters — 9e9936d
+- [x] 3.5 Banner messages still render correctly above the listing section — 9e9936d
+- [x] 3.6 All listing sub-page links still work — 9e9936d
+- [x] 3.7 Delete and reopen actions still function correctly — 9e9936d

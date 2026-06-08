@@ -1,9 +1,10 @@
 ---
 change_id: dashboard-filters
 title: "Filtry na dashboardzie"
-status: implementing
+status: implemented
 created: 2026-06-08
 updated: 2026-06-08
+
 roadmap_id: S-01
 prd_ref: US-01, FR-001, FR-002, FR-003, FR-004, FR-005
 ---
