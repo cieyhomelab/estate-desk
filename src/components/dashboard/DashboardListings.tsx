@@ -84,17 +84,24 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           <div className="flex flex-wrap gap-3">
             <div className="flex flex-col gap-1">
               <label className="text-xs text-white/50">Status</label>
-              <select
-                value={filters.status}
-                onChange={(e) => {
-                  setFilters({ ...filters, status: e.target.value as FilterState["status"] });
-                }}
-                className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              >
-                <option value="all">Wszystkie</option>
-                <option value="active">Aktywne</option>
-                <option value="done">Ukończone</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={filters.status}
+                  onChange={(e) => {
+                    setFilters({ ...filters, status: e.target.value as FilterState["status"] });
+                  }}
+                  className="appearance-none rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 pr-8 text-sm text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                >
+                  <option value="all">Wszystkie</option>
+                  <option value="active">Aktywne</option>
+                  <option value="done">Ukończone</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                  <svg className="h-4 w-4 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-xs text-white/50">Cena od</label>
