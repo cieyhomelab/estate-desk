@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
 import DashboardHeader from "@/components/DashboardHeader.astro";
-import ListingCard from "@/components/listings/ListingCard.astro";
+import DashboardListings from "@/components/dashboard/DashboardListings";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
@@ -36,7 +36,7 @@ if (!supabase) {
         .select("listing_id, agent_net")
         .in("listing_id", doneIds)
         .is("voided_at", null)
-        .limit(100)
+        .limit(doneIds.length)
         .overrideTypes<{ listing_id: string; agent_net: number | null }[], { merge: false }>();
       if (snapshots) {
         snapshotMap = new Map(snapshots.map((s) => [s.listing_id, s.agent_net]));
@@ -44,6 +44,8 @@ if (!supabase) {
     }
   }
 }
+
+const snapshotRecord: Record<string, number | null> = Object.fromEntries(snapshotMap);
 
 const urlError = Astro.url.searchParams.get("error");
 const urlSuccess = Astro.url.searchParams.get("success");
@@ -92,44 +94,11 @@ function formatStatMoney(value: number): string {
         </div>
       </div>
 
-      <div class="mb-4 flex items-center justify-between">
-        <span class="text-sm text-white/35">Twoje oferty ({listings.length})</span>
-        <div class="flex gap-1.5">
-          <button
-            type="button"
-            class="rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
-          >
-            Filtry
-          </button>
-          <button
-            type="button"
-            class="rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
-          >
-            Eksport
-          </button>
-        </div>
-      </div>
-
       {urlSuccess === "wznowiono" && <Banner variant="info">Ogłoszenie zostało wznowione.</Banner>}
       {urlError && <Banner variant="error">{urlError}</Banner>}
       {fetchError && <Banner variant="error">{fetchError}</Banner>}
 
-      {
-        listings.length === 0 && !fetchError ? (
-          <a
-            href="/dashboard/listings/new"
-            class="block rounded-xl border border-white/[0.08] bg-white/[0.04] p-12 text-center transition-colors hover:bg-white/[0.07]"
-          >
-            <p class="text-white/45">Brak ogłoszeń. Dodaj pierwsze ogłoszenie.</p>
-          </a>
-        ) : (
-          <div class="grid gap-4 sm:grid-cols-2">
-            {listings.map((listing) => (
-              <ListingCard listing={listing} agentNet={snapshotMap.get(listing.id) ?? null} />
-            ))}
-          </div>
-        )
-      }
+      <DashboardListings listings={listings} snapshotMap={snapshotRecord} hasError={!!fetchError} client:load />
 
       <form method="POST" action="/api/auth/signout" class="mt-10 border-t border-white/[0.06] pt-6">
         <button

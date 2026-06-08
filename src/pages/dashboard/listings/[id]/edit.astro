@@ -73,7 +73,7 @@ const error = Astro.url.searchParams.get("error");
             <label for="address" class="mb-1 block text-sm font-medium text-white/60"
               >Adres nieruchomości <span class="text-red-400">*</span></label
             >
-            <AddressField initialValue={listing.address} id="address" client:load />
+            <AddressField initialValue={listing.address ?? undefined} id="address" client:load />
           </div>
 
           <div>

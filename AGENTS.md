@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-EstateDesk — real estate transaction management for a single Polish agent. Astro 6 SSR + React 19 + TypeScript + Tailwind CSS 4 + Supabase (PostgreSQL + auth + storage) + Cloudflare Pages.
+EstateDesk — real estate transaction management for a single Polish agent. Astro 6 SSR + React 19 + TypeScript + Tailwind CSS 4 + Supabase (PostgreSQL + auth + storage) + Cloudflare Workers.
 
 ## Hard Rules
 
@@ -29,7 +29,11 @@ TypeScript strict (`@tsconfig.json` extends `astro/tsconfigs/strict`). Import al
 
 ## Testing Guidelines
 
-No test framework configured. CI gate is lint + build only. Add Vitest before writing unit tests.
+Unit tests: Vitest (`npm run test`) — `src/**/*.test.ts`, node environment, excludes integration.
+Integration tests: Vitest with real Supabase (`npm run test:integration`, `npm run test:integration:api`).
+E2E tests: Playwright (`npm run test:e2e`) — specs in `e2e/`, Chromium, runs against local dev server (port 4321).
+All three suites run in CI on every push/PR to `main`. Supabase secrets are required for integration and
+E2E runs and are provided via GitHub Actions secrets (see `.github/workflows/ci.yml`).
 
 ## Commit & Pull Request Guidelines
 

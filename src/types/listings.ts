@@ -6,7 +6,7 @@ export interface Listing {
   user_id: string;
   type: ListingType;
   status: ListingStatus;
-  address: string;
+  address: string | null;
   owner_name: string | null;
   owner_phone: string | null;
   owner_email: string | null;
