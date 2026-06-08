@@ -2,16 +2,17 @@
 
 These conventions apply to all EstateDesk implementation work. Follow them exactly; they override generic framework defaults.
 
-### 1. React Island Hydration
+### 1. Astro Env Schema for New Secret Variables
 
-Use `client:load` for interactive React components that receive Astro props and benefit from SSR (e.g., forms with server-provided error messages). Use `client:only="react"` only when a component uses browser-only APIs (`localStorage`, `window`) and must not server-render. Do not use `client:visible` or `client:idle` — EstateDesk is SSR-first and these lazy strategies add complexity without benefit.
+Every new environment variable used in the app **must** be declared in `astro.config.mjs` under `env.schema` before it can be imported. Without the declaration the variable is `undefined` at runtime in Cloudflare Workers even if the secret is set. See existing declarations in `@astro.config.mjs`.
 
-```astro
-<!-- Preferred for most islands -->
-<MyForm serverError={error} client:load />
-<!-- Only when the component requires browser-only APIs -->
-<BrowserOnlyWidget client:only="react" />
+Then import it in server-side code:
+
+```typescript
+import { MY_SECRET } from "astro:env/server";
 ```
+
+For public client-side variables use `context: "client", access: "public"` and import from `"astro:env/client"`.
 
 ### 2. API Route Shape
 
@@ -37,25 +38,28 @@ Never call OpenRouter (or any external LLM API) from a React component. The API 
 
 See the canonical example: `@src/pages/api/format-address.ts`
 
-### 4. Tailwind CSS v4
+### 4. React Island Hydration
 
-This project uses Tailwind CSS v4. v4 has no `tailwind.config.js` and does not use the PostCSS plugin.
+Use `client:load` for interactive React components that receive Astro props and benefit from SSR (e.g., forms with server-provided error messages). Use `client:only="react"` only when a component uses browser-only APIs (`localStorage`, `window`) and must not server-render. Do not use `client:visible` or `client:idle` — EstateDesk is SSR-first and these lazy strategies add complexity without benefit.
 
-- **Do not create `tailwind.config.js`** — it will be ignored and may cause confusion.
-- Theme tokens live in `src/styles/global.css` under `@theme inline { ... }`. Add custom tokens and utilities there, not in a config file. See `@src/styles/global.css`.
-- Custom utilities use `@utility name { ... }` (e.g., `@utility bg-cosmic { ... }`).
-- The global CSS starts with `@import "tailwindcss"` — this replaces the v3 `@tailwind base/components/utilities` directives.
-- The Vite plugin is `tailwindcss()` from `@tailwindcss/vite` (already wired in `astro.config.mjs`).
-
-### 5. Astro Env Schema for New Secret Variables
-
-Every new environment variable used in the app **must** be declared in `astro.config.mjs` under `env.schema` before it can be imported. Without the declaration the variable is `undefined` at runtime in Cloudflare Workers even if the secret is set. See existing declarations in `@astro.config.mjs`.
-
-Then import it in server-side code:
-
-```typescript
-import { MY_SECRET } from "astro:env/server";
+```astro
+<!-- Preferred for most islands -->
+<MyForm serverError={error} client:load />
+<!-- Only when the component requires browser-only APIs -->
+<BrowserOnlyWidget client:only="react" />
 ```
 
-For public client-side variables use `context: "client", access: "public"` and import from `"astro:env/client"`.
+### 5. Tailwind CSS v4
 
+This project uses Tailwind CSS v4.
+
+- **Do not create `tailwind.config.js`** — v4 removed it; the file will be ignored.
+- Theme tokens live in `src/styles/global.css` under `@theme inline { ... }`. Add custom tokens and utilities there, not in a config file. See `@src/styles/global.css`.
+- Custom utilities use `@utility name { ... }` (e.g., `@utility bg-cosmic { ... }`).
+- The Vite plugin is `tailwindcss()` from `@tailwindcss/vite` (already wired in `astro.config.mjs`).
+
+### 6. Known Failure Modes
+
+Non-obvious failures that are hard to debug when hit. Add an entry here whenever a production or local failure turns out to have a non-obvious root cause.
+
+- **Env variable is `undefined` at runtime despite secret being set** — Missing `env.schema` declaration in `astro.config.mjs`. Cloudflare Workers silently drops undeclared variables. Fix: §1.
