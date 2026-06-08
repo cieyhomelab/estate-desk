@@ -64,6 +64,6 @@ test("unauthenticated access to listing edit page redirects to sign-in", async (
 test("authenticated user sees their listing data on the dashboard", async () => {
   await authedPage.goto("/dashboard");
   await expect(authedPage).toHaveURL("/dashboard");
-  await expect(authedPage.getByText(listingAddress)).toBeVisible();
-  await expect(authedPage.getByText("Jan Właściciel")).toBeVisible();
+  await expect(authedPage.getByRole("heading", { name: listingAddress })).toBeVisible();
+  await expect(authedPage.getByText("Jan Właściciel", { exact: true })).toBeVisible();
 });
