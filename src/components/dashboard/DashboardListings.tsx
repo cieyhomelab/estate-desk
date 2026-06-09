@@ -90,11 +90,17 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
                   onChange={(e) => {
                     setFilters({ ...filters, status: e.target.value as FilterState["status"] });
                   }}
-                  className="appearance-none rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 pr-8 text-sm text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                  className="appearance-none rounded-lg border border-white/20 bg-slate-800 px-3 py-1.5 pr-8 text-sm text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 >
-                  <option value="all">Wszystkie</option>
-                  <option value="active">Aktywne</option>
-                  <option value="done">Ukończone</option>
+                  <option value="all" className="bg-slate-800 text-white">
+                    Wszystkie
+                  </option>
+                  <option value="active" className="bg-slate-800 text-white">
+                    Aktywne
+                  </option>
+                  <option value="done" className="bg-slate-800 text-white">
+                    Ukończone
+                  </option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
                   <svg className="h-4 w-4 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">

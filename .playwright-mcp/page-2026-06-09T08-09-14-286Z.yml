@@ -1,0 +1,395 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - link "EstateDesk" [ref=e6] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e7]
+          - generic [ref=e10]: EstateDesk
+        - navigation [ref=e11]:
+          - generic [ref=e12]: Pomoc
+          - link "Ustawienia" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard/settings/commission
+          - link "+ Nowe ogłoszenie" [ref=e14] [cursor=pointer]:
+            - /url: /dashboard/listings/new
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - heading "Ogłoszenia" [level=1] [ref=e17]
+          - paragraph [ref=e18]: Zarządzaj ofertami, dokumentami, kontaktami i prowizją w jednym, przejrzystym panelu nieruchomości.
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - paragraph [ref=e21]: Aktywne oferty
+            - paragraph [ref=e22]: "16"
+          - generic [ref=e23]:
+            - paragraph [ref=e24]: Łączna wartość
+            - paragraph [ref=e25]: 10,63 mln zł
+          - generic [ref=e26]:
+            - paragraph [ref=e27]: W transakcji
+            - paragraph [ref=e28]: "4"
+          - generic [ref=e29]:
+            - paragraph [ref=e30]: Wszystkich
+            - paragraph [ref=e31]: "20"
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: Twoje oferty (16 z 20)
+            - generic [ref=e35]:
+              - button "Filtry 1" [ref=e410]:
+                - text: Filtry
+                - generic [ref=e411]: "1"
+              - button "Eksport" [ref=e37]
+          - generic [ref=e393]:
+            - generic [ref=e394]:
+              - generic [ref=e395]: Status
+              - generic [ref=e396]:
+                - combobox [ref=e397]:
+                  - option "Wszystkie"
+                  - option "Aktywne" [selected]
+                  - option "Ukończone"
+                - generic:
+                  - img
+            - generic [ref=e398]:
+              - generic [ref=e399]: Cena od
+              - spinbutton [active] [ref=e400]
+            - generic [ref=e401]:
+              - generic [ref=e402]: Cena do
+              - spinbutton [ref=e403]
+            - generic [ref=e404]:
+              - generic [ref=e405]: Miasto
+              - textbox "np. Warszawa" [ref=e406]
+          - generic [ref=e38]:
+            - generic [ref=e412]:
+              - generic [ref=e413]:
+                - heading "ul. Sarmacka 5/6, 02-972 Warszawa (Wilanów)" [level=2] [ref=e414]
+                - generic [ref=e415]:
+                  - generic [ref=e416]: Sprzedaż
+                  - generic [ref=e417]: Aktywne
+              - paragraph [ref=e418]: Ewa Wojciechowska
+              - paragraph [ref=e419]: 1 700 000,00 zł
+              - generic [ref=e420]:
+                - link "Edytuj" [ref=e421] [cursor=pointer]:
+                  - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/edit
+                - link "Cena i prowizja" [ref=e422] [cursor=pointer]:
+                  - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/pricing
+                - link "Dokumenty" [ref=e423] [cursor=pointer]:
+                  - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/documents
+                - link "Kontakty" [ref=e424] [cursor=pointer]:
+                  - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/contacts
+                - link "Zakończ transakcję" [ref=e425] [cursor=pointer]:
+                  - /url: /dashboard/listings/e69c4335-b44a-4c00-8c8c-5c1aa6943b10/close
+                - button "Usuń" [ref=e427]
+            - generic [ref=e428]:
+              - generic [ref=e429]:
+                - heading "ul. Nabycińska 21/9, 53-677 Wrocław (Fabryczna)" [level=2] [ref=e430]
+                - generic [ref=e431]:
+                  - generic [ref=e432]: Sprzedaż
+                  - generic [ref=e433]: Aktywne
+              - paragraph [ref=e434]: Michał Szymański
+              - paragraph [ref=e435]: 390 000,00 zł
+              - generic [ref=e436]:
+                - link "Edytuj" [ref=e437] [cursor=pointer]:
+                  - /url: /dashboard/listings/f3c783c1-f434-4bc2-8f4c-f0701ca36a8c/edit
+                - link "Cena i prowizja" [ref=e438] [cursor=pointer]:
+                  - /url: /dashboard/listings/f3c783c1-f434-4bc2-8f4c-f0701ca36a8c/pricing
+                - link "Dokumenty" [ref=e439] [cursor=pointer]:
+                  - /url: /dashboard/listings/f3c783c1-f434-4bc2-8f4c-f0701ca36a8c/documents
+                - link "Kontakty" [ref=e440] [cursor=pointer]:
+                  - /url: /dashboard/listings/f3c783c1-f434-4bc2-8f4c-f0701ca36a8c/contacts
+                - link "Zakończ transakcję" [ref=e441] [cursor=pointer]:
+                  - /url: /dashboard/listings/f3c783c1-f434-4bc2-8f4c-f0701ca36a8c/close
+                - button "Usuń" [ref=e443]
+            - generic [ref=e444]:
+              - generic [ref=e445]:
+                - heading "ul. Grunwaldzka 112/6, 80-244 Gdańsk (Wrzeszcz)" [level=2] [ref=e446]
+                - generic [ref=e447]:
+                  - generic [ref=e448]: Najem okazjonalny
+                  - generic [ref=e449]: Aktywne
+              - paragraph [ref=e450]: Karolina Michalak
+              - paragraph [ref=e451]: 3 200,00 zł
+              - generic [ref=e452]:
+                - link "Edytuj" [ref=e453] [cursor=pointer]:
+                  - /url: /dashboard/listings/97073d56-8264-4439-b9ec-7fb21c0e750d/edit
+                - link "Cena i prowizja" [ref=e454] [cursor=pointer]:
+                  - /url: /dashboard/listings/97073d56-8264-4439-b9ec-7fb21c0e750d/pricing
+                - link "Dokumenty" [ref=e455] [cursor=pointer]:
+                  - /url: /dashboard/listings/97073d56-8264-4439-b9ec-7fb21c0e750d/documents
+                - link "Kontakty" [ref=e456] [cursor=pointer]:
+                  - /url: /dashboard/listings/97073d56-8264-4439-b9ec-7fb21c0e750d/contacts
+                - link "Zakończ transakcję" [ref=e457] [cursor=pointer]:
+                  - /url: /dashboard/listings/97073d56-8264-4439-b9ec-7fb21c0e750d/close
+                - button "Usuń" [ref=e459]
+            - generic [ref=e460]:
+              - generic [ref=e461]:
+                - heading "ul. Orłowska 12/2, 81-522 Gdynia (Orłowo)" [level=2] [ref=e462]
+                - generic [ref=e463]:
+                  - generic [ref=e464]: Sprzedaż
+                  - generic [ref=e465]: Aktywne
+              - paragraph [ref=e466]: Joanna Mazur
+              - paragraph [ref=e467]: 720 000,00 zł
+              - generic [ref=e468]:
+                - link "Edytuj" [ref=e469] [cursor=pointer]:
+                  - /url: /dashboard/listings/20954cf9-902e-4690-a287-2e98a1b4ab1e/edit
+                - link "Cena i prowizja" [ref=e470] [cursor=pointer]:
+                  - /url: /dashboard/listings/20954cf9-902e-4690-a287-2e98a1b4ab1e/pricing
+                - link "Dokumenty" [ref=e471] [cursor=pointer]:
+                  - /url: /dashboard/listings/20954cf9-902e-4690-a287-2e98a1b4ab1e/documents
+                - link "Kontakty" [ref=e472] [cursor=pointer]:
+                  - /url: /dashboard/listings/20954cf9-902e-4690-a287-2e98a1b4ab1e/contacts
+                - link "Zakończ transakcję" [ref=e473] [cursor=pointer]:
+                  - /url: /dashboard/listings/20954cf9-902e-4690-a287-2e98a1b4ab1e/close
+                - button "Usuń" [ref=e475]
+            - generic [ref=e476]:
+              - generic [ref=e477]:
+                - heading "ul. Świdnicka 32/8, 50-068 Wrocław (Stare Miasto)" [level=2] [ref=e478]
+                - generic [ref=e479]:
+                  - generic [ref=e480]: Najem okazjonalny
+                  - generic [ref=e481]: Aktywne
+              - paragraph [ref=e482]: Paweł Grabowski
+              - paragraph [ref=e483]: 4 500,00 zł
+              - generic [ref=e484]:
+                - link "Edytuj" [ref=e485] [cursor=pointer]:
+                  - /url: /dashboard/listings/f625b21e-046f-43f9-9dc1-f35e27556d76/edit
+                - link "Cena i prowizja" [ref=e486] [cursor=pointer]:
+                  - /url: /dashboard/listings/f625b21e-046f-43f9-9dc1-f35e27556d76/pricing
+                - link "Dokumenty" [ref=e487] [cursor=pointer]:
+                  - /url: /dashboard/listings/f625b21e-046f-43f9-9dc1-f35e27556d76/documents
+                - link "Kontakty" [ref=e488] [cursor=pointer]:
+                  - /url: /dashboard/listings/f625b21e-046f-43f9-9dc1-f35e27556d76/contacts
+                - link "Zakończ transakcję" [ref=e489] [cursor=pointer]:
+                  - /url: /dashboard/listings/f625b21e-046f-43f9-9dc1-f35e27556d76/close
+                - button "Usuń" [ref=e491]
+            - generic [ref=e492]:
+              - generic [ref=e493]:
+                - heading "ul. Kobierzyńska 153, 30-382 Kraków (Krowodrza)" [level=2] [ref=e494]
+                - generic [ref=e495]:
+                  - generic [ref=e496]: Sprzedaż
+                  - generic [ref=e497]: Aktywne
+              - paragraph [ref=e498]: Robert Dąbrowski
+              - paragraph [ref=e499]: 950 000,00 zł
+              - generic [ref=e500]:
+                - link "Edytuj" [ref=e501] [cursor=pointer]:
+                  - /url: /dashboard/listings/f56eae4d-74a1-40dd-820a-e74e2121db2b/edit
+                - link "Cena i prowizja" [ref=e502] [cursor=pointer]:
+                  - /url: /dashboard/listings/f56eae4d-74a1-40dd-820a-e74e2121db2b/pricing
+                - link "Dokumenty" [ref=e503] [cursor=pointer]:
+                  - /url: /dashboard/listings/f56eae4d-74a1-40dd-820a-e74e2121db2b/documents
+                - link "Kontakty" [ref=e504] [cursor=pointer]:
+                  - /url: /dashboard/listings/f56eae4d-74a1-40dd-820a-e74e2121db2b/contacts
+                - link "Zakończ transakcję" [ref=e505] [cursor=pointer]:
+                  - /url: /dashboard/listings/f56eae4d-74a1-40dd-820a-e74e2121db2b/close
+                - button "Usuń" [ref=e507]
+            - generic [ref=e508]:
+              - generic [ref=e509]:
+                - heading "al. Kościuszki 78/5, 90-441 Łódź (Śródmieście)" [level=2] [ref=e510]
+                - generic [ref=e511]:
+                  - generic [ref=e512]: Sprzedaż
+                  - generic [ref=e513]: Aktywne
+              - paragraph [ref=e514]: Agnieszka Kamińska
+              - paragraph [ref=e515]: 410 000,00 zł
+              - generic [ref=e516]:
+                - link "Edytuj" [ref=e517] [cursor=pointer]:
+                  - /url: /dashboard/listings/86035174-0a08-41fc-aa2b-ab1f20d6e252/edit
+                - link "Cena i prowizja" [ref=e518] [cursor=pointer]:
+                  - /url: /dashboard/listings/86035174-0a08-41fc-aa2b-ab1f20d6e252/pricing
+                - link "Dokumenty" [ref=e519] [cursor=pointer]:
+                  - /url: /dashboard/listings/86035174-0a08-41fc-aa2b-ab1f20d6e252/documents
+                - link "Kontakty" [ref=e520] [cursor=pointer]:
+                  - /url: /dashboard/listings/86035174-0a08-41fc-aa2b-ab1f20d6e252/contacts
+                - link "Zakończ transakcję" [ref=e521] [cursor=pointer]:
+                  - /url: /dashboard/listings/86035174-0a08-41fc-aa2b-ab1f20d6e252/close
+                - button "Usuń" [ref=e523]
+            - generic [ref=e524]:
+              - generic [ref=e525]:
+                - heading "ul. Złota 44/12A, 00-120 Warszawa (Śródmieście)" [level=2] [ref=e526]
+                - generic [ref=e527]:
+                  - generic [ref=e528]: Sprzedaż
+                  - generic [ref=e529]: Aktywne
+              - paragraph [ref=e530]: Marek Lewandowski
+              - paragraph [ref=e531]: 2 100 000,00 zł
+              - generic [ref=e532]:
+                - link "Edytuj" [ref=e533] [cursor=pointer]:
+                  - /url: /dashboard/listings/5a715809-f1ed-42fe-a414-88d3de648705/edit
+                - link "Cena i prowizja" [ref=e534] [cursor=pointer]:
+                  - /url: /dashboard/listings/5a715809-f1ed-42fe-a414-88d3de648705/pricing
+                - link "Dokumenty" [ref=e535] [cursor=pointer]:
+                  - /url: /dashboard/listings/5a715809-f1ed-42fe-a414-88d3de648705/documents
+                - link "Kontakty" [ref=e536] [cursor=pointer]:
+                  - /url: /dashboard/listings/5a715809-f1ed-42fe-a414-88d3de648705/contacts
+                - link "Zakończ transakcję" [ref=e537] [cursor=pointer]:
+                  - /url: /dashboard/listings/5a715809-f1ed-42fe-a414-88d3de648705/close
+                - button "Usuń" [ref=e539]
+            - generic [ref=e540]:
+              - generic [ref=e541]:
+                - heading "ul. Józefa 14/3, 31-056 Kraków (Kazimierz)" [level=2] [ref=e542]
+                - generic [ref=e543]:
+                  - generic [ref=e544]: Najem okazjonalny
+                  - generic [ref=e545]: Aktywne
+              - paragraph [ref=e546]: Monika Piotrowska
+              - paragraph [ref=e547]: 2 900,00 zł
+              - generic [ref=e548]:
+                - link "Edytuj" [ref=e549] [cursor=pointer]:
+                  - /url: /dashboard/listings/eedd81d4-360c-4fae-8e20-ac04a57bcd17/edit
+                - link "Cena i prowizja" [ref=e550] [cursor=pointer]:
+                  - /url: /dashboard/listings/eedd81d4-360c-4fae-8e20-ac04a57bcd17/pricing
+                - link "Dokumenty" [ref=e551] [cursor=pointer]:
+                  - /url: /dashboard/listings/eedd81d4-360c-4fae-8e20-ac04a57bcd17/documents
+                - link "Kontakty" [ref=e552] [cursor=pointer]:
+                  - /url: /dashboard/listings/eedd81d4-360c-4fae-8e20-ac04a57bcd17/contacts
+                - link "Zakończ transakcję" [ref=e553] [cursor=pointer]:
+                  - /url: /dashboard/listings/eedd81d4-360c-4fae-8e20-ac04a57bcd17/close
+                - button "Usuń" [ref=e555]
+            - generic [ref=e556]:
+              - generic [ref=e557]:
+                - heading "ul. Głogowska 55/8, 60-702 Poznań (Grunwald)" [level=2] [ref=e558]
+                - generic [ref=e559]:
+                  - generic [ref=e560]: Sprzedaż
+                  - generic [ref=e561]: Aktywne
+              - paragraph [ref=e562]: Katarzyna Kowalczyk
+              - paragraph [ref=e563]: 780 000,00 zł
+              - generic [ref=e564]:
+                - link "Edytuj" [ref=e565] [cursor=pointer]:
+                  - /url: /dashboard/listings/258bb46b-c9a1-4ff6-9786-007834bde430/edit
+                - link "Cena i prowizja" [ref=e566] [cursor=pointer]:
+                  - /url: /dashboard/listings/258bb46b-c9a1-4ff6-9786-007834bde430/pricing
+                - link "Dokumenty" [ref=e567] [cursor=pointer]:
+                  - /url: /dashboard/listings/258bb46b-c9a1-4ff6-9786-007834bde430/documents
+                - link "Kontakty" [ref=e568] [cursor=pointer]:
+                  - /url: /dashboard/listings/258bb46b-c9a1-4ff6-9786-007834bde430/contacts
+                - link "Zakończ transakcję" [ref=e569] [cursor=pointer]:
+                  - /url: /dashboard/listings/258bb46b-c9a1-4ff6-9786-007834bde430/close
+                - button "Usuń" [ref=e571]
+            - generic [ref=e572]:
+              - generic [ref=e573]:
+                - heading "ul. Trakt Św. Wojciecha 220, 80-001 Gdańsk (Kokoszki)" [level=2] [ref=e574]
+                - generic [ref=e575]:
+                  - generic [ref=e576]: Sprzedaż
+                  - generic [ref=e577]: Aktywne
+              - paragraph [ref=e578]: Tomasz Wójcik
+              - paragraph [ref=e579]: 380 000,00 zł
+              - generic [ref=e580]:
+                - link "Edytuj" [ref=e581] [cursor=pointer]:
+                  - /url: /dashboard/listings/48bd3a29-71c9-4084-bf03-8ed4d1f13b61/edit
+                - link "Cena i prowizja" [ref=e582] [cursor=pointer]:
+                  - /url: /dashboard/listings/48bd3a29-71c9-4084-bf03-8ed4d1f13b61/pricing
+                - link "Dokumenty" [ref=e583] [cursor=pointer]:
+                  - /url: /dashboard/listings/48bd3a29-71c9-4084-bf03-8ed4d1f13b61/documents
+                - link "Kontakty" [ref=e584] [cursor=pointer]:
+                  - /url: /dashboard/listings/48bd3a29-71c9-4084-bf03-8ed4d1f13b61/contacts
+                - link "Zakończ transakcję" [ref=e585] [cursor=pointer]:
+                  - /url: /dashboard/listings/48bd3a29-71c9-4084-bf03-8ed4d1f13b61/close
+                - button "Usuń" [ref=e587]
+            - generic [ref=e588]:
+              - generic [ref=e589]:
+                - heading "ul. Grochowska 187/4, 04-357 Warszawa (Praga Południe)" [level=2] [ref=e590]
+                - generic [ref=e591]:
+                  - generic [ref=e592]: Najem okazjonalny
+                  - generic [ref=e593]: Aktywne
+              - paragraph [ref=e594]: Adam Kaczmarek
+              - paragraph [ref=e595]: 3 800,00 zł
+              - generic [ref=e596]:
+                - link "Edytuj" [ref=e597] [cursor=pointer]:
+                  - /url: /dashboard/listings/43c4b7c3-d04d-44fc-9885-48b9fde7f461/edit
+                - link "Cena i prowizja" [ref=e598] [cursor=pointer]:
+                  - /url: /dashboard/listings/43c4b7c3-d04d-44fc-9885-48b9fde7f461/pricing
+                - link "Dokumenty" [ref=e599] [cursor=pointer]:
+                  - /url: /dashboard/listings/43c4b7c3-d04d-44fc-9885-48b9fde7f461/documents
+                - link "Kontakty" [ref=e600] [cursor=pointer]:
+                  - /url: /dashboard/listings/43c4b7c3-d04d-44fc-9885-48b9fde7f461/contacts
+                - link "Zakończ transakcję" [ref=e601] [cursor=pointer]:
+                  - /url: /dashboard/listings/43c4b7c3-d04d-44fc-9885-48b9fde7f461/close
+                - button "Usuń" [ref=e603]
+            - generic [ref=e604]:
+              - generic [ref=e605]:
+                - heading "ul. Ślężna 140/3, 53-111 Wrocław (Krzyki)" [level=2] [ref=e606]
+                - generic [ref=e607]:
+                  - generic [ref=e608]: Sprzedaż
+                  - generic [ref=e609]: Aktywne
+              - paragraph [ref=e610]: Maria Zielińska
+              - paragraph [ref=e611]: 620 000,00 zł
+              - generic [ref=e612]:
+                - link "Edytuj" [ref=e613] [cursor=pointer]:
+                  - /url: /dashboard/listings/c77870da-1243-42fc-9623-933de9245922/edit
+                - link "Cena i prowizja" [ref=e614] [cursor=pointer]:
+                  - /url: /dashboard/listings/c77870da-1243-42fc-9623-933de9245922/pricing
+                - link "Dokumenty" [ref=e615] [cursor=pointer]:
+                  - /url: /dashboard/listings/c77870da-1243-42fc-9623-933de9245922/documents
+                - link "Kontakty" [ref=e616] [cursor=pointer]:
+                  - /url: /dashboard/listings/c77870da-1243-42fc-9623-933de9245922/contacts
+                - link "Zakończ transakcję" [ref=e617] [cursor=pointer]:
+                  - /url: /dashboard/listings/c77870da-1243-42fc-9623-933de9245922/close
+                - button "Usuń" [ref=e619]
+            - generic [ref=e620]:
+              - generic [ref=e621]:
+                - heading "ul. Fieldorfa 7, 30-046 Kraków (Bronowice)" [level=2] [ref=e622]
+                - generic [ref=e623]:
+                  - generic [ref=e624]: Sprzedaż
+                  - generic [ref=e625]: Aktywne
+              - paragraph [ref=e626]: Piotr Nowak
+              - paragraph [ref=e627]: 1 200 000,00 zł
+              - generic [ref=e628]:
+                - link "Edytuj" [ref=e629] [cursor=pointer]:
+                  - /url: /dashboard/listings/cea1cbf5-26c9-4daa-bcf9-c9e95f1f212f/edit
+                - link "Cena i prowizja" [ref=e630] [cursor=pointer]:
+                  - /url: /dashboard/listings/cea1cbf5-26c9-4daa-bcf9-c9e95f1f212f/pricing
+                - link "Dokumenty" [ref=e631] [cursor=pointer]:
+                  - /url: /dashboard/listings/cea1cbf5-26c9-4daa-bcf9-c9e95f1f212f/documents
+                - link "Kontakty" [ref=e632] [cursor=pointer]:
+                  - /url: /dashboard/listings/cea1cbf5-26c9-4daa-bcf9-c9e95f1f212f/contacts
+                - link "Zakończ transakcję" [ref=e633] [cursor=pointer]:
+                  - /url: /dashboard/listings/cea1cbf5-26c9-4daa-bcf9-c9e95f1f212f/close
+                - button "Usuń" [ref=e635]
+            - generic [ref=e636]:
+              - generic [ref=e637]:
+                - heading "ul. Kasprzaka 29/11, 01-234 Warszawa (Wola)" [level=2] [ref=e638]
+                - generic [ref=e639]:
+                  - generic [ref=e640]: Sprzedaż
+                  - generic [ref=e641]: Aktywne
+              - paragraph [ref=e642]: Anna Wiśniewska
+              - paragraph [ref=e643]: 520 000,00 zł
+              - generic [ref=e644]:
+                - link "Edytuj" [ref=e645] [cursor=pointer]:
+                  - /url: /dashboard/listings/43de5a7a-6bf4-4d74-8872-f4c64b4f4021/edit
+                - link "Cena i prowizja" [ref=e646] [cursor=pointer]:
+                  - /url: /dashboard/listings/43de5a7a-6bf4-4d74-8872-f4c64b4f4021/pricing
+                - link "Dokumenty" [ref=e647] [cursor=pointer]:
+                  - /url: /dashboard/listings/43de5a7a-6bf4-4d74-8872-f4c64b4f4021/documents
+                - link "Kontakty" [ref=e648] [cursor=pointer]:
+                  - /url: /dashboard/listings/43de5a7a-6bf4-4d74-8872-f4c64b4f4021/contacts
+                - link "Zakończ transakcję" [ref=e649] [cursor=pointer]:
+                  - /url: /dashboard/listings/43de5a7a-6bf4-4d74-8872-f4c64b4f4021/close
+                - button "Usuń" [ref=e651]
+            - generic [ref=e652]:
+              - generic [ref=e653]:
+                - heading "ul. Puławska 18/4, 02-512 Warszawa (Mokotów)" [level=2] [ref=e654]
+                - generic [ref=e655]:
+                  - generic [ref=e656]: Sprzedaż
+                  - generic [ref=e657]: Aktywne
+              - paragraph [ref=e658]: Jan Kowalski
+              - paragraph [ref=e659]: 850 000,00 zł
+              - generic [ref=e660]:
+                - link "Edytuj" [ref=e661] [cursor=pointer]:
+                  - /url: /dashboard/listings/f1bdc060-1775-483f-ac82-e50b4fa2dd43/edit
+                - link "Cena i prowizja" [ref=e662] [cursor=pointer]:
+                  - /url: /dashboard/listings/f1bdc060-1775-483f-ac82-e50b4fa2dd43/pricing
+                - link "Dokumenty" [ref=e663] [cursor=pointer]:
+                  - /url: /dashboard/listings/f1bdc060-1775-483f-ac82-e50b4fa2dd43/documents
+                - link "Kontakty" [ref=e664] [cursor=pointer]:
+                  - /url: /dashboard/listings/f1bdc060-1775-483f-ac82-e50b4fa2dd43/contacts
+                - link "Zakończ transakcję" [ref=e665] [cursor=pointer]:
+                  - /url: /dashboard/listings/f1bdc060-1775-483f-ac82-e50b4fa2dd43/close
+                - button "Usuń" [ref=e667]
+        - button "Wyloguj" [ref=e368]
+  - generic [ref=e371]:
+    - button "Menu" [ref=e372]:
+      - img [ref=e374]
+      - generic: Menu
+    - button "Inspect" [ref=e378]:
+      - img [ref=e380]
+      - generic: Inspect
+    - button "Audit" [ref=e382]:
+      - generic [ref=e383]:
+        - img [ref=e384]
+        - img [ref=e668]
+      - generic: Audit
+    - button "Settings" [ref=e387]:
+      - img [ref=e389]
+      - generic: Settings
