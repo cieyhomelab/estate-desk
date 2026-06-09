@@ -61,7 +61,7 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           <button
             type="button"
             onClick={toggleFilter}
-            className="relative rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
+            className="relative cursor-pointer rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
             Filtry
             {activeFilterCount > 0 && (
@@ -72,7 +72,7 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           </button>
           <button
             type="button"
-            className="rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
+            className="cursor-pointer rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
             Eksport
           </button>
