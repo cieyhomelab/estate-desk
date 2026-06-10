@@ -29,7 +29,7 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
     setFilterOpen((prev) => !prev);
   }
 
-  function handleExport() {
+  function exportCsv() {
     const csv = listingsToCsv(listings);
     const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -39,7 +39,9 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
     a.href = url;
     a.download = `estatedesk-${date}.csv`;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 100);
   }
 
   const filteredListings = listings.filter((listing) => {
@@ -86,7 +88,7 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           </button>
           <button
             type="button"
-            onClick={handleExport}
+            onClick={exportCsv}
             className="cursor-pointer rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
             Eksport

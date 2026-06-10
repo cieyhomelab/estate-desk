@@ -1,7 +1,7 @@
 ---
 change_id: dashboard-export
 title: "Eksport CSV z dashboardu"
-status: implemented
+status: impl_reviewed
 created: 2026-06-10
 updated: 2026-06-10
 

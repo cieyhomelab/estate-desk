@@ -31,11 +31,6 @@ describe("listingsToCsv", () => {
     expect(csv).toBe("Adres;Status;Cena wywoławcza;Właściciel;Data dodania;Data zamknięcia");
   });
 
-  it("header is exactly as specified", () => {
-    const [header] = listingsToCsv([]).split("\r\n");
-    expect(header).toBe("Adres;Status;Cena wywoławcza;Właściciel;Data dodania;Data zamknięcia");
-  });
-
   it("maps active status to Aktywne", () => {
     const csv = listingsToCsv([makeListing({ status: "active" })]);
     const [, row] = csv.split("\r\n");
@@ -93,12 +88,14 @@ describe("listingsToCsv", () => {
     expect(cols[5]).toBe("2024-07-20");
   });
 
+  // RFC 4180 §2.6: fields containing the delimiter must be enclosed in DQUOTE
   it("field containing semicolon is wrapped in double quotes", () => {
     const csv = listingsToCsv([makeListing({ address: "ul. A; B" })]);
     const [, row] = csv.split("\r\n");
     expect(row.startsWith('"ul. A; B"')).toBe(true);
   });
 
+  // RFC 4180 §2.7: DQUOTE inside a quoted field is escaped by doubling it
   it("field containing double quote is escaped by doubling", () => {
     const csv = listingsToCsv([makeListing({ address: 'ul. "Testowa"' })]);
     const [, row] = csv.split("\r\n");
