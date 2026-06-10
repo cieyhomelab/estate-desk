@@ -182,15 +182,15 @@ Not applicable — no data or schema changes.
 
 #### Automated Verification:
 
-- [x] 2.1 Unit tests still pass: `npm run test`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Type checking passes: `npx astro check`
-- [x] 2.4 Production build succeeds: `npm run build`
+- [x] 2.1 Unit tests still pass: `npm run test` — 2a8007d
+- [x] 2.2 Linting passes: `npm run lint` — 2a8007d
+- [x] 2.3 Type checking passes: `npx astro check` — 2a8007d
+- [x] 2.4 Production build succeeds: `npm run build` — 2a8007d
 
 #### Manual Verification:
 
-- [x] 2.5 Clicking Eksport downloads `estatedesk-<today>.csv` with one row per listing
-- [x] 2.6 With filters active, the export still contains ALL listings
-- [x] 2.7 File opens correctly in Polish-locale Excel (columns split, diacritics intact)
-- [x] 2.8 Closed listing shows close date; active listing shows empty cell
-- [x] 2.9 No regression: filters, badge, card links, delete still work
+- [x] 2.5 Clicking Eksport downloads `estatedesk-<today>.csv` with one row per listing — 2a8007d
+- [x] 2.6 With filters active, the export still contains ALL listings — 2a8007d
+- [x] 2.7 File opens correctly in Polish-locale Excel (columns split, diacritics intact) — 2a8007d
+- [x] 2.8 Closed listing shows close date; active listing shows empty cell — 2a8007d
+- [x] 2.9 No regression: filters, badge, card links, delete still work — 2a8007d
