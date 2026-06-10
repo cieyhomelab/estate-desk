@@ -1,9 +1,10 @@
 ---
 change_id: help-page
 title: "Utwórz stronę /help z dokumentacją po polsku"
-status: impl_reviewed
+status: archived
 created: 2026-06-10
 updated: 2026-06-10
+archived_at: 2026-06-10T16:49:07Z
 
 roadmap_id: S-03
 prd_refs: US-03, FR-007, FR-008

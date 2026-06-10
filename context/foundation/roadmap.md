@@ -31,7 +31,7 @@ EstateDesk to aplikacja do zarządzania ogłoszeniami nieruchomości dla jednego
 | ---- | ------------------ | ------------------------------------------------------------------------ | ---------- | ---------------------------- | ------ |
 | S-01 | dashboard-filters  | filtrować listę ogłoszeń po statusie, cenie i mieście; wyniki natychmiast | —          | US-01, FR-001, FR-002, FR-003, FR-004, FR-005 | done   |
 | S-02 | dashboard-export   | pobrać wszystkie ogłoszenia jako plik .csv                               | —          | US-02, FR-006                | done   |
-| S-03 | help-page          | nawigować do /help i czytać polskojęzyczną dokumentację aplikacji        | —          | US-03, FR-007, FR-008        | ready  |
+| S-03 | help-page          | nawigować do /help i czytać polskojęzyczną dokumentację aplikacji        | —          | US-03, FR-007, FR-008        | done   |
 
 ## Baseline
 
@@ -86,7 +86,7 @@ Brak foundacji — wszystkie warstwy techniczne są już na miejscu (patrz §Bas
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Przycisk Pomoc jest aktualnie renderowany jako `<span>` z disabled styling (`DashboardHeader.astro:28`) — zmiana na link z nawigacją modyfikuje komponent DashboardHeader; minimalna zmiana, ale wymaga weryfikacji, że nie wpłynie na inne części headera. Strona `/help` musi być auth-gated (PRD §Access Control).
-- **Status:** ready
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -113,3 +113,4 @@ Brak foundacji — wszystkie warstwy techniczne są już na miejscu (patrz §Bas
 
 - **S-01: filtrować listę ogłoszeń po statusie, cenie i mieście; wyniki natychmiast** — Archived 2026-06-10 → `context/archive/2026-06-08-dashboard-filters/`. Lesson: —.
 - **S-02: pobrać wszystkie ogłoszenia jako plik .csv** — Archived 2026-06-10 → `context/archive/2026-06-10-dashboard-export/`. Lesson: —.
+- **S-03: nawigować do /help i czytać polskojęzyczną dokumentację aplikacji** — Archived 2026-06-10 → `context/archive/2026-06-10-help-page/`. Lesson: —.
