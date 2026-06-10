@@ -3,7 +3,7 @@ project: "EstateDesk — Dashboard Filters, Export & Help"
 version: 1
 status: draft
 created: 2026-06-08
-updated: 2026-06-08
+updated: 2026-06-10
 prd_version: 1
 main_goal: low-complexity
 top_blocker: capacity
@@ -30,7 +30,7 @@ EstateDesk to aplikacja do zarządzania ogłoszeniami nieruchomości dla jednego
 | ID   | Change ID          | Rezultat (agent może…)                                                   | Zależności | Odniesienia PRD              | Status |
 | ---- | ------------------ | ------------------------------------------------------------------------ | ---------- | ---------------------------- | ------ |
 | S-01 | dashboard-filters  | filtrować listę ogłoszeń po statusie, cenie i mieście; wyniki natychmiast | —          | US-01, FR-001, FR-002, FR-003, FR-004, FR-005 | ready  |
-| S-02 | dashboard-export   | pobrać wszystkie ogłoszenia jako plik .csv                               | —          | US-02, FR-006                | ready  |
+| S-02 | dashboard-export   | pobrać wszystkie ogłoszenia jako plik .csv                               | —          | US-02, FR-006                | done   |
 | S-03 | help-page          | nawigować do /help i czytać polskojęzyczną dokumentację aplikacji        | —          | US-03, FR-007, FR-008        | ready  |
 
 ## Baseline
@@ -74,7 +74,7 @@ Brak foundacji — wszystkie warstwy techniczne są już na miejscu (patrz §Bas
 - **Blokery:** —
 - **Nieznane:** —
 - **Ryzyko:** Jeśli eksport zostanie zaimplementowany jako część tej samej wyspy React co filtry (S-01), musi odczytywać pełny nieufiltrowany zestaw danych, nie przefiltrowany widok — PRD §Export: „export always includes all listings regardless of current filter state". Status 'active'/'done' z bazy musi być mapowany na polskie etykiety (Aktywne/Zamknięte) w pliku CSV.
-- **Status:** ready
+- **Status:** done
 
 ### S-03: Strona pomocy
 
@@ -110,3 +110,5 @@ Brak foundacji — wszystkie warstwy techniczne są już na miejscu (patrz §Bas
 ## Done
 
 *(Puste przy pierwszej generacji. `/10x-archive` doda wpis tutaj i zmieni Status na `done` gdy zmiana o pasującym Change ID zostanie zarchiwizowana.)*
+
+- **S-02: pobrać wszystkie ogłoszenia jako plik .csv** — Archived 2026-06-10 → `context/archive/2026-06-10-dashboard-export/`. Lesson: —.

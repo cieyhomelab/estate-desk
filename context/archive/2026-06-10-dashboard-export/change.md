@@ -1,9 +1,10 @@
 ---
 change_id: dashboard-export
 title: "Eksport CSV z dashboardu"
-status: impl_reviewed
+status: archived
 created: 2026-06-10
 updated: 2026-06-10
+archived_at: 2026-06-10T16:44:46Z
 
 roadmap_id: S-02
 prd_ref: US-02, FR-006
