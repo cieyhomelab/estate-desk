@@ -1,0 +1,88 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DashboardHeader from "@/components/DashboardHeader.astro";
+---
+
+<Layout title="Pomoc — EstateDesk">
+  <div class="bg-cosmic min-h-screen">
+    <DashboardHeader activePage="help" />
+
+    <div class="mx-auto max-w-2xl px-6 py-8">
+      <a
+        href="/dashboard"
+        class="mb-5 inline-flex items-center gap-1 text-sm text-white/40 transition-colors hover:text-white/70"
+      >
+        <span aria-hidden="true">←</span> Powrót do dashboardu
+      </a>
+
+      <h1 class="mb-8 text-3xl font-bold tracking-tight text-white">Pomoc</h1>
+
+      <section class="mb-8">
+        <h2 class="mb-3 text-xl font-semibold text-white">Jak tworzyć ogłoszenia</h2>
+        <div class="space-y-2 text-sm leading-relaxed text-white/65">
+          <p>
+            Kliknij przycisk „+ Nowe ogłoszenie" w prawym górnym rogu dashboardu. Uzupełnij adres nieruchomości — system
+            automatycznie sformatuje go przy użyciu AI. Wpisz dane właściciela oraz cenę wywoławczą, a następnie zapisz
+            formularz.
+          </p>
+          <p>
+            Po zapisaniu ogłoszenie pojawia się na liście ze statusem Aktywne. Kliknięcie dowolnego wiersza na liście
+            otwiera szczegóły ogłoszenia, gdzie znajdziesz zakładki: Dokumenty, Kontakty, Wycena i Zamknięcie.
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="mb-3 text-xl font-semibold text-white">Dokumenty i lista kontrolna</h2>
+        <div class="space-y-2 text-sm leading-relaxed text-white/65">
+          <p>
+            W zakładce Dokumenty każdego ogłoszenia znajduje się lista wymaganych dokumentów. Zaznacz każdy dokument
+            jako zebrany klikając checkbox obok jego nazwy. Możesz dodawać dokumenty niestandardowe (np. dodatkowe
+            pełnomocnictwa) oraz usuwać te, które nie dotyczą danej transakcji.
+          </p>
+          <p>
+            Zamknięcie ogłoszenia jest możliwe dopiero po zebraniu wszystkich wymaganych dokumentów — system blokuje tę
+            akcję, jeśli lista nie jest w pełni ukończona.
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="mb-3 text-xl font-semibold text-white">Prowizja i ceny</h2>
+        <div class="space-y-2 text-sm leading-relaxed text-white/65">
+          <p>
+            Przed pierwszą transakcją przejdź do Ustawienia i ustaw stawkę podatku oraz procentowy udział agencji — te
+            wartości są używane przy każdym obliczeniu prowizji.
+          </p>
+          <p>
+            W zakładce Wycena konkretnego ogłoszenia możesz śledzić historię cen i wpisać aktualną cenę wywoławczą. Przy
+            zamykaniu transakcji podajesz finalną cenę sprzedaży, a system automatycznie wylicza należną prowizję netto
+            na podstawie Twoich ustawień.
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="mb-3 text-xl font-semibold text-white">Kontakty i zamknięcie transakcji</h2>
+        <div class="space-y-2 text-sm leading-relaxed text-white/65">
+          <p>
+            W zakładce Kontakty dodajesz osoby powiązane z ogłoszeniem: kupującego, sprzedającego, notariusza lub inne
+            osoby.
+          </p>
+          <p>
+            Gdy wszystkie wymagane dokumenty są zebrane, przejdź do zakładki Zamknięcie i kliknij „Zamknij transakcję" —
+            podaj finalną cenę sprzedaży i potwierdź. Zamknięte ogłoszenie zmienia status na Zamknięte i trafia do
+            sekcji „W transakcji" na dashboardzie. Jeśli transakcja nie doszła do skutku, możesz wznowić ogłoszenie
+            klikając „Wznów ogłoszenie".
+          </p>
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  :global(body) {
+    background: #0d1b2a;
+  }
+</style>

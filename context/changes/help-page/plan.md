@@ -209,28 +209,28 @@ No data migrations. No existing routes changed.
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.1 Type checking passes: `npm run typecheck` — bf06121
+- [x] 1.2 Linting passes: `npm run lint` — bf06121
 
 #### Manual
 
-- [x] 1.3 Pomoc appears as a clickable link in DashboardHeader on the Dashboard
-- [x] 1.4 Visiting `/help` while logged out redirects to `/`
-- [x] 1.5 Visiting `/help` while logged in returns a 404 (no redirect to `/`)
+- [x] 1.3 Pomoc appears as a clickable link in DashboardHeader on the Dashboard — bf06121
+- [x] 1.4 Visiting `/help` while logged out redirects to `/` — bf06121
+- [x] 1.5 Visiting `/help` while logged in returns a 404 (no redirect to `/`) — bf06121
 
 ### Phase 2: Create `/help` Page
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Clicking Pomoc on the Dashboard navigates to `/help`
-- [ ] 2.5 All four sections render with Polish content in correct styling
-- [ ] 2.6 Pomoc nav link shows active styling when on `/help`
-- [ ] 2.7 "Powrót do dashboardu" link navigates back to `/dashboard`
-- [ ] 2.8 Dashboard listing list renders identically after returning from `/help`
-- [ ] 2.9 Unauthenticated visit to `/help` redirects to `/`
+- [x] 2.4 Clicking Pomoc on the Dashboard navigates to `/help`
+- [x] 2.5 All four sections render with Polish content in correct styling
+- [x] 2.6 Pomoc nav link shows active styling when on `/help`
+- [x] 2.7 "Powrót do dashboardu" link navigates back to `/dashboard`
+- [x] 2.8 Dashboard listing list renders identically after returning from `/help`
+- [x] 2.9 Unauthenticated visit to `/help` redirects to `/`
