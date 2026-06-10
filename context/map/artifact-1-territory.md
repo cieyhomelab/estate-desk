@@ -1,7 +1,7 @@
 # Territory Map — Artifact 1: Git Activity Analysis
 
-> Generated: 2026-06-09  
-> Scope: last 12 months (166 commits); monthly drill-down: last 4 weeks
+> Generated: 2026-06-09 · Refreshed: 2026-06-10 (po merge PR #27 i #28)  
+> Scope: last 12 months (172 commits na main); monthly drill-down: last 4 weeks
 
 ---
 
@@ -16,7 +16,7 @@
 | 5 | `src/types` | 10 |
 | 6 | `src/pages/api/auth` | 8 |
 | 7 | `src/integration/api` | 8 |
-| 8 | `src/components/dashboard` | 4 |
+| 8 | `src/components/dashboard` | 5 |
 | 9 | `src/pages/dashboard/settings` | 3 |
 | 10 | `e2e/` | 20 (7 plików) |
 
@@ -34,8 +34,10 @@
 | 6 | `src/pages/dashboard/listings/[id]/close.astro` | 5 |
 | 7 | `src/pages/api/listings/[id]/commission/set.ts` | 5 |
 | 8 | `src/types/listings.ts` | 5 |
-| 9 | `src/pages/dashboard/listings/[id]/documents.astro` | 4 |
-| 10 | `src/components/listings/ListingTabs.astro` | 4 |
+| 9 | `src/components/dashboard/DashboardListings.tsx` | 5 |
+| 10 | `src/pages/dashboard/listings/[id]/documents.astro` | 4 |
+
+> Zmiana 2026-06-10: `DashboardListings.tsx` wszedł do top-10 (PR #26 filtrowanie + PR #27 eksport CSV); wypadł `ListingTabs.astro` (4 zmiany).
 
 ---
 
@@ -46,9 +48,11 @@
 | W21 | 22–24.05 | 2 | `src/components/auth`, `src/pages/auth` | Bootstrapping auth od zera |
 | W22 | 25–31.05 | 60 | `src/pages/api/listings` (31), `src/pages/dashboard/listings` (24) | Peak funkcjonalny — pełny CRUD listings, kontakty, ceny, prowizje |
 | W23 | 01–07.06 | 94 | `src/pages/dashboard/listings` (16), `src/integration` (18+), `e2e/` | Gear shift: testy + UI polish równolegle |
-| W24 | 08–09.06 | 10 | `src/components/dashboard` (4) | Skupiony feature: live client-side filtering |
+| W24 | 08–10.06 | 15 | `src/components/dashboard`, `src/lib` (csv), `src/pages/help.astro`, `src/middleware.ts` | Live filtering (PR #26) → eksport CSV z wyekstrahowanym `lib/csv.ts` + testy (PR #27) → help page i wpis `/help` do `PROTECTED_ROUTES` (PR #28) → archiwizacja changes |
 
 **Wzorzec cyklu:** buduj feature → polishuj UI → pokryj testami → kolejny feature.
+
+**Nowe w W24 (po pierwszej generacji artefaktu):** PR #27 i #28 to pierwsze feature'y, których commity autoryzuje `cieyhomelab` (dotąd tylko merge'ował) — szczegóły w `artifact-3-contributors.md`.
 
 ---
 
@@ -66,15 +70,16 @@ Metryka: liczba odrębnych obszarów kodu, z którymi plik współwystępował w
 | 6 | `src/components/listings/ListingCard.astro` | 8 | |
 | 7 | `src/pages/dashboard/settings/commission.astro` | 7 | |
 | 8 | `src/pages/dashboard/listings/[id]/close.astro` | 7 | |
-| 9 | `src/middleware.ts` | 6 | Cichy kandydat do obserwacji — dotykany przez niezwiązane feature'y |
+| 9 | `src/middleware.ts` | 7 | Cichy kandydat do obserwacji — dotykany przez niezwiązane feature'y; PR #28 (help page) znów go zmienił |
 | 10 | `src/components/AuthForm.tsx` | 6 | |
 
 ### Sygnały do obserwacji
 
 - **`src/types/listings.ts`** — każda zmiana domain modelu rippluje przez cały stack. Gdy zmiany zaczną dominować, rozważyć osobny contract layer.
 - **`pricing.astro` + `edit.astro` jako tandem** — de facto jedna funkcjonalność rozbita na dwie strony.
-- **`middleware.ts`** — dotykany przez wiele niezwiązanych feature'ów; warto śledzić.
+- **`middleware.ts`** — dotykany przez wiele niezwiązanych feature'ów; warto śledzić. PR #28 potwierdził wzorzec: nowa strona = ręczny wpis do `PROTECTED_ROUTES`.
+- **`DashboardListings.tsx` ↔ `lib/csv.ts`** — nowy tandem (PR #27): komponent i wyekstrahowana logika eksportu zmieniają się razem.
 
 ### Weryfikacja istnienia
 
-Wszystkie pliki ze zbioru hubów zweryfikowane na dzień 2026-06-09: **wszystkie obecne w repo**.
+Wszystkie pliki ze zbioru hubów zweryfikowane na dzień 2026-06-10: **wszystkie obecne w repo**.

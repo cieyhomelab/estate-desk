@@ -1,6 +1,6 @@
 # Structure Map — Artifact 2: Dependency & Testability Analysis
 
-> Generated: 2026-06-09
+> Generated: 2026-06-09 · Refreshed: 2026-06-10 (po merge PR #27 i #28)
 > Tools: dependency-cruiser 17.4.3 (TS/TSX) + grep (.astro) + vitest/Playwright test audit
 > Scope: src/ — grafy zależności, granice warstw, ryzyka testowalności
 
@@ -29,6 +29,7 @@ Warstwa `.astro` zweryfikowana przez grep — brak cross-page importów.
 | `src/integration/helpers/supabase.ts` | 6 | 6 | Tylko testy — izolacja utrzymana |
 | `src/lib/utils.ts` | 3 | 3 | Drobne utility |
 | `src/lib/commission.ts` | 2 | 4 | Krytyczna logika biznesowa; pages `.astro` niewidoczne dla depcruise |
+| `src/lib/csv.ts` | 1 | 1 | Nowe (PR #27, 2026-06-10): eksport CSV wyekstrahowany z `DashboardListings.tsx`, pokryty testami unit |
 
 `src/types/listings.ts` — 0 własnych importów, 9+ konsumentów cross-layer (wszystkie warstwy).  
 Plik nie importuje niczego, ale zmiana pola `Listing` rippluje przez cały stack.
@@ -79,7 +80,7 @@ API integration testy (`src/integration/api/`) wysyłają HTTP do żywego dev se
 
 | Typ testu | Co pokrywa |
 |---|---|
-| **Unit** (vitest) | `calculateCommissionSplit` — 4 przypadki, włącznie z zaokrągleniem |
+| **Unit** (vitest) | `calculateCommissionSplit` — 4 przypadki, włącznie z zaokrągleniem; `listingsToCsv` — 7+ przypadków (mapowanie statusów, null-e, CRLF, separator `;`) |
 | **Integration DB** (vitest + live Supabase) | listing persistence, close/reopen lifecycle, price history ordering |
 | **Integration API** (vitest + live dev server) | auth-boundary (4 trasy), gate-logic close, IDOR close + contacts/create |
 | **E2E** (Playwright) | auth-boundary, listing-persistence (create+edit), close-reopen-lifecycle, document-gate |
@@ -91,18 +92,18 @@ API integration testy (`src/integration/api/`) wysyłają HTTP do żywego dev se
 
 | ID | Moduł | Ryzyko | Zalecane podejście |
 |---|---|---|---|
-| R1 | `DashboardListings.tsx` | Filter logic (5 warunków) bez żadnego testu — dodane w W24 | Unit: wyekstrahować `applyFilters()`, przetestować edge cases |
+| R1 | `DashboardListings.tsx` | Filter logic (5 warunków) bez żadnego testu; eksport CSV już wyekstrahowany i pokryty (`lib/csv.ts`, PR #27), ale filtrowanie nadal nie | Unit: wyekstrahować `applyFilters()` analogicznie do `listingsToCsv` |
 | R2 | `format-address.ts` | Zewnętrzny LLM (OpenRouter/Gemini), zero pokrycia, 9 ścieżek błędów | Unit z `vi.stubGlobal('fetch')` dla błędów + integration dla auth-gate |
 | R3 | `close.ts` | Kombinacja 4 zapytań DB + komisja + null-guardy — przetestowana przez e2e, NIE przez integration | Integration: ścieżka commit z `asking_price + settings → transaction_snapshots` |
 | R4 | 16 tras API | Brak integration testów — zmiana auth-logic lub DB schema może nie być wykryta | Integration per trasa (przynajmniej happy path + auth-gate) |
 | R5 | `lib/supabase.ts` | Nietesowalny bez Astro runtime; testy integration używają innego klienta (service role) | Wyekstrahować cookie-adapter do osobnej funkcji |
 | R6 | `pricing.astro` | 3 zapytania DB + inline commission calc — brak testu renderowania poprawnych wartości | E2E lub integration na stronę `/dashboard/listings/{id}/pricing` |
-| R7 | `middleware.ts` | `PROTECTED_ROUTES` jako hardkodowana tablica — dodanie nowej strony może ominąć ochronę | Test completeness tablicy względem `find src/pages/dashboard` |
+| R7 | `middleware.ts` | `PROTECTED_ROUTES` (`["/dashboard", "/help"]`) jako hardkodowana tablica — dodanie nowej strony może ominąć ochronę; PR #28 potwierdził, że wpis trzeba pamiętać ręcznie | Test completeness tablicy względem chronionych stron w `src/pages` |
 | R8 | `files/upload`, `photos/upload` | Binary upload, Supabase Storage, zero pokrycia | Integration (happy path + size limit) |
 
 ### Najbardziej podejrzane moduły (zestawienie)
 
-1. **`DashboardListings.tsx`** — pure function, zero testów, najnowszy kod (W24)
+1. **`DashboardListings.tsx`** — logika filtrów (pure function) nadal bez testu; część eksportowa pokryta od PR #27
 2. **`format-address.ts`** — jedyna zewnętrzna zależność, zero testów
 3. **`close.ts`** — najtrudniejsza trasa, kombinacja DB+calc pokryta tylko e2e
 4. **`lib/supabase.ts`** — hub 29 konsumentów, sam nietesowalny
@@ -113,7 +114,7 @@ API integration testy (`src/integration/api/`) wysyłają HTTP do żywego dev se
 
 - Przed zmianą `Listing` interface w `src/types/listings.ts` — sprawdzić 9 konsumentów (grep + .astro)
 - Przed zmianą `lib/supabase.ts` — brak testu ochroni; wymagana manualna weryfikacja 29 konsumentów
-- Przy dodawaniu nowej strony dashboard — ręcznie dodać do `PROTECTED_ROUTES` w `middleware.ts`
+- Przy dodawaniu nowej chronionej strony — ręcznie dodać do `PROTECTED_ROUTES` w `middleware.ts` (potwierdzone w praktyce: PR #28 musiał dopisać `/help`)
 - `pricing.astro` + `edit.astro` zmieniają się tandemem (territory map: oba w top-3) — traktować jako jedną funkcjonalność
 - `integration/helpers/supabase.ts` NIE importuje z `src/lib/supabase.ts` — testy omijają produkcyjny klient; celowa izolacja, ale ryzyko rozejścia się konfiguracji cookie
 

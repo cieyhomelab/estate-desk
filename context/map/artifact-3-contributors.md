@@ -1,6 +1,6 @@
 # Artifact 3 — Kontrybutorzy, wiedza i unknowns
 
-_Wygenerowano: 2026-06-09 | Źródło: `git log --all` (193 commity)_
+_Wygenerowano: 2026-06-09 · Odświeżono: 2026-06-10 | Źródło: `git log --all` (208 commitów)_
 
 ---
 
@@ -8,10 +8,11 @@ _Wygenerowano: 2026-06-09 | Źródło: `git log --all` (193 commity)_
 
 | Obszar | Maciej Kulesza | cieyhomelab | Claude (AI co-author) |
 |--------|---------------|-------------|----------------------|
-| **Auth / middleware** | Główny — signup, signin, 3-user limit, RLS trigger | `fix: restructure auth check` (ESLint async bug) | ~95 commitów Sonnet, 11 Opus |
+| **Auth / middleware** | Główny — signup, signin, 3-user limit, RLS trigger | `fix: restructure auth check` (ESLint async bug); **autor PR #28** — dopisanie `/help` do `PROTECTED_ROUTES` | ~95 commitów Sonnet, 11 Opus |
 | **DB / migracje** | Wyłączny — wszystkie 9 migracji | — | — |
 | **Pricing / komisja** | Wyłączny — `commission.ts`, schemat, formatPLN | `Fix commission update logic` + `Fix access to commissionSettings` (przy mergu) | — |
-| **Dashboard / filtrowanie** | Implementacja (plan + fazy 1-3) | Merge PR #26 do main | — |
+| **Dashboard / filtrowanie + eksport CSV** | Implementacja filtrów (plan + fazy 1-3); co-author PR #27 | Merge PR #26; **autor PR #27** — `lib/csv.ts` + `csv.test.ts` + eksport w `DashboardListings.tsx` | — |
+| **Help page** | Co-author PR #28 | **Autor PR #28** — `help.astro`, `DashboardHeader.astro`, `middleware.ts` | — |
 | **Testing (IDOR, gate, e2e)** | Wyłączny autor wszystkich plików testowych | Poprawki selektorów w `auth-boundary`, `close-reopen-lifecycle` | — |
 | **CI / deploy** | Usunął duplikat, dodał Supabase migration step, audit gate | **Stworzył** pierwotny `deploy.yaml` | — |
 | **UI (homepage, logo, glassmorphism)** | Implementacja lokalna | Merge PR #21, #23, #24, #25 | — |
@@ -34,9 +35,10 @@ _Wygenerowano: 2026-06-09 | Źródło: `git log --all` (193 commity)_
 
 ## Gdzie istnieje ukryta wiedza
 
-### 1. cieyhomelab — commity bez kontekstu
+### 1. cieyhomelab — commity bez kontekstu i nowa rola autora
 - `Update set.ts` (`465a157`) — brak opisu, zmiana w krytycznym pliku komisji
 - `Fix access to commissionSettings properties` (`304cdc6`) — naprawił coś przy mergu, nie wiadomo co się posypało
+- **Nowe (2026-06-10):** PR #27 (`a30baeb`) i PR #28 (`0c4ef26`) — cieyhomelab po raz pierwszy jako autor pełnych feature'ów, z trailerem `Co-authored-by: Maciej Kulesza`. Wzorzec autorstwa się odwrócił (dotąd: Maciej autor, cieyhomelab merge)
 
 ### 2. Claude jako faktyczny autor logiki
 95 commitów co-authored by Claude Sonnet 4.6, 11 by Claude Opus 4.8 (1M). Logika biznesowa (komisje, testy IDOR, RLS) pochodzi de facto od AI — brak "ludzkiego" autora który rozumie ją niezależnie od kontekstu sesji.
@@ -56,7 +58,7 @@ Trigger dodany → usunięty (`drop_user_limit_trigger.sql`) → przeniesiony do
 
 | Unknown | Ryzyko |
 |---------|--------|
-| `cieyhomelab` — brak nazwiska, tylko `ciey.air.music@gmail.com` | Niejasna rola (współpracownik / zewnętrzny review / drugie konto?) |
+| `cieyhomelab` — brak nazwiska, tylko `ciey.air.music@gmail.com`; od 2026-06-10 autor feature'ów (PR #27, #28) z co-authorem Maciejem | Niejasna rola (współpracownik / pair-work / drugie konto?) — rosnący udział, w tym w krytycznym `middleware.ts` |
 | Deploy pipeline — stworzony przez cieyhomelab, przerabiany przez Macieja | Brak smoke testu i procedury rollbacku |
 | Logika komisji w `set.ts` po poprawkach cieyhomelab | Wymaga weryfikacji czy poprawki przy mergu nie wprowadzają regresji |
 
