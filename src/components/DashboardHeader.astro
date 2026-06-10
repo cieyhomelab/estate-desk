@@ -1,6 +1,6 @@
 ---
 interface Props {
-  activePage?: "settings";
+  activePage?: "settings" | "help";
 }
 const { activePage } = Astro.props;
 ---
@@ -25,7 +25,15 @@ const { activePage } = Astro.props;
     </a>
 
     <nav class="flex items-center gap-2">
-      <span class="px-3 py-1.5 text-sm text-white/30 select-none">Pomoc</span>
+      <a
+        href="/help"
+        class:list={[
+          "rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors",
+          activePage === "help"
+            ? "border-white/25 bg-white/15 text-white"
+            : "border-white/[0.15] bg-white/[0.07] text-white/70 hover:bg-white/[0.12] hover:text-white",
+        ]}>Pomoc</a
+      >
       <a
         href="/dashboard/settings/commission"
         class:list={[
