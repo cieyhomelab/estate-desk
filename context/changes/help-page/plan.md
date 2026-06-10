@@ -222,15 +222,15 @@ No data migrations. No existing routes changed.
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build succeeds: `npm run build`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 7af6aa6
+- [x] 2.2 Linting passes: `npm run lint` — 7af6aa6
+- [x] 2.3 Build succeeds: `npm run build` — 7af6aa6
 
 #### Manual
 
-- [x] 2.4 Clicking Pomoc on the Dashboard navigates to `/help`
-- [x] 2.5 All four sections render with Polish content in correct styling
-- [x] 2.6 Pomoc nav link shows active styling when on `/help`
-- [x] 2.7 "Powrót do dashboardu" link navigates back to `/dashboard`
-- [x] 2.8 Dashboard listing list renders identically after returning from `/help`
-- [x] 2.9 Unauthenticated visit to `/help` redirects to `/`
+- [x] 2.4 Clicking Pomoc on the Dashboard navigates to `/help` — 7af6aa6
+- [x] 2.5 All four sections render with Polish content in correct styling — 7af6aa6
+- [x] 2.6 Pomoc nav link shows active styling when on `/help` — 7af6aa6
+- [x] 2.7 "Powrót do dashboardu" link navigates back to `/dashboard` — 7af6aa6
+- [x] 2.8 Dashboard listing list renders identically after returning from `/help` — 7af6aa6
+- [x] 2.9 Unauthenticated visit to `/help` redirects to `/` — 7af6aa6
