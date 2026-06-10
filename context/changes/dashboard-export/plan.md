@@ -174,23 +174,23 @@ Not applicable — no data or schema changes.
 
 #### Automated Verification:
 
-- [x] 1.1 Unit tests pass: `npm run test`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Type checking passes: `npx astro check`
+- [x] 1.1 Unit tests pass: `npm run test` — c4cd93b
+- [x] 1.2 Linting passes: `npm run lint` — c4cd93b
+- [x] 1.3 Type checking passes: `npx astro check` — c4cd93b
 
 ### Phase 2: Eksport Button Wiring
 
 #### Automated Verification:
 
-- [ ] 2.1 Unit tests still pass: `npm run test`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Type checking passes: `npx astro check`
-- [ ] 2.4 Production build succeeds: `npm run build`
+- [x] 2.1 Unit tests still pass: `npm run test`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Type checking passes: `npx astro check`
+- [x] 2.4 Production build succeeds: `npm run build`
 
 #### Manual Verification:
 
-- [ ] 2.5 Clicking Eksport downloads `estatedesk-<today>.csv` with one row per listing
-- [ ] 2.6 With filters active, the export still contains ALL listings
-- [ ] 2.7 File opens correctly in Polish-locale Excel (columns split, diacritics intact)
-- [ ] 2.8 Closed listing shows close date; active listing shows empty cell
-- [ ] 2.9 No regression: filters, badge, card links, delete still work
+- [x] 2.5 Clicking Eksport downloads `estatedesk-<today>.csv` with one row per listing
+- [x] 2.6 With filters active, the export still contains ALL listings
+- [x] 2.7 File opens correctly in Polish-locale Excel (columns split, diacritics intact)
+- [x] 2.8 Closed listing shows close date; active listing shows empty cell
+- [x] 2.9 No regression: filters, badge, card links, delete still work

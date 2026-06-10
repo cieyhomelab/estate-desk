@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Listing } from "@/types/listings";
 import ListingCard from "@/components/listings/ListingCard";
+import { listingsToCsv } from "@/lib/csv";
 
 interface Props {
   listings: Listing[];
@@ -26,6 +27,19 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
       setFilters(defaultFilters);
     }
     setFilterOpen((prev) => !prev);
+  }
+
+  function handleExport() {
+    const csv = listingsToCsv(listings);
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const d = new Date();
+    const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `estatedesk-${date}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   const filteredListings = listings.filter((listing) => {
@@ -72,6 +86,7 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           </button>
           <button
             type="button"
+            onClick={handleExport}
             className="cursor-pointer rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
             Eksport
