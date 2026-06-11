@@ -1,0 +1,24 @@
+---
+change_id: refactor-opportunities
+title: Rank and prioritize refactor opportunities from the tech-debt analysis
+status: planned
+created: 2026-06-11
+updated: 2026-06-11
+
+## Outcome
+
+Research → planning complete. Four separate implementation plans created:
+- `context/changes/refactor-c2-owned-update/` — C2: silent 0-row UPDATE fix (start here)
+- `context/changes/refactor-c1-db-types/` — C1: generated DB types
+- `context/changes/refactor-c3-flash-messages/` — C3: flash slug→message layer
+- `context/changes/refactor-c5-snapshot-check/` — C5: snapshot CHECK constraint
+archived_at: null
+---
+
+## Notes
+
+Intencja: mamy analizę tego repozytorium, która dokumentuje dług techniczny
+i ryzyka strukturalne: context/changes/commission-set-analysis/research.md. Ta zmiana odpowiada na pytanie, które tamta analiza celowo zostawiła otwarte:
+KTÓRE z tych problemów warto naprawić, w jakim docelowym kształcie i w jakiej kolejności. Eksplorujemy każdy zapisany problem w kodzie i historii, a potem porządkujemy je jako refactor opportunities.
+Zmiana przebiega etapami: eksploracja → decyzja i plan → implementacja. Na etapie eksploracji nie dzieje się żaden refaktor i nie zapada żadna decyzja.
+Wynik eksploracji: research.md tej zmiany, zakończony rankingiem opcji z trade-offami. Najpierw przeczytam raport; decyzja, co realizujemy, zapada na etapie planowania, a refaktor rusza dopiero według przyjętego planu.
