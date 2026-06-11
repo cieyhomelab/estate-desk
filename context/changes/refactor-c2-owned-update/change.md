@@ -1,9 +1,10 @@
 ---
 change_id: refactor-c2-owned-update
 title: Close silent 0-row UPDATE false-success across vulnerable API routes
-status: planned
+status: plan_reviewed
 created: 2026-06-11
 updated: 2026-06-11
+reviewed: 2026-06-11
 archived_at: null
 ---
 

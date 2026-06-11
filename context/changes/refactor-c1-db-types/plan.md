@@ -21,9 +21,11 @@ client and migrates call sites — in three additive, independently-verifiable p
   `migrate` job runs `supabase db push`. `supabase gen types` is available but never scripted.
 - `astro check` (CI type gate, `ci.yml:21`) is the primary guard — it will surface drift
   as type errors once the client and domain types are connected to the generated file.
-- **11 type consumers**: `src/pages/dashboard/listings/[id]/*.astro` (4 pages),
-  `src/components/ListingCard.{tsx,astro}`, `src/components/DashboardListings.tsx`,
-  `src/lib/csv.ts`, `src/lib/csv.test.ts`, `src/pages/dashboard/dashboard.astro`.
+- **11 type consumers**: `src/pages/dashboard/listings/[id]/*.astro` (5 pages: close,
+  contacts, documents, edit, pricing — `close.astro` is also the sole `TransactionSnapshot`
+  consumer), `src/components/listings/ListingCard.{tsx,astro}`,
+  `src/components/dashboard/DashboardListings.tsx`, `src/lib/csv.ts`, `src/lib/csv.test.ts`,
+  `src/pages/dashboard.astro`.
 
 **Intentionality**: accidental omission — generated typing was never weighed and rejected; it
 was simply never set up. `stack-assessment.md` scored the "Typed" gate as pass on TypeScript
@@ -71,15 +73,17 @@ source of truth going forward.
 
 ### Changes Required
 
-#### 1. Add `db:gen-types` script to `package.json`
+#### 1. Add `db:gen-types` and `typecheck` scripts to `package.json`
 
 **File**: `package.json`
 
 **Intent**: Expose `supabase gen types typescript --local > src/types/database.types.ts` as
-an npm script so generation is repeatable and discoverable.
+an npm script so generation is repeatable and discoverable. Add `typecheck` as a named
+alias for `astro check` so each phase's success criteria are runnable without relying on
+CI's bare `npx astro check` invocation.
 
-**Contract**: The script name is `db:gen-types`. It targets `--local` (uses the local
-Supabase instance) and writes to `src/types/database.types.ts`.
+**Contract**: The script `db:gen-types` targets `--local` (uses the local Supabase instance)
+and writes to `src/types/database.types.ts`. The script `typecheck` runs `astro check`.
 
 #### 2. Run the script and commit the generated file
 
@@ -105,8 +109,10 @@ Do not hand-edit this file.
 - `src/types/database.types.ts` exists and contains the `Database` interface with `listings` and `transaction_snapshots` table entries.
 - `listings.commission_percent` is typed as `number | null` in the generated file, matching the DB column.
 
-**Implementation Note**: After this phase, `astro check` should still pass with no new errors
-(the generated file is imported by nobody yet). Confirm before proceeding.
+**Implementation Note**: Requires local Supabase running (`supabase start`) before executing
+the script — `--local` connects to the local Docker instance. After this phase, `astro check`
+should still pass with no new errors (the generated file is imported by nobody yet). Confirm
+before proceeding.
 
 ---
 
@@ -151,7 +157,9 @@ let `astro check` surface these and resolve them — do not silence with `as any
 `TransactionSnapshot` is aliased onto the generated type, the query can rely on inferred
 types instead. Remove the inline generic.
 
-**Contract**: The query at line 35 becomes `.single()` without the explicit type argument.
+**Contract**: The query at line 35 currently carries the explicit type argument
+`.single<{ id: string; status: string; asking_price: number | null; commission_percent: number | null }>()`.
+Remove it so the call becomes plain `.single()` and the inferred type flows from the typed client.
 `astro check` confirms the inferred type is correct.
 
 ### Success Criteria
@@ -249,7 +257,7 @@ types that were hand-written in Phase 2.
 - Supabase CLI docs: `supabase gen types typescript --help`
 - Untyped client: `src/lib/supabase.ts:9`
 - Hand-written types: `src/types/listings.ts:16`, `src/types/transaction.ts:6`
-- Type consumers: `src/components/ListingCard.{tsx,astro}`, `src/components/DashboardListings.tsx`, `src/lib/csv.ts`
+- Type consumers: `src/components/listings/ListingCard.{tsx,astro}`, `src/components/dashboard/DashboardListings.tsx`, `src/lib/csv.ts`
 - CI type gate: `.github/workflows/ci.yml:21`
 
 ## Progress
@@ -267,6 +275,7 @@ types that were hand-written in Phase 2.
 #### Manual
 
 - [ ] 1.4 database.types.ts contains listings and transaction_snapshots table entries
+- [ ] 1.5 listings.commission_percent typed as number | null in generated file
 
 ### Phase 2: Alias Domain Types onto Generated Types
 

@@ -36,11 +36,15 @@ as a typed `Record<string, string>` keyed by slug.
 ## Desired End State
 
 - `src/lib/messages.ts` is the single source of truth for slug→message text.
-- All 5 render sites import from `messages.ts` instead of inline strings.
+- All 5 render sites import from `messages.ts` for their primary error block instead of
+  inline strings.
 - Each migrated page has at least one Playwright assertion that `?error=blad-zapisu` renders
   the correct banner text.
 - The `blad-zapisu` message on `pricing.astro` no longer says "ceny" — the known bug is fixed.
 - Emitter routes are unchanged.
+- Exception: `documents.astro` retains 4 inline photo/file-upload error banners
+  (`brak-plikow`, `nieprawidlowy-typ`, `blad-uploadu`, `brak-pliku`) — these are
+  context-specific to document uploads and are out of scope (see below).
 
 ### Key Discoveries
 
@@ -56,6 +60,10 @@ as a typed `Record<string, string>` keyed by slug.
 - No changes to `Banner.astro` (render wrapper).
 - No internationalization layer.
 - No handling of the success slugs through `messages.ts` (success messages are few, context-specific, and low-risk — they stay inline per page).
+- No migration of photo/file-upload context-specific error banners in `documents.astro`:
+  `brak-plikow`, `nieprawidlowy-typ`, `blad-uploadu`, `brak-pliku` (lines 206-208, 263) are
+  error slugs that are specific to the document-upload flow and have no equivalent on other
+  pages — they stay inline.
 - No fix to P3 (`undefined` interpolated into redirect URL) — separate one-liner.
 
 ## Implementation Approach
@@ -92,7 +100,6 @@ ponownie." — covering all write-error contexts (not price-specific).
 Slugs to include (derived from the 5 render sites):
 - `blad-zapisu` — "Nie udało się zapisać. Spróbuj ponownie."
 - `blad-serwera` — "Błąd serwera. Spróbuj ponownie."
-- `nie-znaleziono` — "Ogłoszenie nie zostało znalezione."
 - `cena-nieprawidlowa` — "Cena musi być liczbą większą od zera z co najwyżej dwoma miejscami po przecinku."
 - `prowizja-nieprawidlowa` — "Prowizja musi być liczbą większą od zera i nie większą niż 100%."
 - `stawki-nieprawidlowe` — "Stawki muszą być liczbami z zakresu 0–100."
@@ -102,7 +109,8 @@ Slugs to include (derived from the 5 render sites):
 - `blad-usuniecia` — "Wystąpił błąd podczas usuwania. Spróbuj ponownie."
 - `blad-konfiguracji` — "Błąd konfiguracji. Skontaktuj się z administratorem."
 - `blad-ladowania` — "Błąd podczas ładowania danych."
-- `prowizja-nieprawidlowa` — (see above)
+- `nazwa-wymagana` — "Imię i nazwisko jest wymagane."
+- `rola-nieprawidlowa` — "Wybrana rola jest nieprawidłowa."
 
 Add a `getFlashMessage(slug: string): string` helper that returns `messages[slug]` or a
 generic fallback ("Wystąpił nieoczekiwany błąd. Spróbuj ponownie.") for unknown slugs.
@@ -167,8 +175,10 @@ to use `getFlashMessage` from `messages.ts`. Add a Playwright flash-text asserti
 **File**: `src/pages/dashboard/listings/[id]/documents.astro`
 
 **Intent**: Replace the nested ternary for `error` with `getFlashMessage(error)`. The
-per-slug success/photo/file banners at lines 103-205-262 stay inline (they are success
-messages, not in scope).
+success banners and the photo/file-upload error banners (lines 103-263) stay inline — success
+messages are out of scope, and the photo/file error slugs (`brak-plikow`, `nieprawidlowy-typ`,
+`blad-uploadu`, `brak-pliku`) are context-specific to document uploads and are explicitly
+excluded (see "What We're NOT Doing").
 
 **Contract**: Same import pattern as Phase 1. The `error &&` block uses `getFlashMessage`.
 Add Playwright assertion: `?error=blad-zapisu` → "Nie udało się zapisać. Spróbuj ponownie."
@@ -183,7 +193,9 @@ the migration is a simplification (delete local map, import shared one).
 
 **Contract**: Delete lines 59-67 (local map + `errorMessage` derivation). Replace with
 `import { getFlashMessage } from '@/lib/messages'` and use `getFlashMessage(error)` at
-line 82. Add Playwright assertion.
+line 82. Add Playwright assertion. Behavioral delta: the current local map has no fallback
+(unknown slug → no banner rendered); after migration unknown slugs show the generic fallback
+banner — acceptable since no unknown slugs should reach this page.
 
 #### 3. Migrate `close.astro:115-124`
 

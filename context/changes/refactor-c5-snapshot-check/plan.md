@@ -67,9 +67,10 @@ violation exists, the migration must not be applied until those rows are resolve
 ```sql
 SELECT id, listing_id, commission_percent
 FROM transaction_snapshots
-WHERE commission_percent IS NULL
-   OR commission_percent <= 0
+WHERE commission_percent <= 0
    OR commission_percent > 100;
+-- Note: NULLs excluded intentionally — Postgres CHECK passes when the expression
+-- evaluates to NULL, so null commission_percent rows are not rejected by the constraint.
 ```
 
 If the result is zero rows, proceed. If non-zero, stop and document the violating rows — this
@@ -106,6 +107,7 @@ The constraint name follows the Supabase/Postgres naming convention: `<table>_<c
 - Pre-flight query returns zero rows (confirmed before creating the migration file).
 - After migration: attempt to insert a `transaction_snapshots` row with `commission_percent = 0` via the Supabase dashboard; confirm it is rejected with a CHECK violation.
 - After migration: attempt to insert with `commission_percent = 50`; confirm it succeeds.
+- `npm run test:integration:api` passes with no regressions.
 
 **Implementation Note**: The pre-flight query is the gate. Do not create the migration file
 until the pre-flight returns zero rows. If the pre-flight finds violations, stop and document
@@ -159,3 +161,4 @@ alter table public.transaction_snapshots
 - [ ] 1.3 Pre-flight query returns zero rows (confirmed before migration file created)
 - [ ] 1.4 commission_percent = 0 insert rejected by CHECK constraint
 - [ ] 1.5 commission_percent = 50 insert accepted
+- [ ] 1.6 npm run test:integration:api passes

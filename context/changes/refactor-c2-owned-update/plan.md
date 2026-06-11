@@ -92,14 +92,15 @@ unchanged. The test exercises the exact non-owner path that maps to Open Q1.
 4. Assert the response redirect location (Location header slug).
 5. Re-query the row via service-role client; assert `commission_percent` is unchanged.
 
-Record the observed slug in a comment: `// Open Q1 result: [silent-success | rls-error | blad-zapisu]`.
+Record the observed slug AND the raw `error.code` value in a comment:
+`// Open Q1 result: [silent-success | rls-error | blad-zapisu] — error.code: [null | 42501 | <other>]`.
+The `error.code` is needed by Phase 2B to write the correct error-code discrimination.
 
 ### Success Criteria
 
 #### Automated Verification
 
 - Integration test suite passes: `npm run test:integration:api`
-- The new test itself passes (even if it asserts the current wrong behavior — characterization, not fix)
 
 #### Manual Verification
 
@@ -134,13 +135,25 @@ This encapsulates the rowcount check the routes currently omit.
 own), accept an arbitrary partial `listings` update payload, and return a discriminated union
 so callers cannot ignore the not-found case. No changes to any route file in this phase.
 
-#### 2. Adopt in `update.ts` first (already has the correct inline pattern; this proves equivalence)
+#### 2. Write a cookie-auth HTTP integration test for `update.ts` (before migrating it)
+
+**File**: `src/integration/api/idor.test.ts` (append to existing file)
+
+**Intent**: Add a test that signs in as User B, POSTs to `/api/listings/{listingId}/update`
+with valid form data against User A's listing, and asserts (a) the redirect slug is not a
+success slug, and (b) the DB row is unchanged. This establishes the expected HTTP behavior
+before the helper refactor so the migration has automated HTTP-level backing.
+
+**Contract**: Follow the `idor.test.ts:71-116` template. The test must pass before step 3
+(helper migration) begins. No route changes in this step.
+
+#### 3. Adopt in `update.ts` first (already has the correct inline pattern; this proves equivalence)
 
 **File**: `src/pages/api/listings/[id]/update.ts`
 
 **Intent**: Replace the inline `.update().select()` + `data.length === 0` block with a call
-to `updateOwnedListing`. This is the proof-of-equivalence step: the existing integration
-test for `update.ts` must still pass.
+to `updateOwnedListing`. The step-2 HTTP test must still pass after this refactor — that is
+the proof of equivalence.
 
 **Contract**: No behavior change — only structural. The route still redirects to `/dashboard`
 on success and `/dashboard?error=…` on error.
@@ -150,17 +163,17 @@ on success and `/dashboard?error=…` on error.
 #### Automated Verification
 
 - Type checking passes: `npm run typecheck` (or `astro check`)
-- Integration test suite passes (including the Phase 1 characterization test and existing `update.ts` tests): `npm run test:integration:api`
+- Integration test suite passes (including Phase 1 characterization test and the new `update.ts` HTTP test from step 2): `npm run test:integration:api`
 
 #### Manual Verification
 
 - Update a listing title via the UI to confirm `update.ts` still works correctly.
 
-**Implementation Note**: Phase 2A only introduces the helper and adopts it in `update.ts`. The 4 vulnerable routes are migrated in Phase 3. Confirm the existing tests still pass before continuing.
+**Implementation Note**: Phase 2A only introduces the helper and adopts it in `update.ts`. The 4 vulnerable routes are migrated in Phase 3. Confirm all tests still pass before continuing.
 
 ---
 
-## Phase 2B: Document and Improve Error Response (if Case B — RLS error confirmed)
+## Phase 2B: Improve Error Response (Case B only)
 
 *Skip to Phase 3 if Phase 1 reveals Case A (silent success). Only execute Phase 2B if the
 characterization test shows the route already returns an error slug (RLS is the guard).*
@@ -183,8 +196,11 @@ message. Phase 2B upgrades the error mapping and documents Q1's answer.
 (map to `nie-znaleziono` slug) and genuine DB errors (keep `blad-zapisu`). This is a minimal
 improvement to the error UX without restructuring the routes.
 
-**Contract**: Supabase RLS violations return a specific error code (typically `42501` /
-`PGRST116`). Check `error.code` in the existing error branch and route accordingly.
+**Contract**: Use the `error.code` recorded in the Phase 1 test comment. The correct code
+for Postgres/PostgREST RLS permission-denied is `42501` — NOT `PGRST116`, which means
+"zero or multiple rows returned" and is used elsewhere in the codebase as a not-found
+suppressor (a different semantic). Check `error.code === "42501"` in the existing error
+branch and route to `nie-znaleziono`; all other error codes keep the `blad-zapisu` path.
 
 #### 2. Update the characterization test assertion
 
@@ -241,7 +257,14 @@ Then add explicit guards to the 2 surface-narrowed routes (`close`, `reopen`).
 
 **Intent**: These routes already narrow the surface via a prior `.select().single()`, but the
 subsequent `.update()` call itself has no rowcount check. Add `.select()` + zero-row check
-(or `updateOwnedListing` adoption) to the UPDATE call. Add an integration test per route.
+(or `updateOwnedListing` adoption) to the UPDATE call.
+
+**close.ts integration test**: `idor.test.ts:71-91` already covers the non-owner scenario
+for close and passes today (asserts `nie-znaleziono`, DB row unchanged). No new test needed
+for close.ts — the existing test is sufficient to confirm the Phase 3 guard doesn't regress.
+
+**reopen.ts integration test**: No HTTP-level test exists. Add one cookie-auth test for
+reopen following the `idor.test.ts` template.
 
 **Contract**: The change must not alter the `close` / `reopen` success behavior for the happy path — confirmed by the existing integration tests for those routes.
 
@@ -277,7 +300,7 @@ subsequent `.update()` call itself has no rowcount check. Add `.select()` + zero
 ### Integration Tests
 
 - All tests follow the `idor.test.ts:71-116` template (seed via service-role, sign in as different user, POST, assert slug + DB state).
-- One test per route: 1 (Phase 1 characterization) + 1 (Phase 2A/B for commission/set) + 3 (Phase 3 remaining vulnerable) + 2 (close, reopen) = **7 integration tests** total.
+- New tests written: 1 (Phase 1 characterization for commission/set) + 1 (Phase 2A update.ts HTTP test) + 3 (Phase 3: override, toggle, price/set) + 1 (Phase 3: reopen) = **6 new tests**. close.ts already has HTTP coverage in `idor.test.ts:71-91`; total suite count becomes **7** including the pre-existing test.
 
 ### Manual Testing Steps
 
@@ -321,11 +344,12 @@ inlining the original one-liner chain.
 #### Automated
 
 - [ ] 2A.1 Type checking passes: `npm run typecheck`
-- [ ] 2A.2 Integration tests pass (characterization + existing update.ts tests): `npm run test:integration:api`
+- [ ] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api`
+- [ ] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api`
 
 #### Manual
 
-- [ ] 2A.3 Update a listing via UI to confirm update.ts still works correctly
+- [ ] 2A.4 Update a listing via UI to confirm update.ts still works correctly
 
 ### Phase 2B: Improve Error Response (Case B only)
 
