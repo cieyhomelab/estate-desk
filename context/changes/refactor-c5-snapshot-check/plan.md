@@ -153,12 +153,12 @@ alter table public.transaction_snapshots
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `supabase db push`
-- [x] 1.2 CI migration gate passes
+- [x] 1.1 Migration applies cleanly: `supabase db push` — 01bfc7b
+- [x] 1.2 CI migration gate passes — 01bfc7b
 
 #### Manual
 
-- [x] 1.3 Pre-flight query returns zero rows (confirmed before migration file created)
-- [x] 1.4 commission_percent = 0 insert rejected by CHECK constraint
-- [x] 1.5 commission_percent = 50 insert accepted
-- [x] 1.6 npm run test:integration:api passes
+- [x] 1.3 Pre-flight query returns zero rows (confirmed before migration file created) — 01bfc7b
+- [x] 1.4 commission_percent = 0 insert rejected by CHECK constraint — 01bfc7b
+- [x] 1.5 commission_percent = 50 insert accepted — 01bfc7b
+- [x] 1.6 npm run test:integration:api passes — 01bfc7b
