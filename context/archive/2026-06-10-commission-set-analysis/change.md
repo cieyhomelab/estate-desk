@@ -1,9 +1,10 @@
 ---
 change_id: commission-set-analysis
 title: "Analiza przepływu commission/set.ts (trace e2e, luki w testach, blast radius)"
-status: preparing
+status: archived
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-06-12
+archived_at: 2026-06-12T18:40:51Z
 ---
 
 ## Notes
