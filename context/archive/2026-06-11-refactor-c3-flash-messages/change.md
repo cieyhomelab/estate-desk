@@ -1,10 +1,10 @@
 ---
 change_id: refactor-c3-flash-messages
 title: Introduce shared flash-slug → message map and migrate all render sites
-status: impl_reviewed
+status: archived
 created: 2026-06-11
 updated: 2026-06-12
-archived_at: null
+archived_at: 2026-06-12T18:44:01Z
 ---
 
 ## Notes
