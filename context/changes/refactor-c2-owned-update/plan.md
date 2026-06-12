@@ -333,11 +333,11 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [ ] 1.1 Integration test suite passes with characterization test: `npm run test:integration:api`
+- [x] 1.1 Integration test suite passes with characterization test: `npm run test:integration:api`
 
 #### Manual
 
-- [ ] 1.2 Inspect test output; document Open Q1 result (Case A or Case B) in a comment before proceeding
+- [x] 1.2 Inspect test output; document Open Q1 result (Case A or Case B) in a comment before proceeding
 
 ### Phase 2A: Extract Owned-Mutation Helper (Case A only)
 

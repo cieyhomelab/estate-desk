@@ -90,6 +90,32 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     expect((data as any).status).toBe("active");
   });
 
+  it("user B cannot set commission on user A listing — 0-row UPDATE characterization (Open Q1)", async () => {
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/commission/set`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
+      },
+      body: new URLSearchParams({ commission_percent: "5" }),
+      redirect: "manual",
+    });
+
+    expect(res.status).toBe(302);
+    const location = res.headers.get("location") ?? "";
+
+    // Open Q1 result: silent-success — error.code: null
+    // Case A confirmed: 0-row UPDATE under RLS returns error===null; route falsely reports success.
+    // This assertion documents CURRENT (buggy) behavior. Phase 2A will update it to assert the correct slug.
+    expect(location).toContain("prowizja-zapisana");
+
+    // DB row must be unchanged regardless of which case applies
+    const { data } = await supabase.from("listings").select("commission_percent").eq("id", userAListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    expect((data as any).commission_percent).toBeNull();
+  });
+
   it("user B cannot create contact on user A listing (RLS subquery)", async () => {
     expect(userAListingId).toBeDefined();
     const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/contacts/create`, {
