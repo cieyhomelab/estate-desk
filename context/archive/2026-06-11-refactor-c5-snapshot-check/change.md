@@ -1,10 +1,10 @@
 ---
 change_id: refactor-c5-snapshot-check
 title: Add CHECK constraint on transaction_snapshots.commission_percent
-status: impl_reviewed
+status: archived
 created: 2026-06-11
 updated: 2026-06-12
-archived_at: null
+archived_at: 2026-06-12T18:38:09Z
 ---
 
 ## Notes
