@@ -1,9 +1,9 @@
 ---
 change_id: refactor-opportunities
 title: Rank and prioritize refactor opportunities from the tech-debt analysis
-status: planned
+status: archived
 created: 2026-06-11
-updated: 2026-06-11
+updated: 2026-06-12
 
 ## Outcome
 
@@ -12,7 +12,7 @@ Research → planning complete. Four separate implementation plans created:
 - `context/changes/refactor-c1-db-types/` — C1: generated DB types
 - `context/changes/refactor-c3-flash-messages/` — C3: flash slug→message layer
 - `context/changes/refactor-c5-snapshot-check/` — C5: snapshot CHECK constraint
-archived_at: null
+archived_at: 2026-06-12T18:45:20Z
 ---
 
 ## Notes
