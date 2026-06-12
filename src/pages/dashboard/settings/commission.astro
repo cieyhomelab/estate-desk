@@ -3,11 +3,12 @@ import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
 import DashboardHeader from "@/components/DashboardHeader.astro";
 import { createClient } from "@/lib/supabase";
+import { getFlashMessage } from "@/lib/messages";
 import type { CommissionSettings } from "@/types/pricing";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 if (!supabase) {
-  return Astro.redirect("/dashboard?error=" + encodeURIComponent("Błąd konfiguracji bazy danych"));
+  return Astro.redirect("/dashboard?error=blad-konfiguracji");
 }
 
 const {
@@ -24,9 +25,7 @@ const { data: settings, error: fetchError } = await supabase
   .maybeSingle<CommissionSettings>();
 
 if (fetchError) {
-  return Astro.redirect(
-    "/dashboard?error=" + encodeURIComponent("Nie udało się pobrać ustawień prowizji. Spróbuj ponownie."),
-  );
+  return Astro.redirect("/dashboard?error=blad-ladowania");
 }
 
 const error = Astro.url.searchParams.get("error");
@@ -47,17 +46,7 @@ const error = Astro.url.searchParams.get("error");
       <div class="rounded-xl border border-white/[0.08] bg-white/[0.06] p-8 backdrop-blur-sm">
         <h1 class="mb-6 text-2xl font-bold text-white">Ustawienia prowizji</h1>
 
-        {
-          error && (
-            <Banner variant="error">
-              {error === "stawki-nieprawidlowe"
-                ? "Stawki muszą być liczbami z zakresu 0–100."
-                : error === "blad-zapisu"
-                  ? "Nie udało się zapisać ustawień. Spróbuj ponownie."
-                  : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."}
-            </Banner>
-          )
-        }
+        {error && <Banner variant="error">{getFlashMessage(error)}</Banner>}
 
         <form method="POST" action="/api/settings/commission" class="space-y-5">
           <div>

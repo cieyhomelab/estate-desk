@@ -4,6 +4,7 @@ import Banner from "@/components/Banner.astro";
 import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingTabs from "@/components/listings/ListingTabs.astro";
 import { createClient } from "@/lib/supabase";
+import { getFlashMessage } from "@/lib/messages";
 import type { Listing } from "@/types/listings";
 import type { ListingDocument, ListingFile, ListingPhoto } from "@/types/documents";
 
@@ -87,19 +88,7 @@ const success = Astro.url.searchParams.get("success");
     <div class="mx-auto max-w-lg px-6 py-8">
       <ListingTabs listingId={listing.id} activeTab="documents" />
 
-      {
-        error && (
-          <Banner variant="error">
-            {error === "nieprawidlowa-nazwa"
-              ? "Nazwa dokumentu nie może być pusta ani dłuższa niż 500 znaków."
-              : error === "blad-zapisu"
-                ? "Nie udało się zapisać. Spróbuj ponownie."
-                : error === "blad-usuniecia"
-                  ? "Nie udało się usunąć. Spróbuj ponownie."
-                  : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."}
-          </Banner>
-        )
-      }
+      {error && <Banner variant="error">{getFlashMessage(error)}</Banner>}
       {success === "dodano" && <Banner variant="info">Dokument został dodany.</Banner>}
       {success === "usunieto" && <Banner variant="info">Dokument został usunięty.</Banner>}
       {success === "zapisano" && <Banner variant="info">Ustawienia zostały zapisane.</Banner>}

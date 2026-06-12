@@ -5,6 +5,7 @@ import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingTabs from "@/components/listings/ListingTabs.astro";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
+import { getFlashMessage } from "@/lib/messages";
 import { calculateCommissionSplit, type CommissionSplit } from "@/lib/commission";
 import type { Listing } from "@/types/listings";
 import type { PriceHistoryEntry, CommissionSettings } from "@/types/pricing";
@@ -90,25 +91,10 @@ const success = Astro.url.searchParams.get("success");
     <div class="mx-auto max-w-lg px-6 py-8">
       <ListingTabs listingId={listing.id} activeTab="pricing" />
 
-      {
-        error && (
-          <Banner variant="error">
-            {error === "cena-nieprawidlowa"
-              ? "Cena musi być liczbą większą od zera z co najwyżej dwoma miejscami po przecinku."
-              : error === "blad-zapisu"
-                ? "Nie udało się zapisać ceny. Spróbuj ponownie."
-                : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."}
-          </Banner>
-        )
-      }
+      {error && <Banner variant="error">{getFlashMessage(error)}</Banner>}
 
       {success === "cena-zapisana" && <Banner variant="info">Cena została pomyślnie zapisana.</Banner>}
       {success === "prowizja-zapisana" && <Banner variant="info">Prowizja agenta została pomyślnie zapisana.</Banner>}
-      {
-        error === "prowizja-nieprawidlowa" && (
-          <Banner variant="error">Prowizja musi być liczbą większą od zera i nie większą niż 100%.</Banner>
-        )
-      }
 
       <div class="mb-4 rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
         <h2 class="mb-3 text-lg font-bold text-white">Cena wywoławcza</h2>
