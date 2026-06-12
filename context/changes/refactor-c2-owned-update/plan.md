@@ -366,12 +366,12 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 All 7 cookie-auth integration tests pass: `npm run test:integration:api`
-- [x] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 9517e34
+- [x] 3.2 All 7 cookie-auth integration tests pass: `npm run test:integration:api` — 9517e34
+- [x] 3.3 Linting passes: `npm run lint` — 9517e34
 
 #### Manual
 
-- [x] 3.4 Non-owner POST to each of 6 routes → correct error slug, row unchanged
-- [x] 3.5 Happy path for all 6 routes works correctly as authenticated owner
-- [x] 3.6 context/foundation/lessons.md documents the 0-row=error rule
+- [x] 3.4 Non-owner POST to each of 6 routes → correct error slug, row unchanged — 9517e34
+- [x] 3.5 Happy path for all 6 routes works correctly as authenticated owner — 9517e34
+- [x] 3.6 context/foundation/lessons.md documents the 0-row=error rule — 9517e34
