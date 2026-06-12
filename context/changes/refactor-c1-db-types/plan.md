@@ -268,14 +268,14 @@ types that were hand-written in Phase 2.
 
 #### Automated
 
-- [ ] 1.1 `npm run db:gen-types` runs without error
-- [ ] 1.2 Type checking passes: `npm run typecheck`
-- [ ] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 `npm run db:gen-types` runs without error
+- [x] 1.2 Type checking passes: `npm run typecheck`
+- [x] 1.3 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 1.4 database.types.ts contains listings and transaction_snapshots table entries
-- [ ] 1.5 listings.commission_percent typed as number | null in generated file
+- [x] 1.4 database.types.ts contains listings and transaction_snapshots table entries
+- [x] 1.5 listings.commission_percent typed as number | null in generated file
 
 ### Phase 2: Alias Domain Types onto Generated Types
 

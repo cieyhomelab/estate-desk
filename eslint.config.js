@@ -113,6 +113,7 @@ const nodeConfigFiles = tseslint.config({
 });
 
 export default tseslint.config(
+  { ignores: ["src/types/database.types.ts"] },
   includeIgnoreFile(gitignorePath),
   baseConfig,
   reactConfig,

@@ -1,9 +1,9 @@
 ---
 change_id: refactor-c1-db-types
 title: Generate database.types.ts and replace hand-maintained domain type copies
-status: plan_reviewed
+status: implementing
 created: 2026-06-11
-updated: 2026-06-11
+updated: 2026-06-12
 archived_at: null
 ---
 
