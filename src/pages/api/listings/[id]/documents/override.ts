@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { updateOwnedListing } from "@/lib/owned-mutation";
 
 export const POST: APIRoute = async (context) => {
   const id = context.params.id;
@@ -22,14 +23,11 @@ export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const override = form.get("override") === "true";
 
-  const { error } = await supabase
-    .from("listings")
-    .update({ checklist_override: override })
-    .eq("id", id)
-    .eq("user_id", user.id);
+  const result = await updateOwnedListing(supabase, id, user.id, { checklist_override: override });
 
-  if (error) {
-    return context.redirect(`/dashboard/listings/${id}/documents?error=blad-zapisu`);
+  if (!result.ok) {
+    const slug = result.reason === "not-found" ? "nie-znaleziono" : "blad-zapisu";
+    return context.redirect(`/dashboard/listings/${id}/documents?error=${slug}`);
   }
 
   return context.redirect(`/dashboard/listings/${id}/documents?success=zapisano`);

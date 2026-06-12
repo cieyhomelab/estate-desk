@@ -343,13 +343,13 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [x] 2A.1 Type checking passes: `npm run typecheck`
-- [x] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api`
-- [x] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api`
+- [x] 2A.1 Type checking passes: `npm run typecheck` — 2dfafd7
+- [x] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api` — 2dfafd7
+- [x] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api` — 2dfafd7
 
 #### Manual
 
-- [x] 2A.4 Update a listing via UI to confirm update.ts still works correctly
+- [x] 2A.4 Update a listing via UI to confirm update.ts still works correctly — 2dfafd7
 
 ### Phase 2B: Improve Error Response (Case B only)
 
@@ -366,12 +366,12 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 All 7 cookie-auth integration tests pass: `npm run test:integration:api`
-- [ ] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 All 7 cookie-auth integration tests pass: `npm run test:integration:api`
+- [x] 3.3 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.4 Non-owner POST to each of 6 routes → correct error slug, row unchanged
-- [ ] 3.5 Happy path for all 6 routes works correctly as authenticated owner
-- [ ] 3.6 context/foundation/lessons.md documents the 0-row=error rule
+- [x] 3.4 Non-owner POST to each of 6 routes → correct error slug, row unchanged
+- [x] 3.5 Happy path for all 6 routes works correctly as authenticated owner
+- [x] 3.6 context/foundation/lessons.md documents the 0-row=error rule

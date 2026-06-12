@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { updateOwnedListing } from "@/lib/owned-mutation";
 
 export const POST: APIRoute = async (context) => {
   const id = context.params.id;
@@ -48,13 +49,9 @@ export const POST: APIRoute = async (context) => {
   }
 
   // Intentionally preserves notary_name, notary_city, transaction_date, transaction_notes — reopen per plan transaction-close Phase 3
-  const { error: updateListingError } = await supabase
-    .from("listings")
-    .update({ status: "active", closed_at: null })
-    .eq("id", id)
-    .eq("user_id", user.id);
+  const result = await updateOwnedListing(supabase, id, user.id, { status: "active", closed_at: null });
 
-  if (updateListingError) {
+  if (!result.ok) {
     return context.redirect("/dashboard?error=blad-zapisu");
   }
 

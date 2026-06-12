@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { updateOwnedListing } from "@/lib/owned-mutation";
 
 export const POST: APIRoute = async (context) => {
   const { id } = context.params;
@@ -24,10 +25,11 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/listings/${id}/pricing?error=prowizja-nieprawidlowa`);
   }
 
-  const { error } = await supabase.from("listings").update({ commission_percent }).eq("id", id).eq("user_id", user.id);
+  const result = await updateOwnedListing(supabase, id, user.id, { commission_percent });
 
-  if (error) {
-    return context.redirect(`/dashboard/listings/${id}/pricing?error=blad-zapisu`);
+  if (!result.ok) {
+    const slug = result.reason === "not-found" ? "nie-znaleziono" : "blad-zapisu";
+    return context.redirect(`/dashboard/listings/${id}/pricing?error=${slug}`);
   }
 
   return context.redirect(`/dashboard/listings/${id}/pricing?success=prowizja-zapisana`);

@@ -8,6 +8,8 @@ describe("IDOR — authenticated cross-account access is denied", () => {
   let userAId: string;
   let userBId: string;
   let userAListingId: string;
+  let userADoneListingId: string;
+  let userADocId: string;
   let userBCookie: string;
 
   beforeAll(async () => {
@@ -50,15 +52,38 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- supabase-js returns any without DB type definitions
     userAListingId = listing.id;
 
-    // Insert 1 unchecked document so the close gate is relevant
-    const { error: docErr } = await supabase.from("listing_documents").insert({
-      listing_id: userAListingId,
-      user_id: userAId,
-      label: "Akt własności",
-      is_checked: false,
-      position: 99,
-    });
+    const { data: doneListing, error: doneListingErr } = await supabase
+      .from("listings")
+      .insert({
+        user_id: userAId,
+        type: "sale",
+        address: "ul. Ofiary IDOR 2, Warszawa",
+        owner_name: "User A Owner",
+        owner_phone: "+48 600 000 001",
+        owner_email: "user-a@test.local",
+        status: "done",
+      })
+      .select("id")
+      .single();
+    if (doneListingErr) throw new Error(`Failed to insert user A done listing: ${doneListingErr.message}`);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- supabase-js returns any without DB type definitions
+    userADoneListingId = doneListing.id;
+
+    // Insert 1 unchecked document so the close gate is relevant; capture id for toggle test
+    const { data: doc, error: docErr } = await supabase
+      .from("listing_documents")
+      .insert({
+        listing_id: userAListingId,
+        user_id: userAId,
+        label: "Akt własności",
+        is_checked: false,
+        position: 99,
+      })
+      .select("id")
+      .single();
     if (docErr) throw new Error(`Failed to insert document: ${docErr.message}`);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- supabase-js returns any without DB type definitions
+    userADocId = doc.id;
   });
 
   afterAll(async () => {
@@ -90,7 +115,7 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     expect((data as any).status).toBe("active");
   });
 
-  it("user B cannot set commission on user A listing — 0-row UPDATE characterization (Open Q1)", async () => {
+  it("user B cannot set commission on user A listing — updateOwnedListing guard", async () => {
     const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/commission/set`, {
       method: "POST",
       headers: {
@@ -106,11 +131,10 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     const location = res.headers.get("location") ?? "";
 
     // Open Q1 result: silent-success — error.code: null
-    // Case A confirmed: 0-row UPDATE under RLS returns error===null; route falsely reports success.
-    // This assertion documents CURRENT (buggy) behavior. Phase 2A will update it to assert the correct slug.
-    expect(location).toContain("prowizja-zapisana");
+    // Case A confirmed: 0-row UPDATE under RLS returns error===null; updateOwnedListing now guards this.
+    expect(location).toContain("nie-znaleziono");
 
-    // DB row must be unchanged regardless of which case applies
+    // DB row must be unchanged
     const { data } = await supabase.from("listings").select("commission_percent").eq("id", userAListingId).single();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
     expect((data as any).commission_percent).toBeNull();
@@ -167,5 +191,93 @@ describe("IDOR — authenticated cross-account access is denied", () => {
       .eq("listing_id", userAListingId)
       .eq("name", "AttackerContact");
     expect(count).toBe(0);
+  });
+
+  it("user B cannot override document checklist on user A listing (0-row UPDATE guard)", async () => {
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/documents/override`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
+      },
+      body: new URLSearchParams({ override: "true" }),
+      redirect: "manual",
+    });
+
+    expect(res.status).toBe(302);
+    const location = res.headers.get("location") ?? "";
+    expect(location).not.toContain("zapisano");
+    expect(location).toContain("nie-znaleziono");
+
+    const { data } = await supabase.from("listings").select("checklist_override").eq("id", userAListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    expect((data as any).checklist_override).toBeFalsy();
+  });
+
+  it("user B cannot toggle user A document (0-row UPDATE guard)", async () => {
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/documents/${userADocId}/toggle`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
+      },
+      body: new URLSearchParams({ checked: "true" }),
+      redirect: "manual",
+    });
+
+    expect(res.status).toBe(302);
+    const location = res.headers.get("location") ?? "";
+    expect(location).toContain("nie-znaleziono");
+
+    const { data } = await supabase.from("listing_documents").select("is_checked").eq("id", userADocId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    expect((data as any).is_checked).toBe(false);
+  });
+
+  it("user B cannot set price on user A listing (0-row UPDATE guard)", async () => {
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/price/set`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
+      },
+      body: new URLSearchParams({ price: "500000" }),
+      redirect: "manual",
+    });
+
+    expect(res.status).toBe(302);
+    const location = res.headers.get("location") ?? "";
+    expect(location).not.toContain("cena-zapisana");
+    // RLS blocks price_history INSERT before updateOwnedListing is reached → blad-zapisu slug
+    expect(location).toContain("blad-zapisu");
+
+    const { data } = await supabase.from("listings").select("asking_price").eq("id", userAListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    expect((data as any).asking_price).toBeNull();
+  });
+
+  it("user B cannot reopen user A done listing (0-row UPDATE guard)", async () => {
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userADoneListingId}/reopen`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
+      },
+      body: new URLSearchParams({}),
+      redirect: "manual",
+    });
+
+    expect(res.status).toBe(302);
+    const location = res.headers.get("location") ?? "";
+    expect(location).not.toContain("wznowiono");
+    expect(location).toContain("nie-znaleziono");
+
+    const { data } = await supabase.from("listings").select("status").eq("id", userADoneListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    expect((data as any).status).toBe("done");
   });
 });
