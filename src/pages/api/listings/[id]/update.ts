@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { updateOwnedListing } from "@/lib/owned-mutation";
 
 export const POST: APIRoute = async (context) => {
   const id = context.params.id;
@@ -35,19 +36,17 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/listings/${id}/edit?error=${encodeURIComponent("Adres jest wymagany")}`);
   }
 
-  const { data, error } = await supabase
-    .from("listings")
-    .update({ type, address, owner_name, owner_phone, owner_email })
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .select();
+  const result = await updateOwnedListing(supabase, id, user.id, {
+    type,
+    address,
+    owner_name,
+    owner_phone,
+    owner_email,
+  });
 
-  if (error) {
-    return context.redirect(`/dashboard?error=${encodeURIComponent(error.message)}`);
-  }
-
-  if (data.length === 0) {
-    return context.redirect(`/dashboard?error=${encodeURIComponent("Ogłoszenie nie zostało znalezione")}`);
+  if (!result.ok) {
+    const msg = result.reason === "not-found" ? "Ogłoszenie nie zostało znalezione" : (result.error as Error).message;
+    return context.redirect(`/dashboard?error=${encodeURIComponent(msg)}`);
   }
 
   return context.redirect("/dashboard");

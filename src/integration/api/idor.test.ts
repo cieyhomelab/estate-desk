@@ -116,6 +116,34 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     expect((data as any).commission_percent).toBeNull();
   });
 
+  it("user B cannot update user A listing via update.ts (0-row UPDATE rowcount check)", async () => {
+    const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/update`, {
+      method: "POST",
+      headers: {
+        Cookie: userBCookie,
+        "Content-Type": "application/x-www-form-urlencoded",
+        Origin: TEST_BASE_URL,
+      },
+      body: new URLSearchParams({
+        type: "sale",
+        address: "ul. Atakujacy 1, Warszawa",
+        owner_name: "Attacker",
+        owner_phone: "+48 600 000 999",
+        owner_email: "attacker@test.local",
+      }),
+      redirect: "manual",
+    });
+
+    expect(res.status).toBe(302);
+    const location = res.headers.get("location") ?? "";
+    // update.ts currently redirects with encoded Polish error message (not a slug); assert any error redirect
+    expect(location).toContain("error");
+
+    const { data } = await supabase.from("listings").select("address").eq("id", userAListingId).single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
+    expect((data as any).address).toBe("ul. Ofiary IDOR 1, Warszawa");
+  });
+
   it("user B cannot create contact on user A listing (RLS subquery)", async () => {
     expect(userAListingId).toBeDefined();
     const res = await fetch(`${TEST_BASE_URL}/api/listings/${userAListingId}/contacts/create`, {

@@ -333,23 +333,23 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [x] 1.1 Integration test suite passes with characterization test: `npm run test:integration:api`
+- [x] 1.1 Integration test suite passes with characterization test: `npm run test:integration:api` — 15e0149
 
 #### Manual
 
-- [x] 1.2 Inspect test output; document Open Q1 result (Case A or Case B) in a comment before proceeding
+- [x] 1.2 Inspect test output; document Open Q1 result (Case A or Case B) in a comment before proceeding — 15e0149
 
 ### Phase 2A: Extract Owned-Mutation Helper (Case A only)
 
 #### Automated
 
-- [ ] 2A.1 Type checking passes: `npm run typecheck`
-- [ ] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api`
-- [ ] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api`
+- [x] 2A.1 Type checking passes: `npm run typecheck`
+- [x] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api`
+- [x] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api`
 
 #### Manual
 
-- [ ] 2A.4 Update a listing via UI to confirm update.ts still works correctly
+- [x] 2A.4 Update a listing via UI to confirm update.ts still works correctly
 
 ### Phase 2B: Improve Error Response (Case B only)
 
