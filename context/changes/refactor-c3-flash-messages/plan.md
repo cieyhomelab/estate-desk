@@ -275,21 +275,21 @@ and asserts the Banner text. Optionally also asserts a page-specific slug per pa
 
 #### Manual
 
-- [ ] 1.4 pricing.astro?error=blad-zapisu shows generic text (not "ceny")
-- [ ] 1.5 pricing.astro?error=prowizja-nieprawidlowa shows commission message
-- [ ] 1.6 pricing.astro?error=cena-nieprawidlowa shows price message
+- [x] 1.4 pricing.astro?error=blad-zapisu shows generic text (not "ceny")
+- [x] 1.5 pricing.astro?error=prowizja-nieprawidlowa shows commission message
+- [x] 1.6 pricing.astro?error=cena-nieprawidlowa shows price message
 
 ### Phase 2: Migrate Remaining Render Sites
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 All 5 Playwright flash-text assertions pass: `npm run test:e2e`
+- [x] 2.1 Type checking passes: `npm run typecheck` — 2777c3c
+- [x] 2.2 Linting passes: `npm run lint` — 2777c3c
+- [x] 2.3 All 5 Playwright flash-text assertions pass: `npm run test:e2e` — 2777c3c
 
 #### Manual
 
-- [ ] 2.4 All 5 pages show correct generic text for blad-zapisu
-- [ ] 2.5 All 5 pages show correct specific text for page-specific slugs
-- [ ] 2.6 All 5 pages show fallback text for unknown slugs
-- [ ] 2.7 Success banners unaffected on all pages
+- [x] 2.4 All 5 pages show correct generic text for blad-zapisu
+- [x] 2.5 All 5 pages show correct specific text for page-specific slugs
+- [x] 2.6 All 5 pages show fallback text for unknown slugs
+- [x] 2.7 Success banners unaffected on all pages
