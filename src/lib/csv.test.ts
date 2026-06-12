@@ -9,6 +9,7 @@ function makeListing(overrides: Partial<Listing> = {}): Listing {
     type: "sale",
     status: "active",
     address: "ul. Testowa 1, Warszawa",
+    checklist_override: false,
     owner_name: "Jan Kowalski",
     owner_phone: null,
     owner_email: null,
@@ -45,8 +46,8 @@ describe("listingsToCsv", () => {
     expect(cols[1]).toBe("Ukończone");
   });
 
-  it("null address renders as empty cell", () => {
-    const csv = listingsToCsv([makeListing({ address: null })]);
+  it("empty address renders as empty cell", () => {
+    const csv = listingsToCsv([makeListing({ address: "" })]);
     const [, row] = csv.split("\r\n");
     const cols = row.split(";");
     expect(cols[0]).toBe("");

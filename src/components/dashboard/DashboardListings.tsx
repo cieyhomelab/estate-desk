@@ -53,8 +53,7 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
       if (min !== null && !isNaN(min) && listing.asking_price < min) return false;
       if (max !== null && !isNaN(max) && listing.asking_price > max) return false;
     }
-    if (filters.city !== "" && !(listing.address ?? "").toLowerCase().includes(filters.city.toLowerCase()))
-      return false;
+    if (filters.city !== "" && !listing.address.toLowerCase().includes(filters.city.toLowerCase())) return false;
     return true;
   });
 

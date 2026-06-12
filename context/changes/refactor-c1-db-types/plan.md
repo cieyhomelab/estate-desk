@@ -268,26 +268,26 @@ types that were hand-written in Phase 2.
 
 #### Automated
 
-- [x] 1.1 `npm run db:gen-types` runs without error
-- [x] 1.2 Type checking passes: `npm run typecheck`
-- [x] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 `npm run db:gen-types` runs without error — 2747624
+- [x] 1.2 Type checking passes: `npm run typecheck` — 2747624
+- [x] 1.3 Linting passes: `npm run lint` — 2747624
 
 #### Manual
 
-- [x] 1.4 database.types.ts contains listings and transaction_snapshots table entries
-- [x] 1.5 listings.commission_percent typed as number | null in generated file
+- [x] 1.4 database.types.ts contains listings and transaction_snapshots table entries — 2747624
+- [x] 1.5 listings.commission_percent typed as number | null in generated file — 2747624
 
 ### Phase 2: Alias Domain Types onto Generated Types
 
 #### Automated
 
-- [ ] 2.1 Type checking passes with all drift resolved: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes with all drift resolved: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Listing.commission_percent typed as number | null in IDE type hints
-- [ ] 2.4 No runtime behavior change confirmed
+- [x] 2.3 Listing.commission_percent typed as number | null in IDE type hints
+- [x] 2.4 No runtime behavior change confirmed
 
 ### Phase 3: Type the Supabase Client and Migrate Call Sites
 

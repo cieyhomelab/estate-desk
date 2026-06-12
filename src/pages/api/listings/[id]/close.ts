@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import type { Listing } from "@/types/listings";
 import { calculateCommissionSplit } from "@/lib/commission";
 
 export const POST: APIRoute = async (context) => {
@@ -32,7 +33,7 @@ export const POST: APIRoute = async (context) => {
     .select("id, status, asking_price, commission_percent")
     .eq("id", id)
     .eq("user_id", user.id)
-    .single<{ id: string; status: string; asking_price: number | null; commission_percent: number | null }>();
+    .single<Pick<Listing, "id" | "status" | "asking_price" | "commission_percent">>();
 
   if (listingError) {
     return context.redirect("/dashboard?error=nie-znaleziono");
