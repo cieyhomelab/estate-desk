@@ -293,11 +293,11 @@ types that were hand-written in Phase 2.
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Tests pass: `npm run test`
+- [x] 3.1 Type checking passes: `npm run typecheck` — b16e179
+- [x] 3.2 Linting passes: `npm run lint` — b16e179
+- [x] 3.3 Tests pass: `npm run test` — b16e179
 
 #### Manual
 
-- [x] 3.4 Hovering over .from('listings').select() result shows typed row, not any
-- [x] 3.5 Application loads and functions normally (dashboard, create, update, close, CSV)
+- [x] 3.4 Hovering over .from('listings').select() result shows typed row, not any — b16e179
+- [x] 3.5 Application loads and functions normally (dashboard, create, update, close, CSV) — b16e179
