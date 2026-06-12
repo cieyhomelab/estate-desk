@@ -257,6 +257,12 @@ describe("IDOR — authenticated cross-account access is denied", () => {
     const { data } = await supabase.from("listings").select("asking_price").eq("id", userAListingId).single();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access -- supabase-js returns any
     expect((data as any).asking_price).toBeNull();
+
+    const { count } = await supabase
+      .from("price_history")
+      .select("id", { count: "exact", head: true })
+      .eq("listing_id", userAListingId);
+    expect(count).toBe(0);
   });
 
   it("user B cannot reopen user A done listing (0-row UPDATE guard)", async () => {

@@ -6,7 +6,10 @@ export const POST: APIRoute = async (context) => {
   const { id } = context.params;
   const supabase = createClient(context.request.headers, context.cookies);
 
-  if (!supabase || !id) {
+  if (!id) {
+    return context.redirect(`/dashboard?error=blad-serwera`);
+  }
+  if (!supabase) {
     return context.redirect(`/dashboard/listings/${id}/pricing?error=blad-serwera`);
   }
 

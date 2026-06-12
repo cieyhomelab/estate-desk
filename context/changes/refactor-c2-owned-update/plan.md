@@ -245,6 +245,8 @@ Then add explicit guards to the 2 surface-narrowed routes (`close`, `reopen`).
 
 **Intent** (Case A path): Replace the bare `.update().eq().eq()` call with `updateOwnedListing` from `src/lib/owned-mutation.ts`. Each route gets its own cookie-auth integration test (non-owner POST → assert slug + unchanged row).
 
+**Addendum**: `toggle.ts` intentionally kept the equivalent inline `.select()` + `data.length === 0` pattern — `updateOwnedListing` is scoped to the `listings` table; toggle.ts updates `listing_documents`. Protection is equivalent and tested. See L1 in `context/foundation/lessons.md` for the exception rule.
+
 **Intent** (Case B path): Add the `error.code` discrimination from Phase 2B to each route. Each route gets its own cookie-auth integration test asserting the correct error slug.
 
 **Contract**: One route + one test per commit. The test must pass before the next route is touched.

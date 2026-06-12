@@ -45,7 +45,10 @@ export const POST: APIRoute = async (context) => {
   });
 
   if (!result.ok) {
-    const msg = result.reason === "not-found" ? "Ogłoszenie nie zostało znalezione" : (result.error as Error).message;
+    const msg =
+      result.reason === "not-found"
+        ? "Ogłoszenie nie zostało znalezione"
+        : (result.error as { message: string }).message;
     return context.redirect(`/dashboard?error=${encodeURIComponent(msg)}`);
   }
 

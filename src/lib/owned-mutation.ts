@@ -2,7 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 type OwnedMutationResult<T> =
   | { ok: true; data: T[] }
-  | { ok: false; reason: "not-found" | "db-error"; error?: unknown };
+  | { ok: false; reason: "not-found" }
+  | { ok: false; reason: "db-error"; error: unknown };
 
 export async function updateOwnedListing<T extends Record<string, unknown>>(
   supabase: SupabaseClient,
