@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { calculateCommissionSplit } from "@/lib/commission";
+import { updateOwnedListing } from "@/lib/owned-mutation";
 
 export const POST: APIRoute = async (context) => {
   const id = context.params.id;
@@ -106,20 +107,16 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/dashboard/listings/${id}/close?error=${slug}`);
   }
 
-  const { error: updateError } = await supabase
-    .from("listings")
-    .update({
-      status: "done",
-      notary_name,
-      notary_city,
-      transaction_date,
-      transaction_notes,
-      closed_at: new Date().toISOString(),
-    })
-    .eq("id", id)
-    .eq("user_id", user.id);
+  const result = await updateOwnedListing(supabase, id, user.id, {
+    status: "done",
+    notary_name,
+    notary_city,
+    transaction_date,
+    transaction_notes,
+    closed_at: new Date().toISOString(),
+  });
 
-  if (updateError) {
+  if (!result.ok) {
     // Orphaned snapshot accepted MVP risk — per plan transaction-close "What We're NOT Doing"
     return context.redirect(`/dashboard/listings/${id}/close?error=blad-zapisu`);
   }

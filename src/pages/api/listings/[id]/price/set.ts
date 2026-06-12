@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { updateOwnedListing } from "@/lib/owned-mutation";
 
 export const POST: APIRoute = async (context) => {
   const supabase = createClient(context.request.headers, context.cookies);
@@ -36,14 +37,11 @@ export const POST: APIRoute = async (context) => {
 
   // Second write — denormalized cache of price_history. Sequential (not atomic) by design; on failure here the
   // price_history row is already committed. User must resubmit the form to reconcile. See plan pricing-and-commission Phase 3.
-  const { error: updateError } = await supabase
-    .from("listings")
-    .update({ asking_price: parsedPrice })
-    .eq("id", id)
-    .eq("user_id", user.id);
+  const result = await updateOwnedListing(supabase, id, user.id, { asking_price: parsedPrice });
 
-  if (updateError) {
-    return context.redirect(`/dashboard/listings/${id}/pricing?error=blad-zapisu`);
+  if (!result.ok) {
+    const slug = result.reason === "not-found" ? "nie-znaleziono" : "blad-zapisu";
+    return context.redirect(`/dashboard/listings/${id}/pricing?error=${slug}`);
   }
 
   return context.redirect(`/dashboard/listings/${id}/pricing?success=cena-zapisana`);

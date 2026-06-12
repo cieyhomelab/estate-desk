@@ -22,14 +22,19 @@ export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const checked = form.get("checked") === "true";
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("listing_documents")
     .update({ is_checked: checked })
     .eq("id", docId)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .select();
 
   if (error) {
     return context.redirect(`/dashboard/listings/${id}/documents?error=blad-zapisu`);
+  }
+
+  if (data.length === 0) {
+    return context.redirect(`/dashboard/listings/${id}/documents?error=nie-znaleziono`);
   }
 
   return context.redirect(`/dashboard/listings/${id}/documents`);

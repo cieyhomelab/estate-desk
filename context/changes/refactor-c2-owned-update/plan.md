@@ -245,6 +245,8 @@ Then add explicit guards to the 2 surface-narrowed routes (`close`, `reopen`).
 
 **Intent** (Case A path): Replace the bare `.update().eq().eq()` call with `updateOwnedListing` from `src/lib/owned-mutation.ts`. Each route gets its own cookie-auth integration test (non-owner POST → assert slug + unchanged row).
 
+**Addendum**: `toggle.ts` intentionally kept the equivalent inline `.select()` + `data.length === 0` pattern — `updateOwnedListing` is scoped to the `listings` table; toggle.ts updates `listing_documents`. Protection is equivalent and tested. See L1 in `context/foundation/lessons.md` for the exception rule.
+
 **Intent** (Case B path): Add the `error.code` discrimination from Phase 2B to each route. Each route gets its own cookie-auth integration test asserting the correct error slug.
 
 **Contract**: One route + one test per commit. The test must pass before the next route is touched.
@@ -333,23 +335,23 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [ ] 1.1 Integration test suite passes with characterization test: `npm run test:integration:api`
+- [x] 1.1 Integration test suite passes with characterization test: `npm run test:integration:api` — 15e0149
 
 #### Manual
 
-- [ ] 1.2 Inspect test output; document Open Q1 result (Case A or Case B) in a comment before proceeding
+- [x] 1.2 Inspect test output; document Open Q1 result (Case A or Case B) in a comment before proceeding — 15e0149
 
 ### Phase 2A: Extract Owned-Mutation Helper (Case A only)
 
 #### Automated
 
-- [ ] 2A.1 Type checking passes: `npm run typecheck`
-- [ ] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api`
-- [ ] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api`
+- [x] 2A.1 Type checking passes: `npm run typecheck` — 2dfafd7
+- [x] 2A.2 Cookie-auth HTTP test for update.ts passes (non-owner POST → not-found slug, row unchanged): `npm run test:integration:api` — 2dfafd7
+- [x] 2A.3 Integration tests pass after helper migration (Phase 1 characterization + update.ts HTTP test): `npm run test:integration:api` — 2dfafd7
 
 #### Manual
 
-- [ ] 2A.4 Update a listing via UI to confirm update.ts still works correctly
+- [x] 2A.4 Update a listing via UI to confirm update.ts still works correctly — 2dfafd7
 
 ### Phase 2B: Improve Error Response (Case B only)
 
@@ -366,12 +368,12 @@ inlining the original one-liner chain.
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 All 7 cookie-auth integration tests pass: `npm run test:integration:api`
-- [ ] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 9517e34
+- [x] 3.2 All 7 cookie-auth integration tests pass: `npm run test:integration:api` — 9517e34
+- [x] 3.3 Linting passes: `npm run lint` — 9517e34
 
 #### Manual
 
-- [ ] 3.4 Non-owner POST to each of 6 routes → correct error slug, row unchanged
-- [ ] 3.5 Happy path for all 6 routes works correctly as authenticated owner
-- [ ] 3.6 context/foundation/lessons.md documents the 0-row=error rule
+- [x] 3.4 Non-owner POST to each of 6 routes → correct error slug, row unchanged — 9517e34
+- [x] 3.5 Happy path for all 6 routes works correctly as authenticated owner — 9517e34
+- [x] 3.6 context/foundation/lessons.md documents the 0-row=error rule — 9517e34
