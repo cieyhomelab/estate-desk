@@ -58,3 +58,23 @@ test("pricing.astro?error=prowizja-nieprawidlowa shows commission-specific messa
     "Prowizja musi być liczbą większą od zera i nie większą niż 100%.",
   );
 });
+
+test("documents.astro?error=blad-zapisu shows generic write-error text", async () => {
+  await page.goto(`/dashboard/listings/${listingId}/documents?error=blad-zapisu`);
+  await expect(page.getByRole("alert")).toContainText("Nie udało się zapisać. Spróbuj ponownie.");
+});
+
+test("contacts.astro?error=blad-zapisu shows generic write-error text", async () => {
+  await page.goto(`/dashboard/listings/${listingId}/contacts?error=blad-zapisu`);
+  await expect(page.getByRole("alert")).toContainText("Nie udało się zapisać. Spróbuj ponownie.");
+});
+
+test("close.astro?error=blad-zapisu shows generic write-error text", async () => {
+  await page.goto(`/dashboard/listings/${listingId}/close?error=blad-zapisu`);
+  await expect(page.getByRole("alert")).toContainText("Nie udało się zapisać. Spróbuj ponownie.");
+});
+
+test("settings/commission?error=blad-zapisu shows generic write-error text", async () => {
+  await page.goto(`/dashboard/settings/commission?error=blad-zapisu`);
+  await expect(page.getByRole("alert")).toContainText("Nie udało się zapisać. Spróbuj ponownie.");
+});

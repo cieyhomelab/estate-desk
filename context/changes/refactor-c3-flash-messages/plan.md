@@ -269,9 +269,9 @@ and asserts the Banner text. Optionally also asserts a page-specific slug per pa
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Playwright flash-text assertion for pricing.astro passes: `npm run test:e2e`
+- [x] 1.1 Type checking passes: `npm run typecheck` — bd99186
+- [x] 1.2 Linting passes: `npm run lint` — bd99186
+- [x] 1.3 Playwright flash-text assertion for pricing.astro passes: `npm run test:e2e` — bd99186
 
 #### Manual
 
@@ -283,9 +283,9 @@ and asserts the Banner text. Optionally also asserts a page-specific slug per pa
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 All 5 Playwright flash-text assertions pass: `npm run test:e2e`
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 All 5 Playwright flash-text assertions pass: `npm run test:e2e`
 
 #### Manual
 

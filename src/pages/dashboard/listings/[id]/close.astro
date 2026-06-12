@@ -4,6 +4,7 @@ import Banner from "@/components/Banner.astro";
 import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingTabs from "@/components/listings/ListingTabs.astro";
 import { createClient } from "@/lib/supabase";
+import { getFlashMessage } from "@/lib/messages";
 import { formatPLN } from "@/lib/utils";
 import type { Listing } from "@/types/listings";
 import { calculateCommissionSplit, type CommissionSplit } from "@/lib/commission";
@@ -113,18 +114,7 @@ const error = Astro.url.searchParams.get("error");
       <ListingTabs listingId={listing.id} activeTab="close" />
 
       {success === "zamknieto" && <Banner variant="info">Transakcja została pomyślnie zamknięta.</Banner>}
-      {error === "juz-zamknieta" && <Banner variant="error">Transakcja jest już zamknięta.</Banner>}
-      {
-        error === "brakujace-dokumenty" && (
-          <Banner variant="error">Nie można zamknąć transakcji — brakuje wymaganych dokumentów.</Banner>
-        )
-      }
-      {error === "blad-zapisu" && <Banner variant="error">Nie udało się zapisać. Spróbuj ponownie.</Banner>}
-      {
-        error && !["juz-zamknieta", "brakujace-dokumenty", "blad-zapisu"].includes(error) && (
-          <Banner variant="error">Wystąpił nieoczekiwany błąd. Spróbuj ponownie.</Banner>
-        )
-      }
+      {error && <Banner variant="error">{getFlashMessage(error)}</Banner>}
 
       {
         listing.status === "active" ? (
