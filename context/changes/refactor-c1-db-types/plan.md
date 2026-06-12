@@ -281,23 +281,23 @@ types that were hand-written in Phase 2.
 
 #### Automated
 
-- [x] 2.1 Type checking passes with all drift resolved: `npm run typecheck`
-- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes with all drift resolved: `npm run typecheck` — 17ad716
+- [x] 2.2 Linting passes: `npm run lint` — 17ad716
 
 #### Manual
 
-- [x] 2.3 Listing.commission_percent typed as number | null in IDE type hints
-- [x] 2.4 No runtime behavior change confirmed
+- [x] 2.3 Listing.commission_percent typed as number | null in IDE type hints — 17ad716
+- [x] 2.4 No runtime behavior change confirmed — 17ad716
 
 ### Phase 3: Type the Supabase Client and Migrate Call Sites
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Tests pass: `npm run test`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Tests pass: `npm run test`
 
 #### Manual
 
-- [ ] 3.4 Hovering over .from('listings').select() result shows typed row, not any
-- [ ] 3.5 Application loads and functions normally (dashboard, create, update, close, CSV)
+- [x] 3.4 Hovering over .from('listings').select() result shows typed row, not any
+- [x] 3.5 Application loads and functions normally (dashboard, create, update, close, CSV)

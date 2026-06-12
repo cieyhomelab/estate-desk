@@ -10,6 +10,9 @@ export const POST: APIRoute = async (context) => {
   }
 
   const { id } = context.params;
+  if (!id) {
+    return context.redirect("/dashboard?error=blad-zapisu");
+  }
 
   const {
     data: { user },
