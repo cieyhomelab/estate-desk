@@ -8,7 +8,7 @@ import type { CommissionSettings } from "@/types/pricing";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 if (!supabase) {
-  return Astro.redirect("/dashboard?error=" + encodeURIComponent("Błąd konfiguracji bazy danych"));
+  return Astro.redirect("/dashboard?error=blad-konfiguracji");
 }
 
 const {
@@ -25,9 +25,7 @@ const { data: settings, error: fetchError } = await supabase
   .maybeSingle<CommissionSettings>();
 
 if (fetchError) {
-  return Astro.redirect(
-    "/dashboard?error=" + encodeURIComponent("Nie udało się pobrać ustawień prowizji. Spróbuj ponownie."),
-  );
+  return Astro.redirect("/dashboard?error=blad-ladowania");
 }
 
 const error = Astro.url.searchParams.get("error");

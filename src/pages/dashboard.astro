@@ -5,6 +5,7 @@ import DashboardHeader from "@/components/DashboardHeader.astro";
 import DashboardListings from "@/components/dashboard/DashboardListings";
 import { createClient } from "@/lib/supabase";
 import { formatPLN } from "@/lib/utils";
+import { getFlashMessage } from "@/lib/messages";
 import type { Listing } from "@/types/listings";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
@@ -95,7 +96,7 @@ function formatStatMoney(value: number): string {
       </div>
 
       {urlSuccess === "wznowiono" && <Banner variant="info">Ogłoszenie zostało wznowione.</Banner>}
-      {urlError && <Banner variant="error">{urlError}</Banner>}
+      {urlError && <Banner variant="error">{getFlashMessage(urlError)}</Banner>}
       {fetchError && <Banner variant="error">{fetchError}</Banner>}
 
       <DashboardListings listings={listings} snapshotMap={snapshotRecord} hasError={!!fetchError} client:load />
