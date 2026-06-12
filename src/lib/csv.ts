@@ -23,7 +23,7 @@ export function listingsToCsv(listings: Listing[]): string {
   const rows = [HEADER];
   for (const l of listings) {
     const fields = [
-      escapeField(l.address ?? ""),
+      escapeField(l.address),
       escapeField(STATUS_LABELS[l.status] ?? l.status),
       l.asking_price !== null ? String(l.asking_price) : "",
       escapeField(l.owner_name ?? ""),

@@ -268,36 +268,36 @@ types that were hand-written in Phase 2.
 
 #### Automated
 
-- [ ] 1.1 `npm run db:gen-types` runs without error
-- [ ] 1.2 Type checking passes: `npm run typecheck`
-- [ ] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 `npm run db:gen-types` runs without error — 2747624
+- [x] 1.2 Type checking passes: `npm run typecheck` — 2747624
+- [x] 1.3 Linting passes: `npm run lint` — 2747624
 
 #### Manual
 
-- [ ] 1.4 database.types.ts contains listings and transaction_snapshots table entries
-- [ ] 1.5 listings.commission_percent typed as number | null in generated file
+- [x] 1.4 database.types.ts contains listings and transaction_snapshots table entries — 2747624
+- [x] 1.5 listings.commission_percent typed as number | null in generated file — 2747624
 
 ### Phase 2: Alias Domain Types onto Generated Types
 
 #### Automated
 
-- [ ] 2.1 Type checking passes with all drift resolved: `npm run typecheck`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes with all drift resolved: `npm run typecheck` — 17ad716
+- [x] 2.2 Linting passes: `npm run lint` — 17ad716
 
 #### Manual
 
-- [ ] 2.3 Listing.commission_percent typed as number | null in IDE type hints
-- [ ] 2.4 No runtime behavior change confirmed
+- [x] 2.3 Listing.commission_percent typed as number | null in IDE type hints — 17ad716
+- [x] 2.4 No runtime behavior change confirmed — 17ad716
 
 ### Phase 3: Type the Supabase Client and Migrate Call Sites
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Tests pass: `npm run test`
+- [x] 3.1 Type checking passes: `npm run typecheck` — b16e179
+- [x] 3.2 Linting passes: `npm run lint` — b16e179
+- [x] 3.3 Tests pass: `npm run test` — b16e179
 
 #### Manual
 
-- [ ] 3.4 Hovering over .from('listings').select() result shows typed row, not any
-- [ ] 3.5 Application loads and functions normally (dashboard, create, update, close, CSV)
+- [x] 3.4 Hovering over .from('listings').select() result shows typed row, not any — b16e179
+- [x] 3.5 Application loads and functions normally (dashboard, create, update, close, CSV) — b16e179
