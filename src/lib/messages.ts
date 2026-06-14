@@ -12,6 +12,7 @@ export const messages: Record<string, string> = {
   "blad-ladowania": "Błąd podczas ładowania danych.",
   "nazwa-wymagana": "Imię i nazwisko jest wymagane.",
   "rola-nieprawidlowa": "Wybrana rola jest nieprawidłowa.",
+  "transakcja-zamknieta": "Nie można zmienić prowizji — transakcja jest już zamknięta.",
 };
 
 const FALLBACK = "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";

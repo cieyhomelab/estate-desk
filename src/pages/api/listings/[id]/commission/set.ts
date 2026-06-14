@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
 import { updateOwnedListing } from "@/lib/owned-mutation";
+import type { Listing } from "@/types/listings";
 
 export const POST: APIRoute = async (context) => {
   const { id } = context.params;
@@ -26,6 +27,21 @@ export const POST: APIRoute = async (context) => {
 
   if (isNaN(commission_percent) || commission_percent <= 0 || commission_percent > 100) {
     return context.redirect(`/dashboard/listings/${id}/pricing?error=prowizja-nieprawidlowa`);
+  }
+
+  const { data: listing, error: listingError } = await supabase
+    .from("listings")
+    .select("id, status")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single<Pick<Listing, "id" | "status">>();
+
+  if (listingError) {
+    return context.redirect(`/dashboard/listings/${id}/pricing?error=nie-znaleziono`);
+  }
+
+  if (listing.status === "done") {
+    return context.redirect(`/dashboard/listings/${id}/pricing?error=transakcja-zamknieta`);
   }
 
   const result = await updateOwnedListing(supabase, id, user.id, { commission_percent });
