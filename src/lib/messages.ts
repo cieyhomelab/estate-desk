@@ -13,6 +13,7 @@ export const messages: Record<string, string> = {
   "nazwa-wymagana": "Imię i nazwisko jest wymagane.",
   "rola-nieprawidlowa": "Wybrana rola jest nieprawidłowa.",
   "transakcja-zamknieta": "Nie można zmienić prowizji — transakcja jest już zamknięta.",
+  "blad-prowizji": "Błąd wyliczenia prowizji. Sprawdź stawki w ustawieniach i spróbuj ponownie.",
 };
 
 const FALLBACK = "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";

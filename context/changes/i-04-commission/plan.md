@@ -174,22 +174,22 @@ No new unit tests required — `commission.test.ts` already covers the `calculat
 
 #### Automated
 
-- [x] 1.1 Type check passes: `npx tsc --noEmit`
-- [x] 1.2 New integration test passes: `npx vitest run src/integration/api/commission-immutability.test.ts`
-- [x] 1.3 Full integration suite green: `npx vitest run src/integration/`
+- [x] 1.1 Type check passes: `npx tsc --noEmit` — ffa0688
+- [x] 1.2 New integration test passes: `npx vitest run src/integration/api/commission-immutability.test.ts` — ffa0688
+- [x] 1.3 Full integration suite green: `npx vitest run src/integration/` — ffa0688
 
 #### Manual
 
-- [ ] 1.4 Done listing pricing tab shows locked-state text, no form
-- [ ] 1.5 POST to commission/set on done listing → 302 `?error=transakcja-zamknieta`, DB unchanged
-- [ ] 1.6 Active listing commission form saves normally
+- [x] 1.4 Done listing pricing tab shows locked-state text, no form — ffa0688
+- [x] 1.5 POST to commission/set on done listing → 302 `?error=transakcja-zamknieta`, DB unchanged — ffa0688
+- [x] 1.6 Active listing commission form saves normally — ffa0688
 
 ### Phase 2: R-03 — Catch commission split invariant failure in close
 
 #### Automated
 
-- [ ] 2.1 Type check passes: `npx tsc --noEmit`
-- [ ] 2.2 Full integration suite green: `npx vitest run src/integration/`
+- [x] 2.1 Type check passes: `npx tsc --noEmit`
+- [x] 2.2 Full integration suite green: `npx vitest run src/integration/`
 
 #### Manual
 
