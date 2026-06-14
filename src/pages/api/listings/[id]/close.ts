@@ -72,18 +72,22 @@ export const POST: APIRoute = async (context) => {
   let tax_amount: number | null = null;
   let agent_net: number | null = null;
 
-  if (listing.asking_price !== null && listing.commission_percent !== null && settings !== null) {
-    const split = calculateCommissionSplit({
-      askingPrice: listing.asking_price,
-      commissionPercent: listing.commission_percent,
-      agencyPercent: settings.agency_percent,
-      taxRate: settings.tax_rate,
-    });
-    brutto = split.brutto;
-    agency_amount = split.agencyAmount;
-    gross_income = split.grossIncome;
-    tax_amount = split.taxAmount;
-    agent_net = split.agentNet;
+  try {
+    if (listing.asking_price !== null && listing.commission_percent !== null && settings !== null) {
+      const split = calculateCommissionSplit({
+        askingPrice: listing.asking_price,
+        commissionPercent: listing.commission_percent,
+        agencyPercent: settings.agency_percent,
+        taxRate: settings.tax_rate,
+      });
+      brutto = split.brutto;
+      agency_amount = split.agencyAmount;
+      gross_income = split.grossIncome;
+      tax_amount = split.taxAmount;
+      agent_net = split.agentNet;
+    }
+  } catch {
+    return context.redirect(`/dashboard/listings/${id}/close?error=blad-prowizji`);
   }
 
   const { error: insertError } = await supabase.from("transaction_snapshots").insert({
