@@ -148,6 +148,7 @@ describe("commission immutability — POST commission/set", () => {
 
     // Close the listing first to get it into done state
     const closeRes = await postClose(lifecycleListingId, {}, authCookie);
+    expect(closeRes.status).toBe(302);
     expect(closeRes.headers.get("location")).toContain("zamknieto");
 
     // Reopen
