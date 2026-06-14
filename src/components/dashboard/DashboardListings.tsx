@@ -175,10 +175,21 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
       ) : filteredListings.length === 0 && listings.length > 0 ? (
         <p className="py-12 text-center text-sm text-white/45">Brak ogłoszeń pasujących do filtrów.</p>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {filteredListings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} agentNet={snapshotMap[listing.id] ?? null} />
-          ))}
+        <div className="overflow-x-auto">
+          <div className="min-w-[640px]">
+            <div className="flex items-center border-b border-white/[0.07] pb-2.5">
+              <div className="min-w-0 flex-1 pr-4 text-[10px] font-semibold tracking-widest text-white/30 uppercase">
+                Adres / Właściciel
+              </div>
+              <div className="w-28 text-[10px] font-semibold tracking-widest text-white/30 uppercase">Typ</div>
+              <div className="w-[130px] text-[10px] font-semibold tracking-widest text-white/30 uppercase">Cena</div>
+              <div className="w-[90px] text-[10px] font-semibold tracking-widest text-white/30 uppercase">Status</div>
+              <div className="w-[156px] text-[10px] font-semibold tracking-widest text-white/30 uppercase">Akcje</div>
+            </div>
+            {filteredListings.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} agentNet={snapshotMap[listing.id] ?? null} />
+            ))}
+          </div>
         </div>
       )}
     </>
