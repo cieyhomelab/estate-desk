@@ -188,10 +188,10 @@ No new unit tests required — `commission.test.ts` already covers the `calculat
 
 #### Automated
 
-- [x] 2.1 Type check passes: `npx tsc --noEmit`
-- [x] 2.2 Full integration suite green: `npx vitest run src/integration/`
+- [x] 2.1 Type check passes: `npx tsc --noEmit` — 56a25c1
+- [x] 2.2 Full integration suite green: `npx vitest run src/integration/` — 56a25c1
 
 #### Manual
 
-- [ ] 2.3 Close a listing with commission settings — success flow unchanged
-- [ ] 2.4 try/catch block is present in close.ts (code review)
+- [x] 2.3 Close a listing with commission settings — success flow unchanged — 56a25c1
+- [x] 2.4 try/catch block is present in close.ts (code review) — 56a25c1
