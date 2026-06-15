@@ -1,4 +1,5 @@
 ---
+import { PencilLine, Tag, FileText, Users, CircleCheck, RotateCcw, Trash2 } from "lucide-react";
 import type { Listing } from "@/types/listings";
 import { formatPLN } from "@/lib/utils";
 
@@ -52,47 +53,53 @@ const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
     )
   }
 
-  <div class="flex flex-wrap gap-1.5">
+  <div class="flex gap-[5px]">
     <a
       href={`/dashboard/listings/${listing.id}/edit`}
-      class="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+      title="Edytuj"
+      class="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
     >
-      Edytuj
+      <PencilLine className="h-3 w-3" />
     </a>
     <a
       href={`/dashboard/listings/${listing.id}/pricing`}
-      class="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+      title="Cena i prowizja"
+      class="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
     >
-      Cena i prowizja
+      <Tag className="h-3 w-3" />
     </a>
     <a
       href={`/dashboard/listings/${listing.id}/documents`}
-      class="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+      title="Dokumenty"
+      class="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
     >
-      Dokumenty
+      <FileText className="h-3 w-3" />
     </a>
     <a
       href={`/dashboard/listings/${listing.id}/contacts`}
-      class="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+      title="Kontakty"
+      class="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
     >
-      Kontakty
+      <Users className="h-3 w-3" />
     </a>
     {
       listing.status === "active" ? (
         <a
           href={`/dashboard/listings/${listing.id}/close`}
-          class="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+          title="Zakończ transakcję"
+          class="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
         >
-          Zakończ transakcję
+          <CircleCheck className="h-3 w-3" />
         </a>
       ) : (
         /* Intentionally no confirmation dialog — reopen is reversible per plan transaction-close Phase 3 */
         <form method="POST" action={`/api/listings/${listing.id}/reopen`}>
           <button
             type="submit"
-            class="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+            title="Wznów transakcję"
+            class="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
           >
-            Wznów transakcję
+            <RotateCcw className="h-3 w-3" />
           </button>
         </form>
       )
@@ -100,10 +107,11 @@ const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
     <form method="POST" action={`/api/listings/${listing.id}/delete`}>
       <button
         type="submit"
+        title="Usuń"
         onclick="return confirm('Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.')"
-        class="rounded-lg border border-red-500/20 bg-red-500/[0.07] px-3 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-500/[0.14]"
+        class="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-red-400/[0.06] text-red-400 transition-colors hover:bg-red-400/[0.12]"
       >
-        Usuń
+        <Trash2 className="h-3 w-3" />
       </button>
     </form>
   </div>

@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Banner from "@/components/Banner.astro";
 import DashboardHeader from "@/components/DashboardHeader.astro";
 import ListingTabs from "@/components/listings/ListingTabs.astro";
+import { Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase";
 import { getFlashMessage } from "@/lib/messages";
 import type { Listing } from "@/types/listings";
@@ -129,10 +130,10 @@ const success = Astro.url.searchParams.get("success");
                   <form method="POST" action={`/api/listings/${id}/documents/${doc.id}/delete`}>
                     <button
                       type="submit"
-                      class="text-xs text-red-400/50 transition-colors hover:text-red-300"
-                      aria-label="Usuń"
+                      title="Usuń"
+                      class="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-red-400/[0.06] text-red-400 transition-colors hover:bg-red-400/[0.12]"
                     >
-                      Usuń
+                      <Trash2 className="h-3 w-3" />
                     </button>
                   </form>
                 </li>
@@ -211,9 +212,10 @@ const success = Astro.url.searchParams.get("success");
                   >
                     <button
                       type="submit"
-                      class="rounded bg-black/60 px-1.5 py-0.5 text-xs text-red-300 hover:bg-black/80"
+                      title="Usuń"
+                      class="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-red-400/[0.06] text-red-400 transition-colors hover:bg-red-400/[0.12]"
                     >
-                      Usuń
+                      <Trash2 className="h-3 w-3" />
                     </button>
                   </form>
                 </div>
@@ -267,8 +269,12 @@ const success = Astro.url.searchParams.get("success");
                     {file.file_name}
                   </a>
                   <form method="POST" action={`/api/listings/${id}/files/${file.id}/delete`}>
-                    <button type="submit" class="text-xs text-red-400/50 transition-colors hover:text-red-300">
-                      Usuń
+                    <button
+                      type="submit"
+                      title="Usuń"
+                      class="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-red-400/[0.06] text-red-400 transition-colors hover:bg-red-400/[0.12]"
+                    >
+                      <Trash2 className="h-3 w-3" />
                     </button>
                   </form>
                 </li>
