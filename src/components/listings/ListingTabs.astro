@@ -1,4 +1,6 @@
 ---
+import { PencilLine, Tag, FileText, Users, CircleCheck } from "lucide-react";
+
 interface Props {
   listingId: string;
   activeTab: "edit" | "pricing" | "documents" | "contacts" | "close";
@@ -7,12 +9,12 @@ interface Props {
 const { listingId, activeTab } = Astro.props;
 
 const tabs = [
-  { key: "edit", label: "Edytuj", href: `/dashboard/listings/${listingId}/edit` },
-  { key: "pricing", label: "Cena i prowizja", href: `/dashboard/listings/${listingId}/pricing` },
-  { key: "documents", label: "Dokumenty", href: `/dashboard/listings/${listingId}/documents` },
-  { key: "contacts", label: "Kontakty", href: `/dashboard/listings/${listingId}/contacts` },
-  { key: "close", label: "Zakończ transakcję", href: `/dashboard/listings/${listingId}/close` },
-] as const;
+  { key: "edit" as const, label: "Edytuj", href: `/dashboard/listings/${listingId}/edit` },
+  { key: "pricing" as const, label: "Cena i prowizja", href: `/dashboard/listings/${listingId}/pricing` },
+  { key: "documents" as const, label: "Dokumenty", href: `/dashboard/listings/${listingId}/documents` },
+  { key: "contacts" as const, label: "Kontakty", href: `/dashboard/listings/${listingId}/contacts` },
+  { key: "close" as const, label: "Zakończ transakcję", href: `/dashboard/listings/${listingId}/close` },
+];
 ---
 
 <div class="mb-6">
@@ -22,21 +24,34 @@ const tabs = [
   >
     <span aria-hidden="true">←</span> Powrót do panelu
   </a>
-  <div class="flex flex-wrap gap-1 rounded-xl border border-white/[0.08] bg-white/[0.04] p-1">
+  <div class="flex gap-[5px] rounded-xl border border-white/[0.08] bg-white/[0.04] p-1">
     {
       tabs.map((tab) => {
         const isActive = tab.key === activeTab;
         const isClose = tab.key === "close";
+        const icon =
+          tab.key === "edit" ? (
+            <PencilLine className="h-3 w-3" />
+          ) : tab.key === "pricing" ? (
+            <Tag className="h-3 w-3" />
+          ) : tab.key === "documents" ? (
+            <FileText className="h-3 w-3" />
+          ) : tab.key === "contacts" ? (
+            <Users className="h-3 w-3" />
+          ) : (
+            <CircleCheck className="h-3 w-3" />
+          );
 
         if (isActive) {
           return (
             <span
+              title={tab.label}
               class:list={[
-                "rounded-lg px-3 py-1.5 text-sm font-medium",
+                "flex size-[22px] items-center justify-center rounded-[6px]",
                 isClose ? "bg-red-500/20 text-red-300" : "bg-white/[0.14] text-white",
               ]}
             >
-              {tab.label}
+              {icon}
             </span>
           );
         }
@@ -44,14 +59,15 @@ const tabs = [
         return (
           <a
             href={tab.href}
+            title={tab.label}
             class:list={[
-              "rounded-lg px-3 py-1.5 text-sm transition-colors",
+              "flex size-[22px] items-center justify-center rounded-[6px] transition-colors",
               isClose
                 ? "text-red-400/50 hover:bg-red-500/10 hover:text-red-300"
-                : "text-white/45 hover:bg-white/[0.07] hover:text-white/80",
+                : "text-white/35 hover:bg-white/[0.08] hover:text-white/60",
             ]}
           >
-            {tab.label}
+            {icon}
           </a>
         );
       })
