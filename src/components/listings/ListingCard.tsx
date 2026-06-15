@@ -1,3 +1,4 @@
+import { PencilLine, Tag, FileText, Users, CircleCheck, RotateCcw, Trash2 } from "lucide-react";
 import type { Listing } from "@/types/listings";
 import { formatPLN } from "@/lib/utils";
 
@@ -46,45 +47,51 @@ export default function ListingCard({ listing, agentNet = null }: Props) {
         </p>
       )}
 
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex gap-[5px]">
         <a
           href={`/dashboard/listings/${listing.id}/edit`}
-          className="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+          title="Edytuj"
+          className="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
         >
-          Edytuj
+          <PencilLine className="h-3 w-3" />
         </a>
         <a
           href={`/dashboard/listings/${listing.id}/pricing`}
-          className="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+          title="Cena i prowizja"
+          className="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
         >
-          Cena i prowizja
+          <Tag className="h-3 w-3" />
         </a>
         <a
           href={`/dashboard/listings/${listing.id}/documents`}
-          className="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+          title="Dokumenty"
+          className="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
         >
-          Dokumenty
+          <FileText className="h-3 w-3" />
         </a>
         <a
           href={`/dashboard/listings/${listing.id}/contacts`}
-          className="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+          title="Kontakty"
+          className="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
         >
-          Kontakty
+          <Users className="h-3 w-3" />
         </a>
         {listing.status === "active" ? (
           <a
             href={`/dashboard/listings/${listing.id}/close`}
-            className="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+            title="Zakończ transakcję"
+            className="flex size-[22px] items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
           >
-            Zakończ transakcję
+            <CircleCheck className="h-3 w-3" />
           </a>
         ) : (
           <form method="POST" action={`/api/listings/${listing.id}/reopen`}>
             <button
               type="submit"
-              className="rounded-lg border border-white/[0.14] bg-white/[0.07] px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.12]"
+              title="Wznów transakcję"
+              className="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-white/[0.03] text-white/35 transition-colors hover:bg-white/[0.08] hover:text-white/60"
             >
-              Wznów transakcję
+              <RotateCcw className="h-3 w-3" />
             </button>
           </form>
         )}
@@ -92,9 +99,10 @@ export default function ListingCard({ listing, agentNet = null }: Props) {
           <button
             type="submit"
             onClick={handleDelete}
-            className="rounded-lg border border-red-500/20 bg-red-500/[0.07] px-3 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-500/[0.14]"
+            title="Usuń"
+            className="flex size-[22px] cursor-pointer items-center justify-center rounded-[6px] bg-red-400/[0.06] text-red-400 transition-colors hover:bg-red-400/[0.12]"
           >
-            Usuń
+            <Trash2 className="h-3 w-3" />
           </button>
         </form>
       </div>

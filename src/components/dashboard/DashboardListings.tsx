@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SlidersHorizontal, Download } from "lucide-react";
 import type { Listing } from "@/types/listings";
 import ListingCard from "@/components/listings/ListingCard";
 import { listingsToCsv } from "@/lib/csv";
@@ -76,8 +77,9 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           <button
             type="button"
             onClick={toggleFilter}
-            className="relative cursor-pointer rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
+            className="relative flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
+            <SlidersHorizontal className="h-3 w-3" />
             Filtry
             {activeFilterCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-500 px-1 text-[10px] font-bold text-white">
@@ -88,8 +90,9 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
           <button
             type="button"
             onClick={exportCsv}
-            className="cursor-pointer rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
+            className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/[0.12] bg-white/[0.05] px-3 py-1.5 text-sm text-white/60 transition-colors hover:bg-white/[0.09] hover:text-white/80"
           >
+            <Download className="h-3 w-3" />
             Eksport
           </button>
         </div>
