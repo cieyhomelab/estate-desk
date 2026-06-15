@@ -112,11 +112,11 @@ Create `.claude/skills/pr-body-generator/SKILL.md` with the full skill specifica
 
 #### Automated
 
-- [x] 1.1 Skill file exists: `ls .claude/skills/pr-body-generator/SKILL.md`
-- [x] 1.2 Frontmatter is valid YAML with required fields
+- [x] 1.1 Skill file exists: `ls .claude/skills/pr-body-generator/SKILL.md` — 85359a1
+- [x] 1.2 Frontmatter is valid YAML with required fields — 85359a1
 
 #### Manual
 
-- [x] 1.3 `/pr-body-generator i-04-commission` outputs correct Summary, Changes, Test plan, Risks, Commits
-- [x] 1.4 No-argument invocation prints usage and stops
-- [x] 1.5 Nonexistent change-id prints error and stops
+- [x] 1.3 `/pr-body-generator i-04-commission` outputs correct Summary, Changes, Test plan, Risks, Commits — 85359a1
+- [x] 1.4 No-argument invocation prints usage and stops — 85359a1
+- [x] 1.5 Nonexistent change-id prints error and stops — 85359a1
