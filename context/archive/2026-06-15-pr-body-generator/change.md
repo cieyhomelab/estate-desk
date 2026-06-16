@@ -1,10 +1,10 @@
 ---
 change_id: pr-body-generator
 title: PR body generator skill
-status: impl_reviewed
+status: archived
 created: 2026-06-15
-updated: 2026-06-15
-archived_at: null
+updated: 2026-06-16
+archived_at: 2026-06-16T19:04:34Z
 ---
 
 ## Notes
