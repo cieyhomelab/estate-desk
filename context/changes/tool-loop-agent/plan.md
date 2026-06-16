@@ -177,10 +177,10 @@ The snippet is included because `output` on `ToolLoopAgent.generate()` is typed 
 
 #### Automated
 
-- [x] 2.1 `npm run typecheck` passes (no type errors across all four files)
-- [x] 2.2 `npm run build` completes without errors
+- [x] 2.1 `npm run typecheck` passes (no type errors across all four files) — 88e8172
+- [x] 2.2 `npm run build` completes without errors — 88e8172
 
 #### Manual
 
-- [ ] 2.3 `npm run dev` prints valid JSON matching reviewSchema shape
-- [ ] 2.4 Off-by-one bug appears in issues array; `approved: false`
+- [x] 2.3 `npm run dev` prints valid JSON matching reviewSchema shape
+- [x] 2.4 Off-by-one bug appears in issues array; `approved: false`
