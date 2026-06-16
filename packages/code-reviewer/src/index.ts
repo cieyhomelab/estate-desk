@@ -35,6 +35,8 @@ function calculateTotal(items) {
   const { output } = await generateText({
     model,
     output: Output.object({ schema: reviewSchema }),
+    system:
+      "You are senior code reviewer. Report only genuine issues. correctnes bugs, security problems and clear maintainability concerns. Do not invent problems, empty findings list is valid result",
     prompt: `Review this JavaScript code for bugs and issues:\n\n${sampleCode}`,
   });
 
