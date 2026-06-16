@@ -1,10 +1,10 @@
 ---
 change_id: i-04-commission
 title: Enforce commission immutability on closed listings
-status: impl_reviewed
+status: archived
 created: 2026-06-14
-updated: 2026-06-14
-archived_at: null
+updated: 2026-06-16
+archived_at: 2026-06-16T19:02:14Z
 ---
 
 ## Notes
