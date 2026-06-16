@@ -167,18 +167,18 @@ The snippet is included because `output` on `ToolLoopAgent.generate()` is typed 
 
 #### Automated
 
-- [x] 1.1 `npm run typecheck` passes with no errors across all four files
+- [x] 1.1 `npm run typecheck` passes with no errors across all four files — e318e8e
 
 #### Manual
 
-- [x] 1.2 `src/schema.ts` and `src/prompt.ts` exist and contain only their respective exports
+- [x] 1.2 `src/schema.ts` and `src/prompt.ts` exist and contain only their respective exports — e318e8e
 
 ### Phase 2: Create Agent Module and Update Runner
 
 #### Automated
 
-- [ ] 2.1 `npm run typecheck` passes (no type errors across all four files)
-- [ ] 2.2 `npm run build` completes without errors
+- [x] 2.1 `npm run typecheck` passes (no type errors across all four files)
+- [x] 2.2 `npm run build` completes without errors
 
 #### Manual
 
