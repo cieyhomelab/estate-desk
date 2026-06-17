@@ -412,9 +412,9 @@ The three `ai-cr:*` labels are created idempotently on first workflow run. No ma
 
 #### Automated
 
-- [x] 1.1 TypeScript compiles without errors (`npm run typecheck --prefix packages/code-reviewer`)
-- [x] 1.2 Build succeeds (`npm run build --prefix packages/code-reviewer`)
-- [x] 1.3 Smoke test emits JSON with criteria array of length 6, overall_score, and passed
+- [x] 1.1 TypeScript compiles without errors (`npm run typecheck --prefix packages/code-reviewer`) — b7d0b30
+- [x] 1.2 Build succeeds (`npm run build --prefix packages/code-reviewer`) — b7d0b30
+- [x] 1.3 Smoke test emits JSON with criteria array of length 6, overall_score, and passed — b7d0b30
 
 #### Manual
 
@@ -425,8 +425,8 @@ The three `ai-cr:*` labels are created idempotently on first workflow run. No ma
 
 #### Automated
 
-- [ ] 2.1 `action.yml` passes YAML lint
-- [ ] 2.2 All steps include `shell: bash`
+- [x] 2.1 `action.yml` passes YAML lint
+- [x] 2.2 All steps include `shell: bash`
 
 #### Manual
 
