@@ -32,7 +32,7 @@ runs:
         gh label create "ai-cr:failed" --color "D93F0B" --description "AI code review failed" --force
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: 22
 
@@ -44,6 +44,7 @@ runs:
       shell: bash
       run: npm run build --prefix packages/code-reviewer
 
+    # Requires caller to: checkout with fetch-depth: 0 and run "git fetch origin main"
     - name: Compute and truncate diff
       id: diff
       shell: bash
@@ -81,6 +82,7 @@ runs:
         python3 - <<'PYEOF'
         import json
         import os
+        import sys
 
         display_names = {
             "implementation_correctness": "Implementation Correctness",
@@ -91,8 +93,12 @@ runs:
             "security_safety": "Security & Safety",
         }
 
-        with open("/tmp/review-output.json") as f:
-            data = json.load(f)
+        try:
+            with open("/tmp/review-output.json") as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError) as e:
+            print(f"Failed to parse review output: {e}", file=sys.stderr)
+            sys.exit(1)
 
         passed = data.get("passed", False)
         overall = data.get("overall_score", 0)
@@ -144,19 +150,21 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
       run: |
         PASSED=$(jq -r '.passed' /tmp/review-output.json)
         if [ "$PASSED" = "true" ]; then
-          gh pr edit ${{ inputs.pr-number }} --add-label "ai-cr:passed"
-          gh pr edit ${{ inputs.pr-number }} --remove-label "ai-cr:failed" 2>/dev/null || true
+          gh pr edit "$PR_NUMBER" --add-label "ai-cr:passed"
+          gh pr edit "$PR_NUMBER" --remove-label "ai-cr:failed" 2>/dev/null || true
         else
-          gh pr edit ${{ inputs.pr-number }} --add-label "ai-cr:failed"
-          gh pr edit ${{ inputs.pr-number }} --remove-label "ai-cr:passed" 2>/dev/null || true
+          gh pr edit "$PR_NUMBER" --add-label "ai-cr:failed"
+          gh pr edit "$PR_NUMBER" --remove-label "ai-cr:passed" 2>/dev/null || true
         fi
 
     - name: Remove review trigger label
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
       run: |
-        gh pr edit ${{ inputs.pr-number }} --remove-label "ai-cr:review" 2>/dev/null || true
+        gh pr edit "$PR_NUMBER" --remove-label "ai-cr:review" 2>/dev/null || true

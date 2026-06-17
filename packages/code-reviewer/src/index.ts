@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { reviewCode, ReviewOutput } from "./agent.js";
 
 type CIReviewOutput = ReviewOutput & { passed: boolean };
@@ -14,6 +14,10 @@ async function main() {
   }
   if (!diffFile) {
     process.stderr.write("Missing required env var: DIFF_FILE\n");
+    process.exit(1);
+  }
+  if (!existsSync(diffFile)) {
+    process.stderr.write(`DIFF_FILE not found: ${diffFile}\n`);
     process.exit(1);
   }
 

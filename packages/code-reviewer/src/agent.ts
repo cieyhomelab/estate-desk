@@ -19,8 +19,10 @@ export async function reviewCode(params: {
     output: Output.object({ schema: reviewSchema }),
   });
 
-  const prBodyLine = params.prBody ? `PR body: ${params.prBody}\n\n` : "";
-  const prompt = `PR title: ${params.prTitle}\n${prBodyLine}Review the following git diff:\n\n${params.diff}`;
+  const prBodySection = params.prBody
+    ? `<pr_body>\n${params.prBody}\n</pr_body>\n\n`
+    : "";
+  const prompt = `<pr_title>${params.prTitle}</pr_title>\n\n${prBodySection}Review the following git diff:\n\n${params.diff}`;
 
   const { output } = await agent.generate({ prompt });
   return output;

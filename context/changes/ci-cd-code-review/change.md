@@ -1,7 +1,7 @@
 ---
 change_id: ci-cd-code-review
 title: GitHub Actions workflow for agentic code review
-status: implemented
+status: impl_reviewed
 created: 2026-06-17
 updated: 2026-06-17
 archived_at: null
