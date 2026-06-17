@@ -109,7 +109,7 @@ runs:
         lines = [
             f"## AI Code Review — {status_icon} ({overall}/10)",
             "",
-            "> Reviewed by `claude-sonnet-4-5` via OpenRouter",
+            "> Reviewed by `claude-sonnet-4-6` via OpenRouter",
             "",
             f"**Summary**: {summary}",
             "",

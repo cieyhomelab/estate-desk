@@ -14,7 +14,7 @@ export async function reviewCode(params: {
   if (!apiKey) throw new Error("OPENROUTER_API_KEY is not set");
   const openrouter = createOpenRouter({ apiKey });
   const agent = new ToolLoopAgent({
-    model: openrouter("anthropic/claude-sonnet-4-5"),
+    model: openrouter("anthropic/claude-sonnet-4-6"),
     instructions: SYSTEM_PROMPT,
     output: Output.object({ schema: reviewSchema }),
   });
