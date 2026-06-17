@@ -9,7 +9,7 @@ export const criterionSchema = z.object({
     "documentation",
     "security_safety",
   ]),
-  score: z.number().int(),
+  score: z.number(),
   rationale: z.string(),
   issues: z.array(z.string()).optional(),
 });
@@ -17,7 +17,7 @@ export const criterionSchema = z.object({
 export const reviewSchema = z.object({
   summary: z.string(),
   criteria: z.array(criterionSchema),
-  overall_score: z.number().int(),
+  overall_score: z.number(),
 });
 
 export type ReviewOutput = z.infer<typeof reviewSchema>;
