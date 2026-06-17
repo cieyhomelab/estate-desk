@@ -418,8 +418,8 @@ The three `ai-cr:*` labels are created idempotently on first workflow run. No ma
 
 #### Manual
 
-- [ ] 1.4 `passed` is `true` when `overall_score >= 7`, `false` otherwise
-- [ ] 1.5 `package-lock.json` committed and `npm ci --prefix packages/code-reviewer` succeeds
+- [x] 1.4 `passed` is `true` when `overall_score >= 7`, `false` otherwise
+- [x] 1.5 `package-lock.json` committed and `npm ci --prefix packages/code-reviewer` succeeds
 
 ### Phase 2: Composite Action
 
@@ -430,18 +430,18 @@ The three `ai-cr:*` labels are created idempotently on first workflow run. No ma
 
 #### Manual
 
-- [ ] 2.3 Action can be called from a test workflow and all steps execute without error
-- [ ] 2.4 Labels `ai-cr:review`, `ai-cr:passed`, `ai-cr:failed` appear in repo after first run
-- [ ] 2.5 PR comment appears with all 6 criteria using display names (no raw enum strings)
+- [x] 2.3 Action can be called from a test workflow and all steps execute without error
+- [x] 2.4 Labels `ai-cr:review`, `ai-cr:passed`, `ai-cr:failed` appear in repo after first run
+- [x] 2.5 PR comment appears with all 6 criteria using display names (no raw enum strings)
 
 ### Phase 3: Main Workflow
 
 #### Automated
 
-- [x] 3.1 `code-review.yml` passes YAML lint
+- [x] 3.1 `code-review.yml` passes YAML lint — 139f4ca
 
 #### Manual
 
-- [ ] 3.2 PR to main triggers review → comment + label within 2 minutes
-- [ ] 3.3 Adding `ai-cr:review` label re-triggers review and removes the label after run
-- [ ] 3.4 Adding an unrelated label does NOT trigger a review run
+- [x] 3.2 PR to main triggers review → comment + label within 2 minutes
+- [x] 3.3 Adding `ai-cr:review` label re-triggers review and removes the label after run
+- [x] 3.4 Adding an unrelated label does NOT trigger a review run
