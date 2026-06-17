@@ -425,8 +425,8 @@ The three `ai-cr:*` labels are created idempotently on first workflow run. No ma
 
 #### Automated
 
-- [x] 2.1 `action.yml` passes YAML lint
-- [x] 2.2 All steps include `shell: bash`
+- [x] 2.1 `action.yml` passes YAML lint — 20ec3c5
+- [x] 2.2 All steps include `shell: bash` — 20ec3c5
 
 #### Manual
 
@@ -438,7 +438,7 @@ The three `ai-cr:*` labels are created idempotently on first workflow run. No ma
 
 #### Automated
 
-- [ ] 3.1 `code-review.yml` passes YAML lint
+- [x] 3.1 `code-review.yml` passes YAML lint
 
 #### Manual
 
