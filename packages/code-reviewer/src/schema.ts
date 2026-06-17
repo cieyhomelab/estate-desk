@@ -1,13 +1,23 @@
 import { z } from "zod";
 
-export const reviewSchema = z.object({
-  summary: z.string().describe("Brief summary of the code review"),
-  issues: z.array(
-    z.object({
-      severity: z.enum(["error", "warning", "info"]),
-      description: z.string(),
-      suggestion: z.string().optional(),
-    }),
-  ),
-  approved: z.boolean().describe("Whether the code passes review"),
+export const criterionSchema = z.object({
+  name: z.enum([
+    "implementation_correctness",
+    "idiomaticity",
+    "complexity",
+    "test_risk_coverage",
+    "documentation",
+    "security_safety",
+  ]),
+  score: z.number(),
+  rationale: z.string(),
+  issues: z.array(z.string()).optional(),
 });
+
+export const reviewSchema = z.object({
+  summary: z.string(),
+  criteria: z.array(criterionSchema),
+  overall_score: z.number(),
+});
+
+export type ReviewOutput = z.infer<typeof reviewSchema>;

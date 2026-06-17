@@ -1,0 +1,170 @@
+name: AI Code Review
+description: Runs AI-powered code review on a PR and posts a comment with scores and a pass/fail label.
+
+inputs:
+  pr-number:
+    description: PR number to comment on
+    required: true
+  pr-title:
+    description: PR title passed to the reviewer
+    required: true
+  pr-body:
+    description: PR body passed to the reviewer
+    required: false
+    default: ''
+  openrouter-api-key:
+    description: OpenRouter API key for LLM calls
+    required: true
+  github-token:
+    description: GitHub token for gh CLI calls
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure labels exist
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: |
+        gh label create "ai-cr:review" --color "CCCCCC" --description "Trigger AI code review" --force
+        gh label create "ai-cr:passed" --color "0E8A16" --description "AI code review passed" --force
+        gh label create "ai-cr:failed" --color "D93F0B" --description "AI code review failed" --force
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: 22
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci --prefix packages/code-reviewer
+
+    - name: Build code reviewer
+      shell: bash
+      run: npm run build --prefix packages/code-reviewer
+
+    # Requires caller to: checkout with fetch-depth: 0 and run "git fetch origin main"
+    - name: Compute and truncate diff
+      id: diff
+      shell: bash
+      run: |
+        git diff origin/main...HEAD > /tmp/pr-full.diff
+        LINE_COUNT=$(wc -l < /tmp/pr-full.diff)
+        if [ "$LINE_COUNT" -gt 4000 ]; then
+          head -n 4000 /tmp/pr-full.diff > /tmp/pr.diff
+          echo "truncated=true" >> "$GITHUB_OUTPUT"
+        else
+          cp /tmp/pr-full.diff /tmp/pr.diff
+          echo "truncated=false" >> "$GITHUB_OUTPUT"
+        fi
+        echo "line_count=$LINE_COUNT" >> "$GITHUB_OUTPUT"
+
+    - name: Run code reviewer
+      shell: bash
+      env:
+        OPENROUTER_API_KEY: ${{ inputs.openrouter-api-key }}
+        PR_TITLE: ${{ inputs.pr-title }}
+        PR_BODY: ${{ inputs.pr-body }}
+        DIFF_FILE: /tmp/pr.diff
+      run: |
+        cd packages/code-reviewer
+        node dist/index.js > /tmp/review-output.json
+
+    - name: Post PR comment
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        TRUNCATED: ${{ steps.diff.outputs.truncated }}
+        LINE_COUNT: ${{ steps.diff.outputs.line_count }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+      run: |
+        python3 - <<'PYEOF'
+        import json
+        import os
+        import sys
+
+        display_names = {
+            "implementation_correctness": "Implementation Correctness",
+            "idiomaticity": "Idiomaticity",
+            "complexity": "Complexity",
+            "test_risk_coverage": "Test Risk Coverage",
+            "documentation": "Documentation",
+            "security_safety": "Security & Safety",
+        }
+
+        try:
+            with open("/tmp/review-output.json") as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError) as e:
+            print(f"Failed to parse review output: {e}", file=sys.stderr)
+            sys.exit(1)
+
+        passed = data.get("passed", False)
+        overall = data.get("overall_score", 0)
+        summary = data.get("summary", "").replace("|", r"\|")
+        criteria = data.get("criteria", [])
+        status_icon = "✅ Passed" if passed else "❌ Failed"
+
+        lines = [
+            f"## AI Code Review — {status_icon} ({overall}/10)",
+            "",
+            "> Reviewed by `claude-sonnet-4-6` via OpenRouter",
+            "",
+            f"**Summary**: {summary}",
+            "",
+            "### Criteria Scores",
+            "",
+            "| Criterion | Score | Notes |",
+            "|-----------|-------|-------|",
+        ]
+
+        for c in criteria:
+            name = display_names.get(c.get("name", ""), c.get("name", ""))
+            score = c.get("score", 0)
+            rationale = c.get("rationale", "").replace("|", r"\|")
+            issues = c.get("issues", [])
+            notes = rationale
+            if issues:
+                escaped_issues = [i.replace("|", r"\|") for i in issues]
+                notes += "<br>" + "<br>".join(f"• {i}" for i in escaped_issues)
+            lines.append(f"| {name} | {score}/10 | {notes} |")
+
+        truncated = os.environ.get("TRUNCATED", "false") == "true"
+        line_count = os.environ.get("LINE_COUNT", "0")
+        if truncated:
+            lines.append("")
+            lines.append(f"⚠️ Diff truncated to 4000 lines (original: {line_count} lines). Review may be incomplete.")
+
+        lines.append("")
+        lines.append("---")
+        lines.append("*Re-trigger: add label `ai-cr:review`*")
+
+        with open("/tmp/review-comment.md", "w") as f:
+            f.write("\n".join(lines) + "\n")
+
+        PYEOF
+        gh pr comment "$PR_NUMBER" --body-file /tmp/review-comment.md
+
+    - name: Apply result label
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+      run: |
+        PASSED=$(jq -r '.passed' /tmp/review-output.json)
+        if [ "$PASSED" = "true" ]; then
+          gh pr edit "$PR_NUMBER" --add-label "ai-cr:passed"
+          gh pr edit "$PR_NUMBER" --remove-label "ai-cr:failed" 2>/dev/null || true
+        else
+          gh pr edit "$PR_NUMBER" --add-label "ai-cr:failed"
+          gh pr edit "$PR_NUMBER" --remove-label "ai-cr:passed" 2>/dev/null || true
+        fi
+
+    - name: Remove review trigger label
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+      run: |
+        gh pr edit "$PR_NUMBER" --remove-label "ai-cr:review" 2>/dev/null || true
