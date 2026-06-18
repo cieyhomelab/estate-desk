@@ -444,17 +444,17 @@ No existing data or users are affected. The `reviewCode()` signature change is a
 
 #### Automated
 
-- [x] 3.1 Type-check passes with provider file included
+- [x] 3.1 Type-check passes with provider file included — b625f3c
 
 ### Phase 4: Create the React Migration Test Fixture
 
 #### Automated
 
-- [ ] 4.1 Fixture file exists at evals/fixtures/react-migration.diff
+- [x] 4.1 Fixture file exists at evals/fixtures/react-migration.diff
 
 #### Manual
 
-- [ ] 4.2 Fixture contains all 3 flaws: ReactDOM.render, string ref, missing keys
+- [x] 4.2 Fixture contains all 3 flaws: ReactDOM.render, string ref, missing keys
 
 ### Phase 5: Create promptfooconfig.yaml
 

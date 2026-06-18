@@ -1,0 +1,86 @@
+diff --git a/src/components/TodoList.jsx b/src/components/TodoList.jsx
+index a1b2c3d..e4f5a6b 100644
+--- a/src/components/TodoList.jsx
++++ b/src/components/TodoList.jsx
+@@ -1,46 +1,40 @@
+-import React, { Component } from 'react';
+-import ReactDOM from 'react-dom';
++import React, { useEffect, useRef, useState } from 'react';
++import ReactDOM from 'react-dom';
+
+-class TodoList extends Component {
+-  constructor(props) {
+-    super(props);
+-    this.state = {
+-      items: [],
+-      inputValue: '',
+-    };
+-  }
+-
+-  componentDidMount() {
+-    this.refs.inputRef.focus();
+-  }
+-
+-  handleAdd = () => {
+-    this.setState({
+-      items: [...this.state.items, this.state.inputValue],
+-      inputValue: '',
+-    });
+-  };
+-
+-  render() {
+-    const { items, inputValue } = this.state;
+-    return (
+-      <div className="todo-list">
+-        <input
+-          ref="inputRef"
+-          type="text"
+-          value={inputValue}
+-          onChange={(e) => this.setState({ inputValue: e.target.value })}
+-          placeholder="New todo..."
+-        />
+-        <button onClick={this.handleAdd}>Add</button>
+-        <ul>
+-          {items.map((item) => (
+-            <li>{item}</li>
+-          ))}
+-        </ul>
+-      </div>
+-    );
+-  }
+-}
++function TodoList() {
++  const [items, setItems] = useState([]);
++  const [inputValue, setInputValue] = useState('');
++  const inputRef = useRef(null);
+
+-ReactDOM.render(<TodoList />, document.getElementById('root'));
++  useEffect(() => {
++    inputRef.current.focus();
++  }, []);
++
++  const handleAdd = () => {
++    setItems([...items, inputValue]);
++    setInputValue('');
++  };
++
++  return (
++    <div className="todo-list">
++      <input
++        ref="inputRef"
++        type="text"
++        value={inputValue}
++        onChange={(e) => setInputValue(e.target.value)}
++        placeholder="New todo..."
++      />
++      <button onClick={handleAdd}>Add</button>
++      <ul>
++        {items.map((item) => (
++          <li>{item}</li>
++        ))}
++      </ul>
++    </div>
++  );
++}
++
++ReactDOM.render(<TodoList />, document.getElementById('root'));
