@@ -6,7 +6,9 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "eval": "promptfoo eval",
+    "eval:view": "promptfoo view"
   },
   "dependencies": {
     "@openrouter/ai-sdk-provider": "^2.9.1",
@@ -16,6 +18,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.0",
+    "promptfoo": "^0.121.17",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"
   }

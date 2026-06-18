@@ -423,18 +423,18 @@ No existing data or users are affected. The `reviewCode()` signature change is a
 
 #### Automated
 
-- [x] 1.1 Type-check passes: `npm run typecheck` inside `packages/code-reviewer/`
-- [x] 1.2 Build succeeds: `npm run build` inside `packages/code-reviewer/`
+- [x] 1.1 Type-check passes: `npm run typecheck` inside `packages/code-reviewer/` — faaa1fb
+- [x] 1.2 Build succeeds: `npm run build` inside `packages/code-reviewer/` — faaa1fb
 
 #### Manual
 
-- [x] 1.3 CLI path unchanged: `npm run dev` with sample diff works without model argument
+- [x] 1.3 CLI path unchanged: `npm run dev` with sample diff works without model argument — faaa1fb
 
 ### Phase 2: Install promptfoo and Add Eval Scripts
 
 #### Automated
 
-- [ ] 2.1 `npm run eval -- --help` exits 0 and prints promptfoo usage
+- [x] 2.1 `npm run eval -- --help` exits 0 and prints promptfoo usage
 
 #### Manual
 
