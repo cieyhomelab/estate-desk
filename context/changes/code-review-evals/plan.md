@@ -460,12 +460,12 @@ No existing data or users are affected. The `reviewCode()` signature change is a
 
 #### Automated
 
-- [x] 5.1 `npm run eval` exits 0 (all three models run)
-- [x] 5.2 promptfoo table shows 3 rows, 5 assertion columns
-- [x] 5.3 `claude-sonnet-4-6` row shows all assertions passing
+- [x] 5.1 `npm run eval` exits 0 (all three models run) — fecd24f
+- [x] 5.2 promptfoo table shows 3 rows, 5 assertion columns — fecd24f
+- [x] 5.3 `claude-sonnet-4-6` row shows all assertions passing — fecd24f
 
 #### Manual
 
-- [x] 5.4 `glm-5.1` and `deepseek-v4-flash` rows show results (pass or fail establishes baseline)
-- [x] 5.5 LLM-judge verdict is present for each model row
-- [x] 5.6 `npm run eval:view` opens web UI with results
+- [x] 5.4 `glm-5.1` and `deepseek-v4-flash` rows show results (pass or fail establishes baseline) — fecd24f
+- [x] 5.5 LLM-judge verdict is present for each model row — fecd24f
+- [x] 5.6 `npm run eval:view` opens web UI with results — fecd24f
