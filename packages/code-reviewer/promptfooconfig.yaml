@@ -1,0 +1,73 @@
+description: "code-reviewer model comparison — React 16→19 migration with 3 flaws"
+
+providers:
+  - id: file://./src/promptfoo-provider.ts
+    label: claude-sonnet-4-6
+    config:
+      model: anthropic/claude-sonnet-4-6
+
+  - id: file://./src/promptfoo-provider.ts
+    label: glm-5.1
+    config:
+      model: z-ai/glm-5.1
+
+  - id: file://./src/promptfoo-provider.ts
+    label: deepseek-v4-flash
+    config:
+      model: deepseek/deepseek-v4-flash
+
+prompts:
+  - "{{diff}}"
+
+defaultTest:
+  assert:
+    # Structural: output must conform to ReviewOutput schema (enforces enum names, required fields).
+    # Inlined because promptfoo JS assertions run in `new Function()` (sync), so await import() is unavailable.
+    - type: javascript
+      value: |
+        const validNames = ['implementation_correctness','idiomaticity','complexity','test_risk_coverage','documentation','security_safety'];
+        return typeof output === 'object' &&
+          typeof output.summary === 'string' &&
+          Array.isArray(output.criteria) &&
+          output.criteria.every(c => validNames.includes(c.name) && typeof c.score === 'number' && typeof c.rationale === 'string') &&
+          typeof output.overall_score === 'number';
+      description: "ReviewOutput matches production schema (Zod)"
+
+    # Structural: exactly 6 criteria (reviewSchema uses z.array() with no length constraint)
+    - type: javascript
+      value: output.criteria.length === 6
+      description: "Exactly 6 criteria returned"
+
+    # Static: holistic score must be low (flawed diff)
+    - type: javascript
+      value: output.overall_score <= 5
+      description: "overall_score ≤ 5 on a diff with 3 impactful flaws"
+
+    # Static: at least 3 criteria must have raised issues
+    - type: javascript
+      value: |
+        const criteriaWithIssues = output.criteria.filter(
+          (c) => Array.isArray(c.issues) && c.issues.length > 0
+        );
+        return criteriaWithIssues.length >= 3;
+      description: "≥3 criteria raise specific issues"
+
+tests:
+  - description: "React 16→19 migration with ReactDOM.render + string ref + missing keys"
+    vars:
+      prTitle: "Migrate TodoList from React 16 class component to React 19 functional component"
+      prBody: |
+        Converts the legacy class-based TodoList to a functional component using hooks.
+        Updates imports and component structure to align with the React 19 migration guide.
+      diff: "file://./evals/fixtures/react-migration.diff"
+    assert:
+      # LLM-as-judge: verify the three specific flaws are identified
+      - type: llm-rubric
+        value: |
+          The code review must identify all three of the following flaws:
+          1. ReactDOM.render() is still used — this API was removed in React 18 and crashes in React 19 strict mode. createRoot() must be used instead.
+          2. A string ref (ref="inputRef") is used in JSX — string refs were removed in React 19. A useRef() hook is declared but never connected; the string ref syntax must be replaced with ref={inputRef}.
+          3. List items are rendered without key props (items.map(item => <li>{item}</li>)) — missing keys break React reconciliation.
+          The review fails if any of these three flaws is absent from the output's issues or rationale text.
+        provider: openrouter:anthropic/claude-sonnet-4-6
+        description: "LLM judge verifies all 3 React flaws are identified"

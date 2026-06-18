@@ -1,9 +1,13 @@
 import { reviewCode } from './agent.js';
 
-// promptfoo injects the provider's config: block into context.config at runtime.
-// The type declarations don't expose it, so we widen the context param here.
-const provider = {
-  id: () => 'code-reviewer',
+// promptfoo instantiates the default export with `new`, so it must be a class.
+// It injects the provider's config: block into context.config at runtime;
+// the type declarations don't expose it, so we widen the context param here.
+class CodeReviewerProvider {
+  id() {
+    return 'code-reviewer';
+  }
+
   async callApi(
     _prompt: string,
     context?: { vars?: Record<string, string>; config?: Record<string, string> },
@@ -17,7 +21,7 @@ const provider = {
       model,
     });
     return { output: result };
-  },
-};
+  }
+}
 
-export default provider;
+export default CodeReviewerProvider;

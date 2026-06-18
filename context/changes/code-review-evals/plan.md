@@ -450,22 +450,22 @@ No existing data or users are affected. The `reviewCode()` signature change is a
 
 #### Automated
 
-- [x] 4.1 Fixture file exists at evals/fixtures/react-migration.diff
+- [x] 4.1 Fixture file exists at evals/fixtures/react-migration.diff — d903619
 
 #### Manual
 
-- [x] 4.2 Fixture contains all 3 flaws: ReactDOM.render, string ref, missing keys
+- [x] 4.2 Fixture contains all 3 flaws: ReactDOM.render, string ref, missing keys — d903619
 
 ### Phase 5: Create promptfooconfig.yaml
 
 #### Automated
 
-- [ ] 5.1 `npm run eval` exits 0 (all three models run)
-- [ ] 5.2 promptfoo table shows 3 rows, 5 assertion columns
-- [ ] 5.3 `claude-sonnet-4-6` row shows all assertions passing
+- [x] 5.1 `npm run eval` exits 0 (all three models run)
+- [x] 5.2 promptfoo table shows 3 rows, 5 assertion columns
+- [x] 5.3 `claude-sonnet-4-6` row shows all assertions passing
 
 #### Manual
 
-- [ ] 5.4 `glm-5.1` and `deepseek-v4-flash` rows show results (pass or fail establishes baseline)
-- [ ] 5.5 LLM-judge verdict is present for each model row
-- [ ] 5.6 `npm run eval:view` opens web UI with results
+- [x] 5.4 `glm-5.1` and `deepseek-v4-flash` rows show results (pass or fail establishes baseline)
+- [x] 5.5 LLM-judge verdict is present for each model row
+- [x] 5.6 `npm run eval:view` opens web UI with results
