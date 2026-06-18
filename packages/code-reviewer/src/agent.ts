@@ -26,6 +26,15 @@ export async function reviewCode(params: {
     : "";
   const prompt = `<pr_title>${params.prTitle}</pr_title>\n\n${prBodySection}Review the following git diff:\n\n${params.diff}`;
 
-  const { output } = await agent.generate({ prompt });
+  const timeoutMs = 60_000;
+  const timeoutSignal = AbortSignal.timeout(timeoutMs);
+  const { output } = await Promise.race([
+    agent.generate({ prompt }),
+    new Promise<never>((_, reject) =>
+      timeoutSignal.addEventListener('abort', () =>
+        reject(new Error(`reviewCode timed out after ${timeoutMs / 1000}s`)),
+      ),
+    ),
+  ]);
   return output;
 }

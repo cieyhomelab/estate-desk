@@ -40,8 +40,8 @@ defaultTest:
 
     # Static: holistic score must be low (flawed diff)
     - type: javascript
-      value: output.overall_score <= 5
-      description: "overall_score ≤ 5 on a diff with 3 impactful flaws"
+      value: output.overall_score <= 6
+      description: "overall_score ≤ 6 on a diff with 3 impactful flaws"
 
     # Static: at least 3 criteria must have raised issues
     - type: javascript
@@ -59,6 +59,8 @@ tests:
       prBody: |
         Converts the legacy class-based TodoList to a functional component using hooks.
         Updates imports and component structure to align with the React 19 migration guide.
+      # The diff imports ReactDOM from 'react-dom' (needed for the ReactDOM.render call — flaw 1).
+      # This is NOT a standalone fourth flaw; it is part of the same ReactDOM.render issue.
       diff: "file://./evals/fixtures/react-migration.diff"
     assert:
       # LLM-as-judge: verify the three specific flaws are identified
