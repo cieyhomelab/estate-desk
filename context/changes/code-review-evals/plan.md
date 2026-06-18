@@ -434,7 +434,7 @@ No existing data or users are affected. The `reviewCode()` signature change is a
 
 #### Automated
 
-- [x] 2.1 `npm run eval -- --help` exits 0 and prints promptfoo usage
+- [x] 2.1 `npm run eval -- --help` exits 0 and prints promptfoo usage — 2c5c5a5
 
 #### Manual
 
@@ -444,7 +444,7 @@ No existing data or users are affected. The `reviewCode()` signature change is a
 
 #### Automated
 
-- [ ] 3.1 Type-check passes with provider file included
+- [x] 3.1 Type-check passes with provider file included
 
 ### Phase 4: Create the React Migration Test Fixture
 
