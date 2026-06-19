@@ -61,7 +61,7 @@ test("close listing → done-state card on dashboard", async () => {
 
   await expect(page.getByText("Ukończone")).toBeVisible();
   await expect(page.getByText("ul. Lifecycle Test", { exact: true })).toBeVisible();
-  await expect(page.getByText("Zofia Testowa")).toBeVisible();
+  await expect(page.getByText("Gdańsk · Zofia Testowa", { exact: true })).toBeVisible();
   await expect(page.getByText(/Zysk:/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Wznów transakcję" })).toBeVisible();
 });
@@ -86,7 +86,7 @@ test("reopen → active state with data intact", async () => {
 
   await expect(page.getByText("Aktywne", { exact: true })).toBeVisible();
   await expect(page.getByText("ul. Lifecycle Test", { exact: true })).toBeVisible();
-  await expect(page.getByText("Zofia Testowa")).toBeVisible();
+  await expect(page.getByText("Gdańsk · Zofia Testowa", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Zakończ transakcję" })).toBeVisible();
   await expect(page.getByText(/Zysk agenta/)).not.toBeVisible();
 });
