@@ -211,24 +211,24 @@ The column header widths mirror the cell widths in `ListingRow` exactly so colum
 
 #### Automated
 
-- [x] 1.1 TypeScript compiles with no errors: `npx tsc --noEmit`
+- [x] 1.1 TypeScript compiles with no errors: `npx tsc --noEmit` — 3b6dc78
 
 #### Manual
 
-- [x] 1.2 ListingRow renders correctly in isolation in the browser
-- [x] 1.3 Address cell: street + meta line visible; meta omitted when owner_name is null
-- [x] 1.4 City parses correctly from comma-separated address string
-- [x] 1.5 Type badges show correct colors for sale vs rental
-- [x] 1.6 Status badges show correct colors for active vs done
-- [x] 1.7 Done listings show green "Zysk:" line; active listings do not
-- [x] 1.8 All 6 action buttons clickable
+- [x] 1.2 ListingRow renders correctly in isolation in the browser — 3b6dc78
+- [x] 1.3 Address cell: street + meta line visible; meta omitted when owner_name is null — 3b6dc78
+- [x] 1.4 City parses correctly from comma-separated address string — 3b6dc78
+- [x] 1.5 Type badges show correct colors for sale vs rental — 3b6dc78
+- [x] 1.6 Status badges show correct colors for active vs done — 3b6dc78
+- [x] 1.7 Done listings show green "Zysk:" line; active listings do not — 3b6dc78
+- [x] 1.8 All 6 action buttons clickable — 3b6dc78
 
 ### Phase 2: Update DashboardListings
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles with no errors: `npx tsc --noEmit`
-- [ ] 2.2 Dev server starts without errors: `npm run dev`
+- [x] 2.1 TypeScript compiles with no errors: `npx tsc --noEmit`
+- [x] 2.2 Dev server starts without errors: `npm run dev`
 
 #### Manual
 

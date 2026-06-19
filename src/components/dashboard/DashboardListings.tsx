@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SlidersHorizontal, Download } from "lucide-react";
 import type { Listing } from "@/types/listings";
-import ListingCard from "@/components/listings/ListingCard";
+import ListingRow from "@/components/listings/ListingRow";
 import { listingsToCsv } from "@/lib/csv";
 
 interface Props {
@@ -178,10 +178,29 @@ export default function DashboardListings({ listings, snapshotMap, hasError = fa
       ) : filteredListings.length === 0 && listings.length > 0 ? (
         <p className="py-12 text-center text-sm text-white/45">Brak ogłoszeń pasujących do filtrów.</p>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {filteredListings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} agentNet={snapshotMap[listing.id] ?? null} />
-          ))}
+        <div className="overflow-x-auto">
+          <div className="min-w-[640px]">
+            <div className="flex items-center border-b border-white/[0.05] pb-[10px]">
+              <div className="flex-1 text-[10px] font-semibold tracking-[0.7px] text-white/[0.19] uppercase">
+                Adres / Właściciel
+              </div>
+              <div className="w-[110px] shrink-0 text-[10px] font-semibold tracking-[0.7px] text-white/[0.19] uppercase">
+                Typ
+              </div>
+              <div className="w-[130px] shrink-0 text-[10px] font-semibold tracking-[0.7px] text-white/[0.19] uppercase">
+                Cena
+              </div>
+              <div className="w-[90px] shrink-0 text-[10px] font-semibold tracking-[0.7px] text-white/[0.19] uppercase">
+                Status
+              </div>
+              <div className="w-[160px] shrink-0 text-[10px] font-semibold tracking-[0.7px] text-white/[0.19] uppercase">
+                Akcje
+              </div>
+            </div>
+            {filteredListings.map((listing) => (
+              <ListingRow key={listing.id} listing={listing} agentNet={snapshotMap[listing.id] ?? null} />
+            ))}
+          </div>
         </div>
       )}
     </>
