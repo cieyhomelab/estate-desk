@@ -80,7 +80,8 @@
     "esbuild": "^0.28.1",
     "qs": "^6.15.2",
     "volar-service-yaml": "0.0.71",
-    "ws": "^8.21.0"
+    "ws": "^8.21.0",
+    "undici": "^7.28.0"
   },
   "lint-staged": {
     "*.{ts,tsx,astro}": [
