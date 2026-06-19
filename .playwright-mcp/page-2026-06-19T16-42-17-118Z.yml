@@ -1,0 +1,40 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - heading "Sign in" [level=1] [ref=e5]
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: Email
+          - generic [ref=e10]:
+            - img [ref=e12]
+            - textbox "Email" [ref=e15]:
+              - /placeholder: you@example.com
+        - generic [ref=e16]:
+          - generic [ref=e17]: Password
+          - generic [ref=e18]:
+            - img [ref=e20]
+            - textbox "Password" [ref=e23]:
+              - /placeholder: Your password
+            - button "Show password" [ref=e24]:
+              - img [ref=e25]
+        - button "Sign in" [ref=e28]:
+          - generic [ref=e29]:
+            - img
+            - text: Sign in
+      - paragraph [ref=e30]:
+        - text: Don't have an account?
+        - link "Sign up" [ref=e31] [cursor=pointer]:
+          - /url: /auth/signup
+  - generic [ref=e34]:
+    - button "Menu" [ref=e35]:
+      - img [ref=e37]
+      - generic: Menu
+    - button "Inspect" [ref=e41]:
+      - img [ref=e43]
+      - generic: Inspect
+    - button "Audit" [ref=e45]:
+      - img [ref=e47]
+      - generic: Audit
+    - button "Settings" [ref=e50]:
+      - img [ref=e52]
+      - generic: Settings

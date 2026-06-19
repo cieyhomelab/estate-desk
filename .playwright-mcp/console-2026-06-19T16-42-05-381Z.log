@@ -1,0 +1,3 @@
+[     844ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:4321/node_modules/.vite/deps/chunk-HUKPTV3E.js?v=fc42d29d:20102
+[    1215ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:4321/node_modules/.vite/deps/@sentry_astro.js?v=4c9bc8d6:7856
+[    2733ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://o4511508107755520.ingest.de.sentry.io/api/4511508132331600/envelope/?sentry_version=7&sentry_key=e7d48789153d6cbfcc0697cdb26e01f7&sentry_client=sentry.javascript.astro%2F10.56.0:0
