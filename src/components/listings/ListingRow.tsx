@@ -13,7 +13,10 @@ export default function ListingRow({ listing, agentNet = null }: Props) {
   const city = lastComma !== -1 ? listing.address.slice(lastComma + 1).trim() : null;
 
   function handleDelete(e: React.MouseEvent<HTMLButtonElement>) {
-    if (!window.confirm("Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.")) {
+    if (
+      typeof window === "undefined" ||
+      !window.confirm("Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.")
+    ) {
       e.preventDefault();
     }
   }
@@ -38,11 +41,11 @@ export default function ListingRow({ listing, agentNet = null }: Props) {
       {/* Type cell */}
       <div className="w-[110px] shrink-0">
         {listing.type === "sale" ? (
-          <span className="inline-flex items-center rounded-full border border-[#3b82f6]/[0.19] bg-[#1e3a5f] px-[10px] py-[4px] text-[11px] font-medium text-[#93c5fd]">
+          <span className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-900 px-[10px] py-[4px] text-[11px] font-medium text-blue-300">
             Sprzedaż
           </span>
         ) : (
-          <span className="inline-flex items-center rounded-full border border-[#38bdf8]/[0.19] bg-[#163040] px-[10px] py-[4px] text-[11px] font-medium text-[#38bdf8]">
+          <span className="inline-flex items-center rounded-full border border-sky-400/20 bg-[#163040] px-[10px] py-[4px] text-[11px] font-medium text-sky-400">
             Najem okazjonalny
           </span>
         )}
@@ -58,18 +61,18 @@ export default function ListingRow({ listing, agentNet = null }: Props) {
           )}
         </p>
         {listing.status === "done" && agentNet !== null && (
-          <p className="text-[11px] text-[#4ade80]">Zysk: {formatPLN(agentNet)}</p>
+          <p className="text-[11px] text-green-400">Zysk: {formatPLN(agentNet)}</p>
         )}
       </div>
 
       {/* Status cell */}
       <div className="w-[90px] shrink-0">
         {listing.status === "active" ? (
-          <span className="inline-flex items-center rounded-full border border-[#22c55e]/[0.13] bg-[#0f2a1a] px-[10px] py-[4px] text-[11px] font-medium text-[#86efac]">
+          <span className="inline-flex items-center rounded-full border border-green-500/[0.13] bg-[#0f2a1a] px-[10px] py-[4px] text-[11px] font-medium text-green-300">
             Aktywne
           </span>
         ) : (
-          <span className="inline-flex items-center rounded-full border border-white/[0.06] bg-[#1a1a2e] px-[10px] py-[4px] text-[11px] font-medium text-white/[0.31]">
+          <span className="inline-flex items-center rounded-full border border-white/[0.06] bg-[#1a1a2e] px-[10px] py-[4px] text-[11px] font-medium text-white/30">
             Ukończone
           </span>
         )}

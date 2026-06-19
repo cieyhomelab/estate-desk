@@ -1,7 +1,7 @@
 ---
 change_id: listing-redesign
 title: Listing redesign
-status: implemented
+status: impl_reviewed
 created: 2026-06-19
 updated: 2026-06-19
 archived_at: null

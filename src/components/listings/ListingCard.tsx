@@ -14,7 +14,10 @@ export default function ListingCard({ listing, agentNet = null }: Props) {
     listing.status === "active" ? "bg-green-500/15 text-green-300" : "bg-white/[0.08] text-white/50";
 
   function handleDelete(e: React.MouseEvent<HTMLButtonElement>) {
-    if (!window.confirm("Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.")) {
+    if (
+      typeof window === "undefined" ||
+      !window.confirm("Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.")
+    ) {
       e.preventDefault();
     }
   }
@@ -43,7 +46,7 @@ export default function ListingCard({ listing, agentNet = null }: Props) {
 
       {listing.status === "done" && (
         <p className="mb-4 text-sm text-white/50">
-          Zysk agenta: <span className="font-medium text-white">{agentNet !== null ? formatPLN(agentNet) : "—"}</span>
+          Zysk: <span className="font-medium text-white">{agentNet !== null ? formatPLN(agentNet) : "—"}</span>
         </p>
       )}
 
