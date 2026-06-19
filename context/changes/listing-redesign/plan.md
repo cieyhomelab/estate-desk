@@ -227,16 +227,16 @@ The column header widths mirror the cell widths in `ListingRow` exactly so colum
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles with no errors: `npx tsc --noEmit`
-- [x] 2.2 Dev server starts without errors: `npm run dev`
+- [x] 2.1 TypeScript compiles with no errors: `npx tsc --noEmit` — 33866b9
+- [x] 2.2 Dev server starts without errors: `npm run dev` — 33866b9
 
 #### Manual
 
-- [ ] 2.3 Dashboard loads with the list view replacing the card grid
-- [ ] 2.4 Column headers align with their respective data cells
-- [ ] 2.5 Filters still work (status, price, city)
-- [ ] 2.6 CSV export still works
-- [ ] 2.7 Empty state renders correctly
-- [ ] 2.8 No-filter-match state renders correctly
-- [ ] 2.9 Mobile: container scrolls horizontally; all columns visible on scroll
-- [ ] 2.10 No regressions on listing detail pages
+- [x] 2.3 Dashboard loads with the list view replacing the card grid — 33866b9
+- [x] 2.4 Column headers align with their respective data cells — 33866b9
+- [x] 2.5 Filters still work (status, price, city) — 33866b9
+- [x] 2.6 CSV export still works — 33866b9
+- [x] 2.7 Empty state renders correctly — 33866b9
+- [x] 2.8 No-filter-match state renders correctly — 33866b9
+- [x] 2.9 Mobile: container scrolls horizontally; all columns visible on scroll — 33866b9
+- [x] 2.10 No regressions on listing detail pages — 33866b9
