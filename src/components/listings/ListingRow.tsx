@@ -46,7 +46,7 @@ export default function ListingRow({ listing, agentNet = null }: Props) {
           </span>
         ) : (
           <span className="inline-flex items-center rounded-full border border-sky-400/20 bg-[#163040] px-[10px] py-[4px] text-[11px] font-medium text-sky-400">
-            Najem okazjonalny
+            Najem
           </span>
         )}
       </div>

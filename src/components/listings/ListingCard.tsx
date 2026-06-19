@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function ListingCard({ listing, agentNet = null }: Props) {
-  const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem okazjonalny";
+  const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem";
   const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
   const statusBadgeClass =
     listing.status === "active" ? "bg-green-500/15 text-green-300" : "bg-white/[0.08] text-white/50";

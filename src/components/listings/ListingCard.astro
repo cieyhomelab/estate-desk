@@ -10,7 +10,7 @@ interface Props {
 
 const { listing, agentNet = null } = Astro.props;
 
-const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem okazjonalny";
+const typeLabel = listing.type === "sale" ? "Sprzedaż" : "Najem";
 const statusLabel = listing.status === "active" ? "Aktywne" : "Ukończone";
 ---
 
