@@ -1,6 +1,6 @@
 import { PencilLine, Tag, FileText, Users, CircleCheck, RotateCcw, Trash2 } from "lucide-react";
 import type { Listing } from "@/types/listings";
-import { formatPLN } from "@/lib/utils";
+import { formatPLN, parseAddressParts } from "@/lib/utils";
 
 interface Props {
   listing: Listing;
@@ -8,15 +8,11 @@ interface Props {
 }
 
 export default function ListingRow({ listing, agentNet = null }: Props) {
-  const lastComma = listing.address.lastIndexOf(",");
-  const street = lastComma !== -1 ? listing.address.slice(0, lastComma).trim() : listing.address;
-  const city = lastComma !== -1 ? listing.address.slice(lastComma + 1).trim() : null;
+  const { street, city } = parseAddressParts(listing.address);
 
   function handleDelete(e: React.MouseEvent<HTMLButtonElement>) {
-    if (
-      typeof window === "undefined" ||
-      !window.confirm("Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.")
-    ) {
+    // onClick only fires in the browser, so window is always defined here.
+    if (!window.confirm("Czy na pewno chcesz usunąć to ogłoszenie? Tej operacji nie można cofnąć.")) {
       e.preventDefault();
     }
   }

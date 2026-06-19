@@ -10,6 +10,7 @@ import { test, expect } from "@playwright/test";
 import type { Browser, BrowserContext, Page } from "@playwright/test";
 import { createE2ESupabaseClient } from "./helpers/db";
 import { createTestUser, getSessionCookies, deleteTestUser } from "./helpers/auth";
+import { parseAddressParts } from "./helpers/address";
 import type { TestUser } from "./helpers/auth";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -62,13 +63,11 @@ test("unauthenticated access to listing edit page redirects to sign-in", async (
 });
 
 test("authenticated user sees their listing data on the dashboard", async () => {
-  const lastComma = listingAddress.lastIndexOf(",");
-  const listingStreet = lastComma !== -1 ? listingAddress.slice(0, lastComma).trim() : listingAddress;
-  const listingCity = lastComma !== -1 ? listingAddress.slice(lastComma + 1).trim() : null;
-  const ownerSubtext = listingCity ? `${listingCity} · Jan Właściciel` : "Jan Właściciel";
+  const { street, city } = parseAddressParts(listingAddress);
+  const ownerSubtext = city ? `${city} · Jan Właściciel` : "Jan Właściciel";
 
   await authedPage.goto("/dashboard");
   await expect(authedPage).toHaveURL("/dashboard");
-  await expect(authedPage.getByText(listingStreet, { exact: true })).toBeVisible();
+  await expect(authedPage.getByText(street, { exact: true })).toBeVisible();
   await expect(authedPage.getByText(ownerSubtext, { exact: true })).toBeVisible();
 });
