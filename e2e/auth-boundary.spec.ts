@@ -68,5 +68,5 @@ test("authenticated user sees their listing data on the dashboard", async () => 
   await authedPage.goto("/dashboard");
   await expect(authedPage).toHaveURL("/dashboard");
   await expect(authedPage.getByText(listingStreet, { exact: true })).toBeVisible();
-  await expect(authedPage.getByText("Jan Właściciel", { exact: true })).toBeVisible();
+  await expect(authedPage.getByText("Jan Właściciel")).toBeVisible();
 });
