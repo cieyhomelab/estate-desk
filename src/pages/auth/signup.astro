@@ -5,18 +5,73 @@ import SignUpForm from "@/components/auth/SignUpForm";
 const error = Astro.url.searchParams.get("error");
 ---
 
-<Layout title="Sign up">
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
-      <h1
-        class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent"
-      >
-        Sign up
-      </h1>
-      <SignUpForm serverError={error} client:load />
-      <p class="mt-4 text-center text-sm text-blue-100/60">
-        Already have an account? <a href="/auth/signin" class="text-purple-300 hover:underline">Sign in</a>
-      </p>
-    </div>
+<Layout title="Utwórz konto">
+  <div class="bg-cosmic min-h-screen lg:grid lg:grid-cols-[1.35fr_0.85fr]">
+    <section class="auth-hero flex min-h-screen flex-col justify-between px-10 py-10 lg:px-16">
+      <div class="auth-hero-content flex items-center gap-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="size-6 text-blue-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+          <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span class="text-lg font-bold text-white">EstateDesk</span>
+      </div>
+
+      <div class="auth-hero-content max-w-3xl">
+        <div class="auth-badge mb-8">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="size-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+            ></path>
+            <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Kompletny system dla agentów nieruchomości</span>
+        </div>
+        <h1 class="auth-title">Twój panel nieruchomości.</h1>
+        <p class="auth-description mt-8">
+          Kompletne narzędzia dla agenta nieruchomości — od onboardingu właściciela po zamknięcie transakcji.
+        </p>
+      </div>
+
+      <div class="auth-hero-content auth-benefits hidden lg:grid">
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">✓</span>
+          <span>Zarządzanie ofertami i cyklem życia</span>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">✓</span>
+          <span>Kolekcja dokumentów z checklistą</span>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon">✓</span>
+          <span>Kalkulator prowizji agenta</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-panel flex min-h-screen items-center justify-center px-8 py-10">
+      <div class="login-card">
+        <h2 class="auth-login-title">Utwórz konto</h2>
+        <p class="auth-login-subtitle">Wprowadź dane, aby się zarejestrować</p>
+        <div class="mt-10">
+          <SignUpForm serverError={error} client:load />
+        </div>
+        <p class="mt-7 text-center text-sm text-slate-400">
+          Masz już konto? <a class="auth-link" href="/auth/signin">Zaloguj się</a>
+        </p>
+      </div>
+    </section>
   </div>
 </Layout>

@@ -376,33 +376,33 @@ Apply the two-column layout to the confirm-email page. The right panel hosts the
 
 #### Automated
 
-- [x] 2.1 `npm run build` completes without errors
-- [x] 2.2 `npx tsc --noEmit` passes
+- [x] 2.1 `npm run build` completes without errors — 60ef86f
+- [x] 2.2 `npx tsc --noEmit` passes — 60ef86f
 
 #### Manual
 
-- [x] 2.3 `/auth/signin` shows two-column layout: dark hero left, card right
-- [x] 2.4 Hero shows EstateDesk branding, badge, large headline, description, three benefits
-- [x] 2.5 Card shows "Zaloguj się" heading, dark tall inputs with leading icons, blue/indigo gradient button
-- [x] 2.6 "Zapomniałeś hasła?" link visible right-aligned between password field and submit button
-- [x] 2.7 "Nie masz konta? Zarejestruj się" footer visible
-- [x] 2.8 Password show/hide toggle functional
-- [x] 2.9 Submit button is blue/indigo gradient — not purple
-- [x] 2.10 Benefits list hidden on mobile, visible on desktop
-- [x] 2.11 Mobile: single column, hero compact, card full-width with reduced padding
+- [x] 2.3 `/auth/signin` shows two-column layout: dark hero left, card right — 60ef86f
+- [x] 2.4 Hero shows EstateDesk branding, badge, large headline, description, three benefits — 60ef86f
+- [x] 2.5 Card shows "Zaloguj się" heading, dark tall inputs with leading icons, blue/indigo gradient button — 60ef86f
+- [x] 2.6 "Zapomniałeś hasła?" link visible right-aligned between password field and submit button — 60ef86f
+- [x] 2.7 "Nie masz konta? Zarejestruj się" footer visible — 60ef86f
+- [x] 2.8 Password show/hide toggle functional — 60ef86f
+- [x] 2.9 Submit button is blue/indigo gradient — not purple — 60ef86f
+- [x] 2.10 Benefits list hidden on mobile, visible on desktop — 60ef86f
+- [x] 2.11 Mobile: single column, hero compact, card full-width with reduced padding — 60ef86f
 
 ### Phase 3: Apply Layout to signup.astro
 
 #### Automated
 
-- [ ] 3.1 `npm run build` completes without errors
+- [x] 3.1 `npm run build` completes without errors
 
 #### Manual
 
-- [ ] 3.2 `/auth/signup` shows same two-column dark layout as `/auth/signin`
-- [ ] 3.3 Card heading "Utwórz konto", three fields styled with auth-input
-- [ ] 3.4 Form labels, placeholders, and validation errors display in Polish
-- [ ] 3.5 Mobile layout collapses correctly
+- [x] 3.2 `/auth/signup` shows same two-column dark layout as `/auth/signin`
+- [x] 3.3 Card heading "Utwórz konto", three fields styled with auth-input
+- [x] 3.4 Form labels, placeholders, and validation errors display in Polish
+- [x] 3.5 Mobile layout collapses correctly
 
 ### Phase 4: Apply Layout to confirm-email.astro
 
