@@ -366,30 +366,30 @@ Apply the two-column layout to the confirm-email page. The right panel hosts the
 
 #### Automated
 
-- [x] 1.1 `npm run build` completes without errors
+- [x] 1.1 `npm run build` completes without errors — e853425
 
 #### Manual
 
-- [x] 1.2 Generated CSS includes `.auth-hero`, `.auth-hero::before`, `.auth-hero::after`, `.auth-input`, `.auth-button` (verified via DevTools or build output)
+- [x] 1.2 Generated CSS includes `.auth-hero`, `.auth-hero::before`, `.auth-hero::after`, `.auth-input`, `.auth-button` (verified via DevTools or build output) — e853425
 
 ### Phase 2: Restructure signin.astro + Restyle Auth Components
 
 #### Automated
 
-- [ ] 2.1 `npm run build` completes without errors
-- [ ] 2.2 `npx tsc --noEmit` passes
+- [x] 2.1 `npm run build` completes without errors
+- [x] 2.2 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 2.3 `/auth/signin` shows two-column layout: dark hero left, card right
-- [ ] 2.4 Hero shows EstateDesk branding, badge, large headline, description, three benefits
-- [ ] 2.5 Card shows "Zaloguj się" heading, dark tall inputs with leading icons, blue/indigo gradient button
-- [ ] 2.6 "Zapomniałeś hasła?" link visible right-aligned between password field and submit button
-- [ ] 2.7 "Nie masz konta? Zarejestruj się" footer visible
-- [ ] 2.8 Password show/hide toggle functional
-- [ ] 2.9 Submit button is blue/indigo gradient — not purple
-- [ ] 2.10 Benefits list hidden on mobile, visible on desktop
-- [ ] 2.11 Mobile: single column, hero compact, card full-width with reduced padding
+- [x] 2.3 `/auth/signin` shows two-column layout: dark hero left, card right
+- [x] 2.4 Hero shows EstateDesk branding, badge, large headline, description, three benefits
+- [x] 2.5 Card shows "Zaloguj się" heading, dark tall inputs with leading icons, blue/indigo gradient button
+- [x] 2.6 "Zapomniałeś hasła?" link visible right-aligned between password field and submit button
+- [x] 2.7 "Nie masz konta? Zarejestruj się" footer visible
+- [x] 2.8 Password show/hide toggle functional
+- [x] 2.9 Submit button is blue/indigo gradient — not purple
+- [x] 2.10 Benefits list hidden on mobile, visible on desktop
+- [x] 2.11 Mobile: single column, hero compact, card full-width with reduced padding
 
 ### Phase 3: Apply Layout to signup.astro
 
