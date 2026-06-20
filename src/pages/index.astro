@@ -3,7 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import AuthHero from "@/components/auth/AuthHero.astro";
 import SignInForm from "@/components/auth/SignInForm";
 
-const error = Astro.url.searchParams.get("error");
+const error = Astro.url.searchParams.get("error") ?? undefined;
 ---
 
 <Layout title="EstateDesk">
