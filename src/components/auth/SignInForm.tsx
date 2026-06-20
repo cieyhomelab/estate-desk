@@ -82,7 +82,15 @@ export default function SignInForm({ serverError }: Props) {
       />
 
       <div className="mt-4 text-right">
-        <a className="auth-link" href="/forgot-password" aria-disabled="true" title="Wkrótce dostępne">
+        <a
+          className="auth-link"
+          href="/forgot-password"
+          aria-disabled="true"
+          title="Wkrótce dostępne"
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+        >
           Zapomniałeś hasła?
         </a>
       </div>

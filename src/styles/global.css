@@ -314,6 +314,7 @@ background-attachment: fixed;
 }
 
 @utility auth-input-error {
+  /* !important needed: auth-input's :focus border-color in the same @layer wins otherwise */
   border-color: rgba(248, 113, 113, 0.6) !important;
   &:focus {
     box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.16);

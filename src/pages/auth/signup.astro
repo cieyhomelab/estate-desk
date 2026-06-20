@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import AuthHero from "@/components/auth/AuthHero.astro";
 import SignUpForm from "@/components/auth/SignUpForm";
 
 const error = Astro.url.searchParams.get("error");
@@ -7,65 +8,7 @@ const error = Astro.url.searchParams.get("error");
 
 <Layout title="Utwórz konto">
   <div class="bg-cosmic min-h-screen lg:grid lg:grid-cols-[1.35fr_0.85fr]">
-    <section class="auth-hero flex min-h-screen flex-col justify-between px-10 py-10 lg:px-16">
-      <div class="auth-hero-content flex items-center gap-3">
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <rect width="32" height="32" rx="8" fill="url(#hdr-grad)"></rect>
-          <path d="M9 23V15.5L16 9.5L23 15.5V23H19.5V18.5H12.5V23H9Z" fill="white" fill-opacity="0.95"></path>
-          <defs>
-            <linearGradient id="hdr-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#6366f1"></stop>
-              <stop offset="100%" stop-color="#4a8cff"></stop>
-            </linearGradient>
-          </defs>
-        </svg>
-        <span class="text-lg font-bold text-white">EstateDesk</span>
-      </div>
-
-      <div class="auth-hero-content max-w-3xl">
-        <div class="auth-badge mb-8">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="size-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-            ></path>
-            <polyline stroke-linecap="round" stroke-linejoin="round" points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Kompletny system dla agentów nieruchomości</span>
-        </div>
-        <h1 class="auth-title">Twój panel nieruchomości.</h1>
-        <p class="auth-description mt-8">
-          Kompletne narzędzia dla agenta nieruchomości — od onboardingu właściciela po zamknięcie transakcji.
-        </p>
-      </div>
-
-      <div class="auth-hero-content auth-benefits hidden lg:grid">
-        <div class="auth-benefit">
-          <span class="auth-benefit-icon">✓</span>
-          <span>Zarządzanie ofertami i cyklem życia</span>
-        </div>
-        <div class="auth-benefit">
-          <span class="auth-benefit-icon">✓</span>
-          <span>Kolekcja dokumentów z checklistą</span>
-        </div>
-        <div class="auth-benefit">
-          <span class="auth-benefit-icon">✓</span>
-          <span>Kalkulator prowizji agenta</span>
-        </div>
-      </div>
-    </section>
+    <AuthHero />
 
     <section class="auth-panel flex min-h-screen items-center justify-center px-8 py-10">
       <div class="login-card">

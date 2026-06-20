@@ -57,13 +57,16 @@ export default function SignUpForm({ serverError }: Props) {
     setIsSubmitting(true);
   }
 
-  const passwordHint =
-    !errors.password && password.length > 0 && password.length < MIN_PASSWORD_LENGTH ? (
+  const passwordHint = (() => {
+    if (errors.password || password.length === 0 || password.length >= MIN_PASSWORD_LENGTH) return undefined;
+    const remaining = MIN_PASSWORD_LENGTH - password.length;
+    const suffix = remaining === 1 ? "" : remaining <= 4 ? "i" : "ów";
+    return (
       <p className="mt-1 text-xs text-blue-100/50">
-        Jeszcze {MIN_PASSWORD_LENGTH - password.length} znak
-        {MIN_PASSWORD_LENGTH - password.length === 1 ? "" : "i"}
+        Jeszcze {remaining} znak{suffix}
       </p>
-    ) : undefined;
+    );
+  })();
 
   return (
     <form method="POST" action="/api/auth/signup" className="space-y-4" onSubmit={handleSubmit} noValidate>
