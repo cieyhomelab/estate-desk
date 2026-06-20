@@ -1,7 +1,7 @@
 ---
 change_id: landing-page-fix
 title: Landing page UI fixes from design review
-status: implemented
+status: impl_reviewed
 created: 2026-06-20
 updated: 2026-06-20
 archived_at: null

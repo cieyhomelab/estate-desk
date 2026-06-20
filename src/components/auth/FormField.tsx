@@ -12,6 +12,7 @@ interface FormFieldProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  autoComplete?: string;
   error?: string;
   hint?: ReactNode;
   icon: ReactNode;
@@ -26,6 +27,7 @@ export function FormField({
   value,
   onChange,
   placeholder,
+  autoComplete,
   error,
   hint,
   icon,
@@ -47,12 +49,15 @@ export function FormField({
             onChange(e.target.value);
           }}
           placeholder={placeholder}
+          autoComplete={autoComplete}
           className={cn(inputBase, error && "auth-input-error")}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
         />
         {endContent}
       </div>
       {error ? (
-        <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
+        <p id={`${id}-error`} role="alert" className="mt-1 flex items-center gap-1 text-xs text-red-300">
           <CircleAlert className="size-3" />
           {error}
         </p>

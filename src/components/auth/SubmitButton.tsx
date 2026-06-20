@@ -1,15 +1,13 @@
 import type { ReactNode } from "react";
-import { useFormStatus } from "react-dom";
 
 interface SubmitButtonProps {
+  pending: boolean;
   pendingText: string;
   icon: ReactNode;
   children: ReactNode;
 }
 
-export function SubmitButton({ pendingText, icon, children }: SubmitButtonProps) {
-  const { pending } = useFormStatus();
-
+export function SubmitButton({ pending, pendingText, icon, children }: SubmitButtonProps) {
   return (
     <button type="submit" disabled={pending} className="auth-button">
       {pending ? (

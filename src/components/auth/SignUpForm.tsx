@@ -18,6 +18,7 @@ export default function SignUpForm({ serverError }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function validate() {
     const next: typeof errors = {};
@@ -51,14 +52,16 @@ export default function SignUpForm({ serverError }: Props) {
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     if (!validate()) {
       e.preventDefault();
+      return;
     }
+    setIsSubmitting(true);
   }
 
   const passwordHint =
     !errors.password && password.length > 0 && password.length < MIN_PASSWORD_LENGTH ? (
       <p className="mt-1 text-xs text-blue-100/50">
-        {MIN_PASSWORD_LENGTH - password.length} more character
-        {MIN_PASSWORD_LENGTH - password.length !== 1 ? "s" : ""} needed
+        Jeszcze {MIN_PASSWORD_LENGTH - password.length} znak
+        {MIN_PASSWORD_LENGTH - password.length === 1 ? "" : "i"}
       </p>
     ) : undefined;
 
@@ -88,6 +91,7 @@ export default function SignUpForm({ serverError }: Props) {
           clearError("password");
         }}
         placeholder="Min. 6 znaków"
+        autoComplete="new-password"
         error={errors.password}
         hint={passwordHint}
         icon={<Lock className="size-4" />}
@@ -112,6 +116,7 @@ export default function SignUpForm({ serverError }: Props) {
           clearError("confirmPassword");
         }}
         placeholder="Powtórz hasło"
+        autoComplete="new-password"
         error={errors.confirmPassword}
         icon={<Lock className="size-4" />}
         endContent={
@@ -126,7 +131,7 @@ export default function SignUpForm({ serverError }: Props) {
 
       <ServerError message={serverError} />
 
-      <SubmitButton pendingText="Tworzenie konta..." icon={<UserPlus className="size-4" />}>
+      <SubmitButton pending={isSubmitting} pendingText="Tworzenie konta..." icon={<UserPlus className="size-4" />}>
         Utwórz konto
       </SubmitButton>
     </form>

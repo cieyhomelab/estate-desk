@@ -11,7 +11,7 @@ export function PasswordToggle({ visible, onToggle }: PasswordToggleProps) {
       type="button"
       onClick={onToggle}
       className="auth-input-action"
-      aria-label={visible ? "Hide password" : "Show password"}
+      aria-label={visible ? "Ukryj hasło" : "Pokaż hasło"}
     >
       {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
     </button>
