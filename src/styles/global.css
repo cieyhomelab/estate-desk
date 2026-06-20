@@ -111,7 +111,21 @@
 }
 
 @utility bg-cosmic {
-  background-image: linear-gradient(to bottom, #0a0e1a, #0f1529, #0a0e1a);
+background:
+linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+radial-gradient(circle at 20% 10%, rgba(37, 99, 235, 0.20), transparent 28%),
+radial-gradient(circle at 85% 15%, rgba(79, 70, 229, 0.16), transparent 32%),
+radial-gradient(circle at 55% 100%, rgba(14, 165, 233, 0.08), transparent 40%),
+linear-gradient(180deg, #070b14 0%, #0b1020 45%, #080c16 100%);
+background-size:
+32px 32px,
+32px 32px,
+auto,
+auto,
+auto,
+auto;
+background-attachment: fixed;
 }
 
 @layer base {
