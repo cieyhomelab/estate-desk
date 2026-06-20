@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Lock, LogIn } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ServerError } from "@/components/auth/ServerError";
+import { validateEmail, validatePassword } from "@/lib/auth-validation";
 
 interface Props {
   serverError?: string | null;
@@ -14,17 +15,25 @@ export default function SignInForm({ serverError }: Props) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Reset if navigation was blocked (network failure after submit)
+  useEffect(() => {
+    if (!isSubmitting) return;
+    const timer = setTimeout(() => {
+      setIsSubmitting(false);
+    }, 15_000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isSubmitting]);
 
   function validate() {
     const next: typeof errors = {};
-    if (!email.trim()) {
-      next.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      next.email = "Enter a valid email address";
-    }
-    if (!password) {
-      next.password = "Password is required";
-    }
+    const emailErr = validateEmail(email);
+    if (emailErr) next.email = emailErr;
+    const passwordErr = validatePassword(password);
+    if (passwordErr) next.password = passwordErr;
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -36,7 +45,9 @@ export default function SignInForm({ serverError }: Props) {
   function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     if (!validate()) {
       e.preventDefault();
+      return;
     }
+    setIsSubmitting(true);
   }
 
   return (
@@ -50,21 +61,22 @@ export default function SignInForm({ serverError }: Props) {
           setEmail(v);
           clearError("email");
         }}
-        placeholder="you@example.com"
+        placeholder="ty@example.com"
         error={errors.email}
         icon={<Mail className="size-4" />}
       />
 
       <FormField
         id="password"
-        label="Password"
+        label="Hasło"
         type={showPassword ? "text" : "password"}
         value={password}
         onChange={(v) => {
           setPassword(v);
           clearError("password");
         }}
-        placeholder="Your password"
+        placeholder="Twoje hasło"
+        autoComplete="current-password"
         error={errors.password}
         icon={<Lock className="size-4" />}
         endContent={
@@ -77,10 +89,24 @@ export default function SignInForm({ serverError }: Props) {
         }
       />
 
+      <div className="mt-4 text-right">
+        <a
+          className="auth-link"
+          href="/forgot-password"
+          aria-disabled="true"
+          title="Wkrótce dostępne"
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+        >
+          Zapomniałeś hasła?
+        </a>
+      </div>
+
       <ServerError message={serverError} />
 
-      <SubmitButton pendingText="Signing in..." icon={<LogIn className="size-4" />}>
-        Sign in
+      <SubmitButton pending={isSubmitting} pendingText="Logowanie..." icon={<LogIn className="size-4" />}>
+        Zaloguj się
       </SubmitButton>
     </form>
   );

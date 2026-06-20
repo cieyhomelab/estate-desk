@@ -2,8 +2,7 @@ import type { ReactNode } from "react";
 import { CircleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const inputBase =
-  "w-full rounded-lg bg-white/10 border px-3 py-2 pl-10 text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-colors";
+const inputBase = "auth-input";
 
 interface FormFieldProps {
   id: string;
@@ -13,6 +12,7 @@ interface FormFieldProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  autoComplete?: string;
   error?: string;
   hint?: ReactNode;
   icon: ReactNode;
@@ -27,6 +27,7 @@ export function FormField({
   value,
   onChange,
   placeholder,
+  autoComplete,
   error,
   hint,
   icon,
@@ -34,11 +35,11 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm text-blue-100/80">
+      <label htmlFor={id} className="auth-label">
         {label}
       </label>
-      <div className="relative">
-        <span className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-white/40">{icon}</span>
+      <div className="auth-input-wrap">
+        <span className="auth-input-icon">{icon}</span>
         <input
           id={id}
           name={name ?? id}
@@ -48,15 +49,15 @@ export function FormField({
             onChange(e.target.value);
           }}
           placeholder={placeholder}
-          className={cn(
-            inputBase,
-            error ? "border-red-400/60 focus:ring-red-400" : "border-white/20 focus:ring-purple-400",
-          )}
+          autoComplete={autoComplete}
+          className={cn(inputBase, error && "auth-input-error")}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
         />
         {endContent}
       </div>
       {error ? (
-        <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
+        <p id={`${id}-error`} role="alert" className="mt-1 flex items-center gap-1 text-xs text-red-300">
           <CircleAlert className="size-3" />
           {error}
         </p>

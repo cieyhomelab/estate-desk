@@ -1,22 +1,26 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import AuthHero from "@/components/auth/AuthHero.astro";
 import SignInForm from "@/components/auth/SignInForm";
 
 const error = Astro.url.searchParams.get("error");
 ---
 
-<Layout title="Sign in">
-  <div class="bg-cosmic flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
-      <h1
-        class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent"
-      >
-        Sign in
-      </h1>
-      <SignInForm serverError={error} client:load />
-      <p class="mt-4 text-center text-sm text-blue-100/60">
-        Don't have an account? <a href="/auth/signup" class="text-purple-300 hover:underline">Sign up</a>
-      </p>
-    </div>
+<Layout title="Zaloguj się">
+  <div class="bg-cosmic min-h-screen lg:grid lg:grid-cols-[1.35fr_0.85fr]">
+    <AuthHero />
+
+    <section class="auth-panel flex min-h-screen items-center justify-center px-8 py-10">
+      <div class="login-card">
+        <h2 class="auth-login-title">Zaloguj się</h2>
+        <p class="auth-login-subtitle">Wprowadź dane, aby kontynuować</p>
+        <div class="mt-10">
+          <SignInForm serverError={error} client:load />
+        </div>
+        <p class="mt-7 text-center text-sm text-slate-400">
+          Nie masz konta? <a class="auth-link" href="/auth/signup">Zarejestruj się</a>
+        </p>
+      </div>
+    </section>
   </div>
 </Layout>
