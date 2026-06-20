@@ -395,23 +395,23 @@ Apply the two-column layout to the confirm-email page. The right panel hosts the
 
 #### Automated
 
-- [x] 3.1 `npm run build` completes without errors
+- [x] 3.1 `npm run build` completes without errors — 02f92b8
 
 #### Manual
 
-- [x] 3.2 `/auth/signup` shows same two-column dark layout as `/auth/signin`
-- [x] 3.3 Card heading "Utwórz konto", three fields styled with auth-input
-- [x] 3.4 Form labels, placeholders, and validation errors display in Polish
-- [x] 3.5 Mobile layout collapses correctly
+- [x] 3.2 `/auth/signup` shows same two-column dark layout as `/auth/signin` — 02f92b8
+- [x] 3.3 Card heading "Utwórz konto", three fields styled with auth-input — 02f92b8
+- [x] 3.4 Form labels, placeholders, and validation errors display in Polish — 02f92b8
+- [x] 3.5 Mobile layout collapses correctly — 02f92b8
 
 ### Phase 4: Apply Layout to confirm-email.astro
 
 #### Automated
 
-- [ ] 4.1 `npm run build` completes without errors
+- [x] 4.1 `npm run build` completes without errors
 
 #### Manual
 
-- [ ] 4.2 `/auth/confirm-email` shows consistent two-column dark layout
-- [ ] 4.3 Confirmation card readable; signin link styled with auth-link
-- [ ] 4.4 No regressions on signin or signup pages
+- [x] 4.2 `/auth/confirm-email` shows consistent two-column dark layout
+- [x] 4.3 Confirmation card readable; signin link styled with auth-link
+- [x] 4.4 No regressions on signin or signup pages
