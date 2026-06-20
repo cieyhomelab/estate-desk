@@ -408,10 +408,10 @@ Apply the two-column layout to the confirm-email page. The right panel hosts the
 
 #### Automated
 
-- [x] 4.1 `npm run build` completes without errors
+- [x] 4.1 `npm run build` completes without errors — 58a7ea1
 
 #### Manual
 
-- [x] 4.2 `/auth/confirm-email` shows consistent two-column dark layout
-- [x] 4.3 Confirmation card readable; signin link styled with auth-link
-- [x] 4.4 No regressions on signin or signup pages
+- [x] 4.2 `/auth/confirm-email` shows consistent two-column dark layout — 58a7ea1
+- [x] 4.3 Confirmation card readable; signin link styled with auth-link — 58a7ea1
+- [x] 4.4 No regressions on signin or signup pages — 58a7ea1
