@@ -1,0 +1,3 @@
+[     690ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "username"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:4322/auth/signin:0
+[     789ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:4322/node_modules/.vite/deps/@sentry_astro.js?v=6d999ffb:7856
+[    1737ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://o4511508107755520.ingest.de.sentry.io/api/4511508132331600/envelope/?sentry_version=7&sentry_key=e7d48789153d6cbfcc0697cdb26e01f7&sentry_client=sentry.javascript.astro%2F10.56.0:0

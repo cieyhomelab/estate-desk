@@ -1,0 +1,52 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e9]: EstateDesk
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - img [ref=e12]
+          - generic [ref=e15]: Kompletny system dla agentów nieruchomości
+        - heading "Twój panel nieruchomości." [level=1] [ref=e16]
+        - paragraph [ref=e17]: Kompletne narzędzia dla agenta nieruchomości — od onboardingu właściciela po zamknięcie transakcji.
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: ✓
+          - generic [ref=e21]: Zarządzanie ofertami i cyklem życia
+        - generic [ref=e22]:
+          - generic [ref=e23]: ✓
+          - generic [ref=e24]: Kolekcja dokumentów z checklistą
+        - generic [ref=e25]:
+          - generic [ref=e26]: ✓
+          - generic [ref=e27]: Kalkulator prowizji agenta
+    - generic [ref=e29]:
+      - heading "Zaloguj się" [level=2] [ref=e30]
+      - paragraph [ref=e31]: Wprowadź dane, aby kontynuować
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e36]: Email
+          - generic [ref=e37]:
+            - generic:
+              - img
+            - textbox "Email" [ref=e38]:
+              - /placeholder: ty@example.com
+        - generic [ref=e39]:
+          - generic [ref=e40]: Hasło
+          - generic [ref=e41]:
+            - generic:
+              - img
+            - textbox "Hasło" [ref=e42]:
+              - /placeholder: Twoje hasło
+            - button "Pokaż hasło" [ref=e43]:
+              - img [ref=e44]
+        - link "Zapomniałeś hasła?" [disabled] [ref=e48] [cursor=pointer]:
+          - /url: /forgot-password
+        - button "Zaloguj się" [ref=e49] [cursor=pointer]:
+          - generic [ref=e50]:
+            - img [ref=e51]
+            - text: Zaloguj się
+      - paragraph [ref=e54]:
+        - text: Nie masz konta?
+        - link "Zarejestruj się" [ref=e55] [cursor=pointer]:
+          - /url: /auth/signup
