@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Lock, UserPlus } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ServerError } from "@/components/auth/ServerError";
+import { validateEmail, validateNewPassword, validateConfirmPassword, pluralizeZnak } from "@/lib/auth-validation";
 
 const MIN_PASSWORD_LENGTH = 6;
 
@@ -20,27 +21,25 @@ export default function SignUpForm({ serverError }: Props) {
   const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Reset if navigation was blocked (network failure after submit)
+  useEffect(() => {
+    if (!isSubmitting) return;
+    const timer = setTimeout(() => {
+      setIsSubmitting(false);
+    }, 15_000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isSubmitting]);
+
   function validate() {
     const next: typeof errors = {};
-
-    if (!email.trim()) {
-      next.email = "Email jest wymagany";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      next.email = "Podaj poprawny adres email";
-    }
-
-    if (!password) {
-      next.password = "Hasło jest wymagane";
-    } else if (password.length < MIN_PASSWORD_LENGTH) {
-      next.password = `Hasło musi mieć co najmniej ${MIN_PASSWORD_LENGTH} znaków`;
-    }
-
-    if (!confirmPassword) {
-      next.confirmPassword = "Potwierdź swoje hasło";
-    } else if (password !== confirmPassword) {
-      next.confirmPassword = "Hasła się nie zgadzają";
-    }
-
+    const emailErr = validateEmail(email);
+    if (emailErr) next.email = emailErr;
+    const passwordErr = validateNewPassword(password, MIN_PASSWORD_LENGTH);
+    if (passwordErr) next.password = passwordErr;
+    const confirmErr = validateConfirmPassword(password, confirmPassword);
+    if (confirmErr) next.confirmPassword = confirmErr;
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -60,10 +59,9 @@ export default function SignUpForm({ serverError }: Props) {
   const passwordHint = (() => {
     if (errors.password || password.length === 0 || password.length >= MIN_PASSWORD_LENGTH) return undefined;
     const remaining = MIN_PASSWORD_LENGTH - password.length;
-    const suffix = remaining === 1 ? "" : remaining <= 4 ? "i" : "ów";
     return (
       <p className="mt-1 text-xs text-blue-100/50">
-        Jeszcze {remaining} znak{suffix}
+        Jeszcze {remaining} {pluralizeZnak(remaining)}
       </p>
     );
   })();
