@@ -148,13 +148,13 @@ Three small template edits, each following the `close.astro` reference pattern.
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Build succeeds: `npm run build`
+- [x] 1.1 Type checking passes: `npm run typecheck` — 57d4bea
+- [x] 1.2 Build succeeds: `npm run build` — 57d4bea
 
 #### Manual
 
-- [x] 1.3 Address visible on `/pricing` tab below tab bar
-- [x] 1.4 Address visible on `/documents` tab below tab bar
-- [x] 1.5 Address visible on `/contacts` tab below tab bar
-- [x] 1.6 Browser tab titles on pricing and documents include address
-- [x] 1.7 No regressions on `close.astro` or `edit.astro`
+- [x] 1.3 Address visible on `/pricing` tab below tab bar — 57d4bea
+- [x] 1.4 Address visible on `/documents` tab below tab bar — 57d4bea
+- [x] 1.5 Address visible on `/contacts` tab below tab bar — 57d4bea
+- [x] 1.6 Browser tab titles on pricing and documents include address — 57d4bea
+- [x] 1.7 No regressions on `close.astro` or `edit.astro` — 57d4bea
