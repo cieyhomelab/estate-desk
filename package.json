@@ -27,6 +27,7 @@
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/react": "^5.0.4",
     "@astrojs/sitemap": "^3.7.2",
+    "@cieyhomelab/ai-toolkit": "^1.0.1",
     "@cloudflare/vite-plugin": "^1.42.1",
     "@eslint/config-helpers": "^0.6.0",
     "@radix-ui/react-slot": "^1.1.2",
