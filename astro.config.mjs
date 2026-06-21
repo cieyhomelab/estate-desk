@@ -23,6 +23,9 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    resolve: {
+      dedupe: ["react", "react-dom", "react-dom/server"],
+    },
   },
   adapter: cloudflare(),
   env: {
