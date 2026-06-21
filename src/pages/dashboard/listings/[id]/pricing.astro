@@ -84,7 +84,7 @@ const error = Astro.url.searchParams.get("error");
 const success = Astro.url.searchParams.get("success");
 ---
 
-<Layout title="Cena i prowizja — EstateDesk">
+<Layout title={`Cena i prowizja — ${listing.address}`}>
   <div class="bg-cosmic min-h-screen">
     <DashboardHeader />
 
@@ -95,6 +95,8 @@ const success = Astro.url.searchParams.get("success");
 
       {success === "cena-zapisana" && <Banner variant="info">Cena została pomyślnie zapisana.</Banner>}
       {success === "prowizja-zapisana" && <Banner variant="info">Prowizja agenta została pomyślnie zapisana.</Banner>}
+
+      <p class="mb-4 text-sm text-white/50">{listing.address}</p>
 
       <div class="mb-4 rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
         <h2 class="mb-3 text-lg font-bold text-white">Cena wywoławcza</h2>

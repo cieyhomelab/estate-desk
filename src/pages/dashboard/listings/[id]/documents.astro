@@ -82,7 +82,7 @@ const error = Astro.url.searchParams.get("error");
 const success = Astro.url.searchParams.get("success");
 ---
 
-<Layout title="Dokumenty i zdjęcia — EstateDesk">
+<Layout title={`Dokumenty i zdjęcia — ${listing.address}`}>
   <div class="bg-cosmic min-h-screen">
     <DashboardHeader />
 
@@ -93,6 +93,8 @@ const success = Astro.url.searchParams.get("success");
       {success === "dodano" && <Banner variant="info">Dokument został dodany.</Banner>}
       {success === "usunieto" && <Banner variant="info">Dokument został usunięty.</Banner>}
       {success === "zapisano" && <Banner variant="info">Ustawienia zostały zapisane.</Banner>}
+
+      <p class="mb-4 text-sm text-white/50">{listing.address}</p>
 
       <!-- Checklist section -->
       <div class="mb-4 rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
