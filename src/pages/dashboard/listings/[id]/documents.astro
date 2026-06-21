@@ -94,7 +94,7 @@ const success = Astro.url.searchParams.get("success");
       {success === "usunieto" && <Banner variant="info">Dokument został usunięty.</Banner>}
       {success === "zapisano" && <Banner variant="info">Ustawienia zostały zapisane.</Banner>}
 
-      {listing.address && <p class="mb-4 text-sm text-white/50">{listing.address}</p>}
+      <p class="mb-4 text-sm text-white/50">{listing.address}</p>
 
       <!-- Checklist section -->
       <div class="mb-4 rounded-xl border border-white/[0.08] bg-white/[0.06] p-6 backdrop-blur-sm">
