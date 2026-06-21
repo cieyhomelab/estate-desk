@@ -21,11 +21,11 @@ EstateDesk — real estate transaction management for a single Polish agent. Ast
 - `npm run lint:fix` — auto-fix ESLint issues
 - `npm run format` — Prettier across all files
 
-CI gate on push/PR to `master`: `npm ci → npx astro sync → npm run lint → npm run build`.
+CI gate on push/PR to `main`: `npm ci → npm audit → astro sync → astro check → lint → unit tests → integration tests (×2) → E2E tests → build`.
 
 ## Coding Style & Naming Conventions
 
-TypeScript strict (`@tsconfig.json` extends `astro/tsconfigs/strict`). Import alias `@/*` resolves to `src/*`. Pages/layouts: `PascalCase.astro`. React island components: `PascalCase.tsx`. Utilities: `camelCase.ts`. ESLint 9 with `eslint-plugin-astro`, `react-compiler`, `jsx-a11y`; Prettier with `prettier-plugin-astro` and `prettier-plugin-tailwindcss`. Husky runs lint-staged on commit: ESLint on `.ts/.tsx/.astro`, Prettier on `.json/.css/.md`.
+TypeScript strict (`@tsconfig.json` extends `astro/tsconfigs/strict`). Import alias `@/*` resolves to `src/*`. Pages/layouts: `PascalCase.astro`. React island components: `PascalCase.tsx`. Utilities: `camelCase.ts`. ESLint 9 with `eslint-plugin-astro`, `react-compiler`, `jsx-a11y`; Prettier with `prettier-plugin-astro` and `prettier-plugin-tailwindcss`. lefthook runs on commit (parallel jobs): ESLint with auto-fix on staged `.ts/.tsx/.astro` files, `astro check` type-check, and `npm run test` unit suite.
 
 ## Testing Guidelines
 
@@ -37,7 +37,7 @@ E2E runs and are provided via GitHub Actions secrets (see `.github/workflows/ci.
 
 ## Commit & Pull Request Guidelines
 
-No commit history yet — convention to be established. CI runs on `master` (`@.github/workflows/ci.yml`). Set `SUPABASE_URL` and `SUPABASE_KEY` in GitHub Actions secrets or the build job fails.
+CI runs on `main` (`@.github/workflows/ci.yml`). Set `SUPABASE_URL`, `SUPABASE_KEY`, and the three `*_TEST` Supabase secrets in GitHub Actions secrets or integration and E2E jobs will fail.
 
 ## Security & Configuration
 
