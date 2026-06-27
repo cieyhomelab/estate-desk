@@ -15,7 +15,7 @@ const error = Astro.url.searchParams.get("error");
         <h2 class="auth-login-title">Zaloguj się</h2>
         <p class="auth-login-subtitle">Wprowadź dane, aby kontynuować</p>
         <div class="mt-10">
-          <SignInForm serverError={error} client:load />
+          <SignInForm serverError={error} client:only="react" />
         </div>
         <p class="mt-7 text-center text-sm text-slate-400">
           Nie masz konta? <a class="auth-link" href="/auth/signup">Zarejestruj się</a>
